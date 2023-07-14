@@ -11,6 +11,8 @@ jobs:
     - uses: actions-ecosystem/action-add-labels@v1
       with:
         labels: "Status: Needs Review"
+        repoToken: "${{ secrets.GITHUB_TOKEN }}"
     - uses: actions-ecosystem/action-remove-labels@v1
       with:
         labels: "Status: Awaiting Changes"
+        repoToken: "${{ secrets.GITHUB_TOKEN }}"
