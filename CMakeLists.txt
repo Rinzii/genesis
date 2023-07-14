@@ -12,6 +12,15 @@ file(ARCHIVE_EXTRACT INPUT "${CMAKE_CURRENT_SOURCE_DIR}/tools/dxc.zip" DESTINATI
 # include the configuration file
 include(cmake/Config.cmake)
 
+if (GENESIS_OS_LINUX)
+  # Set execute permissions for the extracted executable. For some reason it doesn't have them by default.
+  file(
+          COPY ${CMAKE_CURRENT_SOURCE_DIR}/tools/dxc/linux/bin/dxc
+          DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/tools/dxc/linux/bin/dxc
+          FILE_PERMISSIONS OWNER_EXECUTE OWNER_WRITE OWNER_READ GROUP_EXECUTE GROUP_READ WORLD_EXECUTE WORLD_READ
+  )
+endif()
+
 set(is_root_project OFF)
 
 if(PROJECT_NAME STREQUAL CMAKE_PROJECT_NAME)
