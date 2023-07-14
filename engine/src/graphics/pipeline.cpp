@@ -3,6 +3,7 @@
 #include "core.hpp"
 #include "graphics/pipeline.hpp"
 #include "graphics/vkHelpers.hpp"
+#include "log.hpp"
 
 #include <fstream>
 #include <stdexcept>
@@ -33,6 +34,7 @@ namespace gen {
 	void GraphicsPipeline::createGraphicsPipeline() {
         createInstance("Genesis Engine", "Genesis Engine", {}, {}, VK_API_VERSION_1_0);
 		createDebugMessenger();
+		gen::logger::log("GraphicsPipeline created");
     }
 
 	void GraphicsPipeline::destroyGraphicsPipeline() {
