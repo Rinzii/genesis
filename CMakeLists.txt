@@ -14,10 +14,14 @@ include(cmake/Config.cmake)
 
 if (GENESIS_OS_LINUX)
   # Set execute permissions for the extracted executable. For some reason it doesn't have them by default.
-  file(
-          COPY ${CMAKE_CURRENT_SOURCE_DIR}/tools/dxc/linux/bin/dxc
-          DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/tools/dxc/linux/bin
-          FILE_PERMISSIONS OWNER_EXECUTE OWNER_WRITE OWNER_READ GROUP_EXECUTE GROUP_READ WORLD_EXECUTE WORLD_READ
+#  file(
+#          COPY ${CMAKE_CURRENT_SOURCE_DIR}/tools/dxc/linux/bin/dxc
+#          DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/tools/dxc/linux/bin
+#          FILE_PERMISSIONS OWNER_EXECUTE OWNER_WRITE OWNER_READ GROUP_EXECUTE GROUP_READ WORLD_EXECUTE WORLD_READ
+#  )
+
+  execute_process(
+          COMMAND chmod +x ${CMAKE_CURRENT_SOURCE_DIR}/tools/dxc/linux/bin/dxc
   )
 endif()
 
