@@ -7,9 +7,24 @@
 namespace gen {
 
 	void Application::run() {
-        while (!m_window.shouldClose()) {
-            gen::Window::pollEvents();
-        }
+        init();
+		gameLoop();
+		shutdown();
     }
+	void Application::init() {
+		initializeGraphics();
+	}
+	void Application::gameLoop() {
+		while (!m_window.shouldClose()) {
+            Window::pollEvents();
+        }
 
-} // namespace gen
+	}
+	void Application::shutdown() {
+	}
+
+	void Application::initializeGraphics() {
+
+	}
+
+	} // namespace gen
