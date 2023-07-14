@@ -26,7 +26,6 @@ if(GENESIS_BUILD_EDITOR)
 endif()
 
 
-add_subdirectory(tools/ShaderCompiler)
 add_subdirectory(ext)
 add_subdirectory(engine)
 
