@@ -171,6 +171,7 @@ target_link_libraries(genesis
         PUBLIC
         mim::mim
         imgui::imgui
+        vk-dynamic::vk-dynamic
 
         PRIVATE
         genesis::ext

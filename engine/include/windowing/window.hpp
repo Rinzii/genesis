@@ -40,7 +40,7 @@ public:
 	void inline SetTitle(const std::string& title) { m_title = title; }
 
 private:
-	void initWindow();
+	void init();
 
 private:
 	int m_width;

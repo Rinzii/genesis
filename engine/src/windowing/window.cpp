@@ -9,11 +9,12 @@
 namespace gen {
 
     Window::Window(int w, int h, std::string title) : m_width{w}, m_height{h}, m_title{std::move(title)} { // NOLINT(cppcoreguidelines-pro-type-member-init)
-        initWindow();
+        init();
     }
 
 	Window::~Window() {
         glfwDestroyWindow(m_window);
+		glfwTerminate();
     }
 
 	bool Window::shouldClose() const {
@@ -24,7 +25,7 @@ namespace gen {
         glfwPollEvents();
     }
 
-	void Window::initWindow() {
+	void Window::init() {
         glfwInit();
         glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
         glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE); // TODO: Later add support for resizing of windows.

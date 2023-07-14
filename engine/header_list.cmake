@@ -17,6 +17,7 @@ set(base_headers
 
 set(graphics_headers
 		include/graphics/pipeline.hpp
+        include/graphics/vkHelpers.hpp
 		)
 
 set(io_headers
@@ -49,7 +50,7 @@ set(windowing_headers
 # core header include
 set(genesis_headers
         ${base_headers}
-		#${graphics_headers}
+		${graphics_headers}
         ${io_headers}
         ${system_headers}
         ${util_headers}
