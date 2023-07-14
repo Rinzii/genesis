@@ -69,11 +69,11 @@ namespace gen::logger
 		// TODO: Add a windows specific means of outputting to OutputDebugString
 
 		// Log to file
-		log_stream << "[TRACE] [" << getCurrentTime() << "] " << location.file_name() << ":" << location.line()
+		log_stream << "[TRACE] [" << Time::GetCurrentTime() << "] " << location.file_name() << ":" << location.line()
 				   << " - FUNC: " << location.function_name() << " - " << message << std::endl;
 
 		// Log to console
-		output_stream << "[TRACE] [" << getCurrentTime() << "] - " << location.file_name() << ":" << location.line()
+		output_stream << "[TRACE] [" << Time::GetCurrentTime() << "] - " << location.file_name() << ":" << location.line()
 					  << " - FUNC: " << location.function_name() << " - " << message << std::endl;
 		return output_stream;
 	}
