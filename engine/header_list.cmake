@@ -34,7 +34,6 @@ set(system_win32_headers
 
 set(system_headers
         ${system_win32_headers}
-        include/system/crt.hpp
         include/system/types.hpp
         )
 

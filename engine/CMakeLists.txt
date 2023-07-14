@@ -171,7 +171,6 @@ target_link_libraries(genesis
         PUBLIC
         mim::mim
         imgui::imgui
-        fmt::fmt
 
         PRIVATE
         genesis::ext
@@ -194,9 +193,8 @@ endif()
 # PRECOMPILED HEADERS
 if(GENESIS_PCH)
     target_precompile_headers(genesis PRIVATE
-            <vulkan/vulkan.h>
+            <vulkan/vulkan.hpp>
             <vk_mem_alloc.h>
-            <fmt/format.h>
             <algorithm>
             <atomic>
             <chrono>

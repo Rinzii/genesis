@@ -21,8 +21,6 @@ FetchContent_MakeAvailable(mim)
 add_subdirectory(src/dxc)
 add_library(dxc::dxc ALIAS dxc)
 
-add_subdirectory(src/fmt)
-
 set(GLFW_VULKAN_STATIC OFF)
 set(GLFW_INSTALL OFF)
 set(GLFW_BUILD_DOCS OFF)
@@ -66,7 +64,6 @@ target_link_libraries(genesis-ext INTERFACE
         vma::vma
         glfw::glfw
         mim::mim
-        fmt::fmt
         gtest::gtest
         gmock::gmock
         imgui::imgui

@@ -23,7 +23,6 @@ target_sources(genesis-editor PRIVATE
 
 if(GENESIS_PCH)
   target_precompile_headers(genesis-editor PRIVATE
-          <fmt/format.h>
           <algorithm>
           <atomic>
           <chrono>
