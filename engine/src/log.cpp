@@ -72,6 +72,23 @@ namespace gen::logger
 	std::osyncstream log_stream(log_file);
 	std::mutex log_mutex;
 
+	std::ostream& trace(const std::string& message, const std::source_location& location)
+	{
+		static SingleOutputStream output_stream(std::cout.rdbuf());
+		std::lock_guard<std::mutex> lock(log_mutex);
+
+		// TODO: Add a windows specific means of outputting to OutputDebugString
+
+		// Log to file
+		log_stream << "[TRACE] [" << getCurrentTime() << "] " << location.file_name() << ":" << location.line()
+				   << " - FUNC: " << location.function_name() << " - " << message << std::endl;
+
+		// Log to console
+		output_stream << "[TRACE] [" << getCurrentTime() << "] - " << location.file_name() << ":" << location.line()
+					  << " - FUNC: " << location.function_name() << " - " << message << std::endl;
+		return output_stream;
+	}
+
 	std::ostream& log(const std::string& message, const std::source_location& location)
 	{
 		static SingleOutputStream output_stream(std::cout.rdbuf());
