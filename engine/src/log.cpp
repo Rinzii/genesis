@@ -1,13 +1,13 @@
 // Copyright (c) 2023-present Genesis Engine contributors (see LICENSE.txt)
 
 #include "log.hpp"
+#include "time.hpp"
 
 #include <fstream>
 #include <iostream>
 #include <mutex>
 #include <string>
 #include <syncstream>
-#include <chrono>
 
 // Tell MSVC to shut up about using std::gmtime
 // NOLINTNEXTLINE
@@ -52,17 +52,6 @@ namespace
 	private:
 		SingleStreamBuffer singleStreamBuf_;
 	}; // class SingleOutputStream
-
-	std::string getCurrentTime()
-	{
-		// This all SHOULD be thread safe but it needs to be tested further.
-		auto now = std::chrono::system_clock::now();
-		auto in_time_t = std::chrono::system_clock::to_time_t(now);
-		std::stringstream ss;
-		ss << std::put_time(std::gmtime(&in_time_t), "%Y-%m-%d %X");
-		return ss.str();
-	}
-
 } // namespace
 
 namespace gen::logger
@@ -80,11 +69,11 @@ namespace gen::logger
 		// TODO: Add a windows specific means of outputting to OutputDebugString
 
 		// Log to file
-		log_stream << "[LOG] [" << getCurrentTime() << "] " << location.file_name() << ":" << location.line()
+		log_stream << "[LOG] [" << Time::GetCurrentTime() << "] " << location.file_name() << ":" << location.line()
 				   << " - FUNC: " << location.function_name() << " - " << message << std::endl;
 
 		// Log to console
-		output_stream << "[LOG] [" << getCurrentTime() << "] - " << location.file_name() << ":" << location.line()
+		output_stream << "[LOG] [" << Time::GetCurrentTime() << "] - " << location.file_name() << ":" << location.line()
 					  << " - FUNC: " << location.function_name() << " - " << message << std::endl;
 		return output_stream;
 	}
@@ -97,11 +86,11 @@ namespace gen::logger
 		// TODO: Add a windows specific means of outputting to OutputDebugString
 
 		// Log to file
-		log_stream << "[WARN] [" << getCurrentTime() << "] " << location.file_name() << ":" << location.line()
+		log_stream << "[WARN] [" << Time::GetCurrentTime() << "] " << location.file_name() << ":" << location.line()
 				   << " - FUNC: " << location.function_name() << " - " << message << std::endl;
 
 		// Log to console
-		output_stream << "[WARN] [" << getCurrentTime() << "] - " << location.file_name() << ":" << location.line()
+		output_stream << "[WARN] [" << Time::GetCurrentTime() << "] - " << location.file_name() << ":" << location.line()
 					  << " - FUNC: " << location.function_name() << " - " << message << std::endl;
 		return output_stream;
 	}
@@ -114,11 +103,11 @@ namespace gen::logger
 		// TODO: Add a windows specific means of outputting to OutputDebugString
 
 		// Log to file
-		log_stream << "[ERROR] [" << getCurrentTime() << "] " << location.file_name() << ":" << location.line()
+		log_stream << "[ERROR] [" << Time::GetCurrentTime() << "] " << location.file_name() << ":" << location.line()
 				   << " - FUNC: " << location.function_name() << " - " << message << std::endl;
 
 		// Log to console
-		output_stream << "[ERROR] [" << getCurrentTime() << "] - " << location.file_name() << ":" << location.line()
+		output_stream << "[ERROR] [" << Time::GetCurrentTime() << "] - " << location.file_name() << ":" << location.line()
 					  << " - FUNC: " << location.function_name() << " - " << message << std::endl;
 		return output_stream;
 	}
@@ -131,13 +120,13 @@ namespace gen::logger
 		// TODO: Add a windows specific means of outputting to OutputDebugString
 
 		// Log to file
-		log_stream << "[FATAL] [" << getCurrentTime() << "] - " << location.file_name() << ":" << location.line()
+		log_stream << "[FATAL] [" << Time::GetCurrentTime() << "] - " << location.file_name() << ":" << location.line()
 				   << " - FUNC: " << location.function_name() << " - " << message << std::endl;
 
 		log_stream.flush();
 
 		// Log to console
-		output_stream << "[FATAL] [" << getCurrentTime() << "] - " << location.file_name() << ":" << location.line()
+		output_stream << "[FATAL] [" << Time::GetCurrentTime() << "] - " << location.file_name() << ":" << location.line()
 					  << " - FUNC: " << location.function_name() << " - " << message << std::endl;
 		output_stream.flush();
 		log_file.close();
