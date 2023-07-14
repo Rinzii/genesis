@@ -1,0 +1,13 @@
+*		text=auto
+
+*.txt	text eol=lf
+*.cpp	text eol=lf
+*.c		text eol=lf
+*.hpp	text eol=lf
+*.h		text eol=lf
+*.json	text eol=lf
+
+*.png	-text
+*.jpg	-text
+*.ttf	-text
+*.bmp	-text
