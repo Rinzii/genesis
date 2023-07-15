@@ -20,6 +20,13 @@ namespace gen
 		void SetTimeScale(double timeScale) { g_timeScale = timeScale; }
 		double GetDeltaTime() { return g_deltaTime; }
 		double GetTimeScale() { return g_timeScale; }
+
+		std::string GetCurrentTime() {
+			auto const time = std::chrono::current_zone()
+				->to_local(std::chrono::system_clock::now());
+
+			return std::format("{:%Y-%m-%d %X}", time);
+		}
 	}
 
 	namespace FPS

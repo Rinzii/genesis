@@ -12,6 +12,8 @@ namespace gen
 		void SetTimeScale(double timeScale);
 		double GetDeltaTime();
 		double GetTimeScale();
+
+		std::string GetCurrentTime();
 	}
 
 	namespace FPS
