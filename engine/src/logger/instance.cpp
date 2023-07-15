@@ -43,8 +43,14 @@ void append_location(std::string& out, std::source_location const& location, Loc
 }
 
 struct Formatter {
+	static constexpr auto open_v{'{'};
+	static constexpr auto close_v{'}'};
+
+	// snapshot of formatting-related Config (at the time of Formatter construction).
+	// we make copies instead of referring to Config to avoid mutex locks,
+	// since users can change the active config at any time.
 	struct Data {
-		std::string format{};
+		FixedString<Config::format_size_v> format{};
 		Location location{};
 		Timestamp timestamp{};
 	};
@@ -63,6 +69,7 @@ struct Formatter {
 
 	bool advance() {
 		if (at_end()) {
+			// reset current
 			current = {};
 			return false;
 		}
@@ -72,13 +79,14 @@ struct Formatter {
 	}
 
 	bool try_keyword() {
-		assert(current == '{');
-		auto const close = format.find_first_of('}');
+		assert(current == open_v);
+		auto const close = format.find_first_of(close_v);
 		if (close == std::string_view::npos) { return false; }
 
 		auto const key = format.substr(0, close);
 		if (!keyword(key)) { return false; }
 
+		// advance to beyond }
 		format = format.substr(close + 1);
 		return true;
 	}
@@ -116,8 +124,8 @@ struct Formatter {
 		static constexpr std::size_t reserve_v{128};
 		out.reserve(message.size() + reserve_v);
 		while (advance()) {
-			if (current == '{' && try_keyword()) { continue; }
-			out.append({current});
+			if (current == open_v && try_keyword()) { continue; }
+			out += current;
 		}
 		out.append("\n");
 		return std::move(out);

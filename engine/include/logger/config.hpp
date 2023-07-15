@@ -1,6 +1,7 @@
 #pragma once
 #include <logger/level.hpp>
 #include <logger/target.hpp>
+#include <util/fixed_string.hpp>
 #include <cassert>
 #include <string>
 #include <unordered_map>
@@ -32,10 +33,14 @@ struct Config {
 	///
 	static constexpr std::string_view default_format_v{"[{level}][T{thread}] {message} [{timestamp}] [{location}]"};
 
+	static constexpr std::size_t format_size_v{64};
+
+	static_assert(default_format_v.size() < format_size_v);
+
 	///
 	/// \brief Format specification for log entries.
 	///
-	std::string format{default_format_v};
+	FixedString<format_size_v> format{default_format_v};
 	///
 	/// \brief Max log Level.
 	///

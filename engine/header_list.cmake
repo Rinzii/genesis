@@ -39,6 +39,7 @@ set(system_headers
 
 
 set(util_headers
+        include/util/fixed_string.hpp
         include/util/version.hpp
         )
 
