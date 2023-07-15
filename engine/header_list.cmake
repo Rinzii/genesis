@@ -42,6 +42,14 @@ set(util_headers
         include/util/version.hpp
         )
 
+set(logger_headers
+        include/logger/context.hpp
+        include/logger/instance.hpp
+        include/logger/level.hpp
+        include/logger/log.hpp
+        include/logger/sink.hpp
+)
+
 set(windowing_headers
         include/windowing/window.hpp
         )
@@ -53,6 +61,7 @@ set(genesis_headers
         ${io_headers}
         ${system_headers}
         ${util_headers}
+        ${logger_headers}
         ${windowing_headers}
         include/application.hpp
         include/core.hpp
