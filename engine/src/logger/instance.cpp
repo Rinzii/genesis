@@ -171,9 +171,10 @@ struct FileSink : Sink {
 		// loop until stopped
 		while (!stop.stop_requested()) {
 			auto lock = std::unique_lock{mutex};
-			// sleep until buffer is not empty (or stopped, in which case return)
-			if (!cv.wait(lock, stop, [this] { return !buffer.empty(); })) { return; }
-			// drain buffer into file
+			// sleep until buffer is not empty
+			cv.wait(lock, stop, [this] { return !buffer.empty(); });
+			if (buffer.empty()) { continue; }
+			// drain buffer into file, even if stop requested
 			if (auto file = std::ofstream{path, std::ios::binary | std::ios::app}) {
 				file << buffer;
 				buffer.clear();
@@ -201,11 +202,11 @@ struct Instance::Impl {
 	FileSink file;
 
 	static char const* nonEmptyFilePath(char const* input) {
-		if (input == nullptr || *input == 0) { return "geneis.log"; }
+		if (input == nullptr || *input == 0) { return "genesis.log"; }
 		return input;
 	}
 
-	Impl(char const* filePath) : file(nonEmptyFilePath(filePath) ) {}
+	Impl(char const* filePath) : file(nonEmptyFilePath(filePath)) {}
 
 	void print(std::string_view const message, Context const& context) {
 		// config is shared state, must synchronize access
