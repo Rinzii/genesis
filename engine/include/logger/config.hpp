@@ -6,7 +6,7 @@
 #include <string>
 #include <unordered_map>
 
-namespace gen::refactor::logger {
+namespace gen::logger {
 ///
 /// \brief Timestamp mode.
 ///
@@ -62,4 +62,4 @@ struct Config {
 	///
 	Location location{Location::eFilename};
 };
-} // namespace gen::refactor::logger
+} // namespace gen::logger

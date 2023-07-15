@@ -1,7 +1,7 @@
 #include "logger/context.hpp"
 #include <atomic>
 
-namespace gen::refactor::logger {
+namespace gen::logger {
 ThreadId Context::getThreadId() {
 	auto const get_next_id = [] {
 		static auto s_prevId{std::atomic<int>{}};
@@ -20,4 +20,4 @@ Context Context::make(std::string_view category, Level level, SrcLoc const& loca
 		.level = level,
 	};
 }
-} // namespace gen::refactor::logger
+} // namespace gen::logger

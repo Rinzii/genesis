@@ -4,7 +4,7 @@
 #include <source_location>
 #include <string_view>
 
-namespace gen::refactor::logger {
+namespace gen::logger {
 using Clock = std::chrono::system_clock;
 using SrcLoc = std::source_location;
 
@@ -32,4 +32,4 @@ struct Context {
 	static ThreadId getThreadId();
 	static Context make(std::string_view category, Level level, SrcLoc const& location = SrcLoc::current());
 };
-} // namespace gen::refactor::logger
+} // namespace gen::logger

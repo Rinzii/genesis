@@ -12,7 +12,7 @@
 	#include <Windows.h>
 #endif
 
-namespace gen::refactor::logger {
+namespace gen::logger {
 namespace {
 namespace fs = std::filesystem;
 
@@ -200,7 +200,12 @@ struct Instance::Impl {
 	ConsoleSink console{};
 	FileSink file;
 
-	Impl(char const* filePath) : file(filePath) {}
+	static char const* nonEmptyFilePath(char const* input) {
+		if (input == nullptr || *input == 0) { return "geneis.log"; }
+		return input;
+	}
+
+	Impl(char const* filePath) : file(nonEmptyFilePath(filePath) ) {}
 
 	void print(std::string_view const message, Context const& context) {
 		// config is shared state, must synchronize access
@@ -279,4 +284,4 @@ void Instance::print(std::string_view const message, Context const& context) {
 	if (s_instance == nullptr) { return; }
 	s_instance->print(message, context);
 }
-} // namespace gen::refactor::logger
+} // namespace gen::logger

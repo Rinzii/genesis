@@ -5,7 +5,7 @@
 #include <memory>
 #include <stdexcept>
 
-namespace gen::refactor::logger {
+namespace gen::logger {
 ///
 /// \brief Logger Instance: a single instance must be created within main's scope.
 ///
@@ -29,7 +29,7 @@ public:
 	/// \param filePath path to create/overwrite log file at.
 	/// \param config Config to use.
 	///
-	explicit Instance(char const* filePath, Config config = {});
+	explicit Instance(char const* filePath = "genesis.log", Config config = {});
 	~Instance();
 
 	///
@@ -61,4 +61,4 @@ private:
 	inline static Impl* s_instance{};
 	std::unique_ptr<Impl, Deleter> m_impl{};
 };
-} // namespace gen::refactor::logger
+} // namespace gen::logger

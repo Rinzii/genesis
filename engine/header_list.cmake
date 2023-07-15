@@ -66,7 +66,6 @@ set(genesis_headers
         ${windowing_headers}
         include/application.hpp
         include/core.hpp
-        include/log.hpp
 		include/time.hpp
         )
 

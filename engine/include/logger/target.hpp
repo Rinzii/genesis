@@ -1,7 +1,7 @@
 #pragma once
 #include <cstdint>
 
-namespace gen::refactor::logger {
+namespace gen::logger {
 ///
 /// \brief Log Target (destination).
 ///
@@ -25,4 +25,4 @@ inline constexpr Target file_v{.value = 1 << 1};
 inline constexpr Target sinks_v{.value = 1 << 2};
 
 inline constexpr Target all_v{.value = 0xffffffff};
-} // namespace gen::refactor::logger
+} // namespace gen::logger

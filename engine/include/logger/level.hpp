@@ -1,7 +1,7 @@
 #pragma once
 #include <cstdint>
 
-namespace gen::refactor::logger {
+namespace gen::logger {
 ///
 /// \brief Log Level.
 ///
@@ -19,4 +19,4 @@ constexpr char levelChar(Level const level) {
 	default: return '?';
 	}
 }
-} // namespace gen::refactor::logger
+} // namespace gen::logger

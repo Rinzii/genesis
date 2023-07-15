@@ -1,7 +1,7 @@
 #pragma once
 #include <logger/context.hpp>
 
-namespace gen::refactor::logger {
+namespace gen::logger {
 ///
 /// \brief Customizable log sink.
 ///
@@ -15,4 +15,4 @@ struct Sink {
 	///
 	virtual void handle(std::string_view formatted, Context const& context) = 0;
 };
-} // namespace gen::refactor::logger
+} // namespace gen::logger
