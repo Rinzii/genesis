@@ -50,19 +50,25 @@ struct Formatter {
 	// we make copies instead of referring to Config to avoid mutex locks,
 	// since users can change the active config at any time.
 	struct Data {
+		// default format string size is 57, which will cause std::string to heap allocate.
+		// thus we use a fixed capacity stack string instead.
 		FixedString<Config::format_size_v> format{};
 		Location location{};
 		Timestamp timestamp{};
 	};
 
+	// NOLINTNEXTLINE
+	Data const& data;
+	// message and context don't need to be copied, they are unique per call stack.
 	std::string_view message;
-	Data data;
 	// NOLINTNEXTLINE
 	Context const& context;
 
+	// output string (formatted)
 	std::string out{};
+	// remaining input
 	std::string_view format{data.format};
-
+	// current character (preceding format)
 	char current{};
 
 	[[nodiscard]] bool at_end() const { return format.empty(); }
@@ -167,7 +173,7 @@ struct FileSink : Sink {
 			auto lock = std::unique_lock{mutex};
 			// sleep until buffer is not empty (or stopped, in which case return)
 			if (!cv.wait(lock, stop, [this] { return !buffer.empty(); })) { return; }
-			// empty buffer into file
+			// drain buffer into file
 			if (auto file = std::ofstream{path, std::ios::binary | std::ios::app}) {
 				file << buffer;
 				buffer.clear();
@@ -177,8 +183,10 @@ struct FileSink : Sink {
 
 	void handle(std::string_view const formatted, [[maybe_unused]] Context const& context) final {
 		auto lock = std::unique_lock{mutex};
+		// append to the existing buffer
 		buffer.append(formatted);
 		lock.unlock();
+		// notify writing thread
 		cv.notify_one();
 	}
 };
@@ -195,6 +203,7 @@ struct Instance::Impl {
 	Impl(char const* filePath) : file(filePath) {}
 
 	void print(std::string_view const message, Context const& context) {
+		// config is shared state, must synchronize access
 		auto lock = std::unique_lock{mutex};
 		if (auto const itr = config.categoryMaxLevels.find(context.category); itr != config.categoryMaxLevels.end()) {
 			if (context.level > itr->second) { return; }
@@ -207,13 +216,24 @@ struct Instance::Impl {
 		}();
 
 		auto const data = Formatter::Data{.format = config.format, .location = config.location, .timestamp = config.timestamp};
+		// cache this for later use
+		auto const sinks_empty = sinks.empty();
+		// config access complete, release lock
 		lock.unlock();
 
-		auto const formatted = Formatter{.message = message, .data = data, .context = context}();
+		auto const formatted = Formatter{.data = data, .message = message, .context = context}();
 
+		// console has no state, no sync required
 		if ((target & console_v) == console_v) { console.handle(formatted, context); }
+		// file maintains its own sync
 		if ((target & file_v) == file_v) { file.handle(formatted, context); }
-		if ((target & sinks_v) == sinks_v) {
+
+		if ((target & sinks_v) == sinks_v && !sinks_empty) {
+			// sinks are also shared state, obtain lock again
+			// TOCTOU slip throughs are possible due to sinks_empty being stale by this point,
+			// but we get to avoid the redundant lock entirely when there are no sinks.
+			lock.lock();
+			// the game is expected to have zero or one sinks (for Dear ImGui), so we just invoke sink->handle under the lock.
 			for (auto const& sink : sinks) { sink->handle(formatted, context); }
 		}
 	}
@@ -238,6 +258,7 @@ Instance::~Instance() { s_instance = {}; }
 Config Instance::getConfig() const {
 	assert(m_impl);
 	auto lock = std::scoped_lock{m_impl->mutex};
+	// make the copy under mutex lock
 	return m_impl->config;
 }
 
@@ -250,6 +271,7 @@ void Instance::setConfig(Config config) {
 void Instance::addSink(std::unique_ptr<Sink> sink) {
 	if (!sink) { return; }
 	assert(m_impl != nullptr);
+	auto lock = std::scoped_lock{m_impl->mutex};
 	m_impl->sinks.push_back(std::move(sink));
 }
 
