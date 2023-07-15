@@ -26,9 +26,9 @@ auto append_timestamp(std::string& out, Clock::time_point const& timestamp, Time
 	// The structure may be shared between std::gmtime, std::localtime, and std::ctime,
 	// and may be overwritten on each invocation.
 	auto lock = std::unique_lock{s_mutex};
-	auto const* tm_struct = mode == Timestamp::eGm ? std::gmtime(&time) : std::localtime(&time);
-	std::strftime(buffer.data(), buffer.size(), "%F %T", tm_struct);
+	auto const tm_struct = mode == Timestamp::eUtc ? *std::gmtime(&time) : *std::localtime(&time);
 	lock.unlock();
+	std::strftime(buffer.data(), buffer.size(), "%F %T", &tm_struct);
 	out.append(buffer.data());
 }
 

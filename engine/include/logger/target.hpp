@@ -2,6 +2,9 @@
 #include <cstdint>
 
 namespace gen::refactor::logger {
+///
+/// \brief Log Target (destination).
+///
 struct Target {
 	std::uint32_t value{};
 
