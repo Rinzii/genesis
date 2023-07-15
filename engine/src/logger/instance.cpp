@@ -16,7 +16,7 @@ namespace gen::refactor::logger {
 namespace {
 namespace fs = std::filesystem;
 
-auto append_timestamp(std::string& out, Clock::time_point const& timestamp, Timestamp const mode) {
+void append_timestamp(std::string& out, Clock::time_point const& timestamp, Timestamp const mode) {
 	static auto s_mutex{std::mutex{}};
 	static constexpr std::size_t buf_size_v{64};
 	auto buffer = std::array<char, buf_size_v>{};
@@ -26,13 +26,14 @@ auto append_timestamp(std::string& out, Clock::time_point const& timestamp, Time
 	// The structure may be shared between std::gmtime, std::localtime, and std::ctime,
 	// and may be overwritten on each invocation.
 	auto lock = std::unique_lock{s_mutex};
+	// NOLINTNEXTLINE
 	auto const tm_struct = mode == Timestamp::eUtc ? *std::gmtime(&time) : *std::localtime(&time);
 	lock.unlock();
 	std::strftime(buffer.data(), buffer.size(), "%F %T", &tm_struct);
 	out.append(buffer.data());
 }
 
-auto append_location(std::string& out, std::source_location const& location, Location const mode) -> void {
+void append_location(std::string& out, std::source_location const& location, Location const mode) {
 	auto const path = [&] {
 		auto ret = fs::path{location.file_name()};
 		if (mode == Location::eFilename) { ret = ret.filename(); }
@@ -50,6 +51,7 @@ struct Formatter {
 
 	std::string_view message;
 	Data data;
+	// NOLINTNEXTLINE
 	Context const& context;
 
 	std::string out{};
@@ -57,9 +59,9 @@ struct Formatter {
 
 	char current{};
 
-	[[nodiscard]] auto at_end() const -> bool { return format.empty(); }
+	[[nodiscard]] bool at_end() const { return format.empty(); }
 
-	auto advance() -> bool {
+	bool advance() {
 		if (at_end()) {
 			current = {};
 			return false;
@@ -69,7 +71,7 @@ struct Formatter {
 		return true;
 	}
 
-	auto try_keyword() -> bool {
+	bool try_keyword() {
 		assert(current == '{');
 		auto const close = format.find_first_of('}');
 		if (close == std::string_view::npos) { return false; }
@@ -81,7 +83,7 @@ struct Formatter {
 		return true;
 	}
 
-	auto keyword(std::string_view key) -> bool {
+	bool keyword(std::string_view key) {
 		if (key == "level") {
 			out += levelChar(context.level);
 			return true;
@@ -110,7 +112,7 @@ struct Formatter {
 		return false;
 	}
 
-	auto operator()() -> std::string {
+	std::string operator()() {
 		static constexpr std::size_t reserve_v{128};
 		out.reserve(message.size() + reserve_v);
 		while (advance()) {
@@ -125,7 +127,7 @@ struct Formatter {
 
 namespace {
 struct ConsoleSink : Sink {
-	auto handle(std::string_view const formatted, Context const& context) -> void final {
+	void handle(std::string_view const formatted, Context const& context) final {
 		// pick stdout / stderr based on level
 		auto& stream = context.level == Level::eError ? std::cerr : std::cout;
 		// thread-safe: operator<< is atomic
@@ -147,9 +149,9 @@ struct FileSink : Sink {
 	// thread must be destroyed before cv (so it can signal stop)
 	std::jthread thread{};
 
-	FileSink(std::string file_path) : path(std::move(file_path)), thread(&FileSink::run, this) {}
+	FileSink(std::string file_path) : path(std::move(file_path)), thread([this](std::stop_token const& stop) { run(stop); }) {}
 
-	auto run(std::stop_token const& stop) -> void {
+	void run(std::stop_token const& stop) {
 		// remove existing log file
 		if (fs::exists(path)) { fs::remove(path); }
 		// loop until stopped
@@ -165,7 +167,7 @@ struct FileSink : Sink {
 		}
 	}
 
-	auto handle(std::string_view const formatted, [[maybe_unused]] Context const& context) -> void final {
+	void handle(std::string_view const formatted, [[maybe_unused]] Context const& context) final {
 		auto lock = std::unique_lock{mutex};
 		buffer.append(formatted);
 		lock.unlock();
@@ -184,7 +186,7 @@ struct Instance::Impl {
 
 	Impl(char const* filePath) : file(filePath) {}
 
-	auto print(std::string_view const message, Context const& context) -> void {
+	void print(std::string_view const message, Context const& context) {
 		auto lock = std::unique_lock{mutex};
 		if (auto const itr = config.categoryMaxLevels.find(context.category); itr != config.categoryMaxLevels.end()) {
 			if (context.level > itr->second) { return; }
@@ -209,7 +211,10 @@ struct Instance::Impl {
 	}
 };
 
-auto Instance::Deleter::operator()(Impl const* ptr) const -> void { delete ptr; }
+void Instance::Deleter::operator()(Impl const* ptr) const {
+	// NOLINTNEXTLINE
+	delete ptr;
+}
 
 Instance::Instance(char const* filePath, Config config) : m_impl(new Impl{filePath}) {
 	if (s_instance != nullptr) { throw DuplicateError{"Duplicate logger Instance"}; }
@@ -222,25 +227,25 @@ Instance::Instance(char const* filePath, Config config) : m_impl(new Impl{filePa
 
 Instance::~Instance() { s_instance = {}; }
 
-auto Instance::getConfig() const -> Config {
+Config Instance::getConfig() const {
 	assert(m_impl);
 	auto lock = std::scoped_lock{m_impl->mutex};
 	return m_impl->config;
 }
 
-auto Instance::setConfig(Config config) -> void {
+void Instance::setConfig(Config config) {
 	assert(m_impl);
 	auto lock = std::scoped_lock{m_impl->mutex};
 	m_impl->config = std::move(config);
 }
 
-auto Instance::addSink(std::unique_ptr<Sink> sink) -> void {
+void Instance::addSink(std::unique_ptr<Sink> sink) {
 	if (!sink) { return; }
 	assert(m_impl != nullptr);
 	m_impl->sinks.push_back(std::move(sink));
 }
 
-auto Instance::print(std::string_view const message, Context const& context) -> void {
+void Instance::print(std::string_view const message, Context const& context) {
 	if (s_instance == nullptr) { return; }
 	s_instance->print(message, context);
 }

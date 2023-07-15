@@ -6,13 +6,13 @@
 namespace gen::refactor::logger {
 using SrcLoc = std::source_location;
 
-auto error(std::string_view category, std::string_view message, SrcLoc const& location = SrcLoc::current()) -> void;
-auto warn(std::string_view category, std::string_view message, SrcLoc const& location = SrcLoc::current()) -> void;
-auto info(std::string_view category, std::string_view message, SrcLoc const& location = SrcLoc::current()) -> void;
-auto debug(std::string_view category, std::string_view message, SrcLoc const& location = SrcLoc::current()) -> void;
+void error(std::string_view category, std::string_view message, SrcLoc const& location = SrcLoc::current());
+void warn(std::string_view category, std::string_view message, SrcLoc const& location = SrcLoc::current());
+void info(std::string_view category, std::string_view message, SrcLoc const& location = SrcLoc::current());
+void debug(std::string_view category, std::string_view message, SrcLoc const& location = SrcLoc::current());
 
-inline auto error(std::string_view message, SrcLoc const& location = SrcLoc::current()) -> void { error("general", message, location); }
-inline auto warn(std::string_view message, SrcLoc const& location = SrcLoc::current()) -> void { warn("general", message, location); }
-inline auto info(std::string_view message, SrcLoc const& location = SrcLoc::current()) -> void { info("general", message, location); }
-inline auto debug(std::string_view message, SrcLoc const& location = SrcLoc::current()) -> void { debug("general", message, location); }
+inline void error(std::string_view message, SrcLoc const& location = SrcLoc::current()) { error("general", message, location); }
+inline void warn(std::string_view message, SrcLoc const& location = SrcLoc::current()) { warn("general", message, location); }
+inline void info(std::string_view message, SrcLoc const& location = SrcLoc::current()) { info("general", message, location); }
+inline void debug(std::string_view message, SrcLoc const& location = SrcLoc::current()) { debug("general", message, location); }
 } // namespace gen::refactor::logger

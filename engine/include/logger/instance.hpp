@@ -18,7 +18,11 @@ public:
 		using std::runtime_error::runtime_error;
 	};
 
+	Instance(Instance&&) = delete;
 	Instance& operator=(Instance&&) = delete;
+
+	Instance(Instance const&) = delete;
+	Instance& operator=(Instance const&) = delete;
 
 	///
 	/// \brief Create a logger Instance.
@@ -31,26 +35,26 @@ public:
 	///
 	/// \brief Obtain a copy of the Config in use.
 	///
-	[[nodiscard]] auto getConfig() const -> Config;
+	[[nodiscard]] Config getConfig() const;
 	///
 	/// \brief Overwrite the Config in use.
 	///
-	auto setConfig(Config config) -> void;
+	void setConfig(Config config);
 
 	///
 	/// \brief Add a custom sink.
 	///
-	auto addSink(std::unique_ptr<Sink> sink) -> void;
+	void addSink(std::unique_ptr<Sink> sink);
 
 	///
 	/// \brief Entrypoint for logging (free) functions.
 	///
-	static auto print(std::string_view message, Context const& context) -> void;
+	static void print(std::string_view message, Context const& context);
 
 private:
 	struct Impl;
 	struct Deleter {
-		auto operator()(Impl const* ptr) const -> void;
+		void operator()(Impl const* ptr) const;
 	};
 
 	// NOLINTNEXTLINE

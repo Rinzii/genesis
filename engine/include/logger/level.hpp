@@ -10,7 +10,7 @@ enum class Level : std::uint8_t { eError, eWarn, eInfo, eDebug, eCOUNT_ };
 ///
 /// \brief char representation of Level.
 ///
-constexpr auto levelChar(Level const level) -> char {
+constexpr char levelChar(Level const level) {
 	switch (level) {
 	case Level::eError: return 'E';
 	case Level::eWarn: return 'W';

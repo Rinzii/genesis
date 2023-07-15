@@ -2,7 +2,7 @@
 #include <atomic>
 
 namespace gen::refactor::logger {
-auto Context::getThreadId() -> ThreadId {
+ThreadId Context::getThreadId() {
 	auto const get_next_id = [] {
 		static auto s_prevId{std::atomic<int>{}};
 		return s_prevId++;
@@ -11,7 +11,7 @@ auto Context::getThreadId() -> ThreadId {
 	return ThreadId{s_thisThreadId};
 }
 
-auto Context::make(std::string_view category, Level level, SrcLoc const& location) -> Context {
+Context Context::make(std::string_view category, Level level, SrcLoc const& location) {
 	return Context{
 		.category = category,
 		.timestamp = Clock::now(),
