@@ -1,29 +1,22 @@
 // Copyright (c) 2023-present Genesis Engine contributors (see LICENSE.txt)
 
 #include <application.hpp>
-
-#include <iostream>
-#include <stdexcept>
-
-#include <logger/log.hpp>
 #include <logger/instance.hpp>
-#include <future>
+#include <logger/log.hpp>
 
-int main()
-{
+int main() {
 	auto logger = gen::logger::Instance{};
 
-    gen::Application app;
+	gen::Application app;
 
 	gen::logger::info("Hello, world!");
 
 	try {
 		app.run();
-	} catch (const std::exception& e) {
-		//gen::logger::fatal(e.what());
-        return 1;
+	} catch (std::exception const& e) {
+		gen::logger::error(e.what());
+		return EXIT_FAILURE;
 	}
 
-    return 0;
+	return EXIT_SUCCESS;
 }
-
