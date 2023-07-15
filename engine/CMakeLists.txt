@@ -156,7 +156,7 @@ if (GENESIS_BUILD_SHADERS)
     # Add a custom command for each shader file.
     add_custom_command(
             TARGET CmakeCompileShaders
-            COMMAND ${DXC_EXECUTABLE_PATH} -spirv -T ${SHADER_TYPE}_${TARGET_SHADER_MODEL} -E Main ${ABSOLUTE_SHADER_SOURCE_FILE} -Fo ${OUTPUT_SHADER_FILE}.spv
+            COMMAND ${DXC_EXECUTABLE_PATH} -spirv -T ${SHADER_TYPE}_${TARGET_SHADER_MODEL} -E main ${ABSOLUTE_SHADER_SOURCE_FILE} -Fo ${OUTPUT_SHADER_FILE}.spv
             DEPENDS ${SHADER_SOURCE_FILE}
             COMMENT "Compiling ${SHADER_SOURCE_FILE} to SPIR-V"
             VERBATIM

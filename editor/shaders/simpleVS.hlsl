@@ -18,7 +18,7 @@ struct VSOutput
 };
 
 
-VSOutput Main(VSInput input)
+VSOutput main(VSInput input)
 {
     float2 position[3];
 
