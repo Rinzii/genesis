@@ -33,6 +33,7 @@ endif()
 
 option(GENESIS_BUILD_EDITOR "Build the genesis editor (else only library)" ON)
 option(GENESIS_BUILD_SHADERS "Build the genesis shaders" ON)
+option(GENESIS_BUILD_TOOLS "Build Genesis tools" ON)
 
 if(GENESIS_BUILD_EDITOR)
     set(GENESIS_BUILD_SHADERS ON)
@@ -44,4 +45,9 @@ add_subdirectory(engine)
 
 if(GENESIS_BUILD_EDITOR)
   add_subdirectory(editor)
+endif()
+
+
+if (GENESIS_BUILD_TOOLS)
+  add_subdirectory(tools/code-formatter)
 endif()
