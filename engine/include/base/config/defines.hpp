@@ -2,6 +2,8 @@
 
 #pragma once
 
+// clang-format off
+
 #ifndef GEN_TRUE
 	#define GEN_TRUE 1
 #endif

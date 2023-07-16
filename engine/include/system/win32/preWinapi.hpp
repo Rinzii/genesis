@@ -4,6 +4,8 @@
 
 #include "core.hpp"
 
+// clang-format off
+
 #if GEN_PLATFORM_WINDOWS
 
 // Save these macros for later; Windows redefines them

@@ -4,6 +4,8 @@
 
 #include "core.hpp"
 
+// clang-format off
+
 #if GEN_PLATFORM_WINDOWS
 
 #include "system/win32/preWinapi.hpp"
