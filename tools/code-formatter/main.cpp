@@ -38,7 +38,7 @@ struct Options {
 		}
 
 		if (!unmatched.empty()) {
-			if (unmatched.size() > 1) { throw unexpected_arg(unmatched.front()); }
+			if (unmatched.size() > 1) { throw unexpected_arg(unmatched[1]); }
 			rootDir = unmatched.front();
 		}
 	}
