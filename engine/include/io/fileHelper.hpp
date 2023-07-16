@@ -2,8 +2,11 @@
 
 #pragma once
 
-namespace gen {
+namespace gen
+{
 
-class fileHelper {};
+	class fileHelper
+	{
+	};
 
 } // namespace gen

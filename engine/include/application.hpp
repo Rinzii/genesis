@@ -3,32 +3,32 @@
 #pragma once
 
 #include "core.hpp"
-#include "windowing/window.hpp"
 #include "graphics/pipeline.hpp"
+#include "windowing/window.hpp"
 
-namespace gen {
+namespace gen
+{
 
-class Application {
-public:
+	class Application
+	{
+	public:
+		void run();
 
-    void run();
+	private:
+		void init();
+		void gameLoop();
+		void shutdown();
 
-private:
-	void init();
-	void gameLoop();
-	void shutdown();
+	private:
+		void initializeGraphics();
 
-private:
-	void initializeGraphics();
+	public:
+		static constexpr u32 m_width  = 800;
+		static constexpr u32 m_height = 600;
 
-public:
-	static constexpr u32 m_width = 800;
-	static constexpr u32 m_height = 600;
-
-private:
-	Window m_window{ m_width, m_height, "Genesis Engine" };
-	GraphicsPipeline m_graphicsPipeline{ };
-
-};
+	private:
+		Window m_window{m_width, m_height, "Genesis Engine"};
+		GraphicsPipeline m_graphicsPipeline{};
+	};
 
 } // namespace gen

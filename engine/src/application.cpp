@@ -4,27 +4,29 @@
 
 #include "application.hpp"
 
-namespace gen {
+namespace gen
+{
 
-	void Application::run() {
-        init();
+	void Application::run()
+	{
+		init();
 		gameLoop();
 		shutdown();
-    }
-	void Application::init() {
+	}
+	void Application::init()
+	{
 		initializeGraphics();
 	}
-	void Application::gameLoop() {
-		while (!m_window.shouldClose()) {
-            Window::pollEvents();
-        }
-
+	void Application::gameLoop()
+	{
+		while (!m_window.shouldClose()) { Window::pollEvents(); }
 	}
-	void Application::shutdown() {
-	}
-
-	void Application::initializeGraphics() {
-
+	void Application::shutdown()
+	{
 	}
 
-	} // namespace gen
+	void Application::initializeGraphics()
+	{
+	}
+
+} // namespace gen

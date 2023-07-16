@@ -18,10 +18,7 @@ namespace
 	class SingleStreamBuffer : public std::streambuf
 	{
 	public:
-		explicit SingleStreamBuffer(std::streambuf* buf)
-			: buf_(buf)
-		{
-		}
+		explicit SingleStreamBuffer(std::streambuf * buf) : buf_(buf) {}
 
 	protected:
 		int overflow(int c) override
@@ -32,22 +29,18 @@ namespace
 				const char character = static_cast<char>(c);
 
 				// Check if the buffer is valid
-				if (buf_)
-					buf_->sputc(character); // Add the character to the buffer
+				if (buf_) buf_->sputc(character); // Add the character to the buffer
 			}
 			return c;
 		}
 
-		std::streambuf* buf_;
+		std::streambuf * buf_;
 	}; // class SingleStreamBuffer
 
 	class SingleOutputStream : public std::ostream
 	{
 	public:
-		explicit SingleOutputStream(std::streambuf* buf)
-			: std::ostream(&singleStreamBuf_), singleStreamBuf_(buf)
-		{
-		}
+		explicit SingleOutputStream(std::streambuf * buf) : std::ostream(&singleStreamBuf_), singleStreamBuf_(buf) {}
 
 	private:
 		SingleStreamBuffer singleStreamBuf_;
@@ -61,7 +54,7 @@ namespace gen::logger
 	std::osyncstream log_stream(log_file);
 	std::mutex log_mutex;
 
-	std::ostream& trace(const std::string& message, const std::source_location& location)
+	std::ostream & trace(const std::string & message, const std::source_location & location)
 	{
 		static SingleOutputStream output_stream(std::cout.rdbuf());
 		std::lock_guard<std::mutex> lock(log_mutex);
@@ -69,8 +62,8 @@ namespace gen::logger
 		// TODO: Add a windows specific means of outputting to OutputDebugString
 
 		// Log to file
-		log_stream << "[TRACE] [" << Time::GetCurrentTime() << "] " << location.file_name() << ":" << location.line()
-				   << " - FUNC: " << location.function_name() << " - " << message << std::endl;
+		log_stream << "[TRACE] [" << Time::GetCurrentTime() << "] " << location.file_name() << ":" << location.line() << " - FUNC: " << location.function_name()
+				   << " - " << message << std::endl;
 
 		// Log to console
 		output_stream << "[TRACE] [" << Time::GetCurrentTime() << "] - " << location.file_name() << ":" << location.line()
@@ -78,7 +71,7 @@ namespace gen::logger
 		return output_stream;
 	}
 
-	std::ostream& log(const std::string& message, const std::source_location& location)
+	std::ostream & log(const std::string & message, const std::source_location & location)
 	{
 		static SingleOutputStream output_stream(std::cout.rdbuf());
 		std::lock_guard<std::mutex> lock(log_mutex);
@@ -86,8 +79,8 @@ namespace gen::logger
 		// TODO: Add a windows specific means of outputting to OutputDebugString
 
 		// Log to file
-		log_stream << "[LOG] [" << Time::GetCurrentTime() << "] " << location.file_name() << ":" << location.line()
-				   << " - FUNC: " << location.function_name() << " - " << message << std::endl;
+		log_stream << "[LOG] [" << Time::GetCurrentTime() << "] " << location.file_name() << ":" << location.line() << " - FUNC: " << location.function_name()
+				   << " - " << message << std::endl;
 
 		// Log to console
 		output_stream << "[LOG] [" << Time::GetCurrentTime() << "] - " << location.file_name() << ":" << location.line()
@@ -95,7 +88,7 @@ namespace gen::logger
 		return output_stream;
 	}
 
-	std::ostream& warn(const std::string& message, const std::source_location& location)
+	std::ostream & warn(const std::string & message, const std::source_location & location)
 	{
 		static SingleOutputStream output_stream(std::cout.rdbuf());
 		std::lock_guard<std::mutex> lock(log_mutex);
@@ -103,8 +96,8 @@ namespace gen::logger
 		// TODO: Add a windows specific means of outputting to OutputDebugString
 
 		// Log to file
-		log_stream << "[WARN] [" << Time::GetCurrentTime() << "] " << location.file_name() << ":" << location.line()
-				   << " - FUNC: " << location.function_name() << " - " << message << std::endl;
+		log_stream << "[WARN] [" << Time::GetCurrentTime() << "] " << location.file_name() << ":" << location.line() << " - FUNC: " << location.function_name()
+				   << " - " << message << std::endl;
 
 		// Log to console
 		output_stream << "[WARN] [" << Time::GetCurrentTime() << "] - " << location.file_name() << ":" << location.line()
@@ -112,7 +105,7 @@ namespace gen::logger
 		return output_stream;
 	}
 
-	std::ostream& error(const std::string& message, const std::source_location& location)
+	std::ostream & error(const std::string & message, const std::source_location & location)
 	{
 		static SingleOutputStream output_stream(std::cerr.rdbuf());
 		std::lock_guard<std::mutex> lock(log_mutex);
@@ -120,8 +113,8 @@ namespace gen::logger
 		// TODO: Add a windows specific means of outputting to OutputDebugString
 
 		// Log to file
-		log_stream << "[ERROR] [" << Time::GetCurrentTime() << "] " << location.file_name() << ":" << location.line()
-				   << " - FUNC: " << location.function_name() << " - " << message << std::endl;
+		log_stream << "[ERROR] [" << Time::GetCurrentTime() << "] " << location.file_name() << ":" << location.line() << " - FUNC: " << location.function_name()
+				   << " - " << message << std::endl;
 
 		// Log to console
 		output_stream << "[ERROR] [" << Time::GetCurrentTime() << "] - " << location.file_name() << ":" << location.line()
@@ -129,7 +122,7 @@ namespace gen::logger
 		return output_stream;
 	}
 
-	std::ostream& fatal(const std::string& message, const std::source_location& location)
+	std::ostream & fatal(const std::string & message, const std::source_location & location)
 	{
 		static SingleOutputStream output_stream(std::cerr.rdbuf());
 		std::lock_guard<std::mutex> lock(log_mutex);
@@ -150,5 +143,4 @@ namespace gen::logger
 		return output_stream;
 	}
 
-
-} // namespace gen
+} // namespace gen::logger

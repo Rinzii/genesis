@@ -16,9 +16,9 @@ set(base_headers
         )
 
 set(graphics_headers
-		include/graphics/pipeline.hpp
+        include/graphics/pipeline.hpp
         include/graphics/vkHelpers.hpp
-		)
+        )
 
 set(io_headers
         include/io/fileAsync.hpp
@@ -51,7 +51,7 @@ set(windowing_headers
 # core header include
 set(genesis_headers
         ${base_headers}
-		${graphics_headers}
+        ${graphics_headers}
         ${io_headers}
         ${system_headers}
         ${util_headers}
@@ -59,7 +59,7 @@ set(genesis_headers
         include/application.hpp
         include/core.hpp
         include/log.hpp
-		include/time.hpp
+        include/time.hpp
         )
 
 

@@ -2,37 +2,34 @@
 
 #pragma once
 
+#include <vulkan/vulkan.hpp>
 #include <string>
 #include <vector>
-#include <vulkan/vulkan.hpp>
 
 #include "core.hpp"
 
-namespace gen {
+namespace gen
+{
 
-    class GraphicsPipeline {
-    public:
+	class GraphicsPipeline
+	{
+	public:
 		GraphicsPipeline();
 		~GraphicsPipeline();
 
-    private:
-        static std::vector<char> readFile(const std::string& filePath);
+	private:
+		static std::vector<char> readFile(const std::string & filePath);
 
-        void createGraphicsPipeline();
+		void createGraphicsPipeline();
 		void destroyGraphicsPipeline();
 
-		void createInstance(std::string const & appName,
-							std::string const & engineName,
-							std::vector<std::string> const & layers,
-							std::vector<std::string> const & extensions,
-							u32 const & appVersion
-		);
+		void createInstance(std::string const & appName, std::string const & engineName, std::vector<std::string> const & layers,
+							std::vector<std::string> const & extensions, u32 const & appVersion);
 
 		void createDebugMessenger();
 
-
 		vk::Instance m_instance;
 		vk::DebugUtilsMessengerEXT m_debugMessenger;
-    };
+	};
 
 } // namespace gen

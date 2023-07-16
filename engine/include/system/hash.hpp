@@ -6,7 +6,7 @@
 
 namespace gen
 {
-    using THash32 = u32;
+	using THash32 = u32;
 	using THash64 = u64;
 
-}
+} // namespace gen

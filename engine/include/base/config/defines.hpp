@@ -10,7 +10,6 @@
 	#define GEN_FALSE 0
 #endif
 
-
 #ifndef GEN_IMPORT
 	#if defined(GEN_COMPILER_MSVC)
 		#define GEN_IMPORT __declspec(dllimport)
@@ -20,7 +19,6 @@
 		#define GEN_IMPORT
 	#endif
 #endif
-
 
 #ifndef GEN_EXPORT
 	#if defined(_MSC_VER)
@@ -32,14 +30,12 @@
 	#endif
 #endif
 
-
 // For Visual C++ compilers, we also need to turn off this annoying C4251 warning
 #ifdef _MSC_VER
 
 	#pragma warning(disable : 4251)
 
 #endif
-
 
 // Define portable import / export macros
 #if defined(GEN_DLL)
@@ -52,7 +48,6 @@
 	#define GEN_API
 #endif
 
-
 // Portable debug macro - this should be defined in cmake but just in case double check
 #if !defined(NDEBUG)
 	#if !defined(GEN_DEBUG)
@@ -60,19 +55,19 @@
 	#endif
 #endif
 
-
-namespace gen {
-constexpr bool debug_v =
+namespace gen
+{
+	constexpr bool debug_v =
 #if defined(GEN_DEBUG)
-	true;
+		true;
 #else
-	false;
+		false;
 #endif
 
-constexpr bool freetype_v =
+	constexpr bool freetype_v =
 #if defined(GEN_USE_FREETYPE)
-	true;
+		true;
 #else
-	false;
+		false;
 #endif
 } // namespace gen

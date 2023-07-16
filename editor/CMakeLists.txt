@@ -6,7 +6,7 @@ target_link_libraries(genesis-editor PRIVATE
         )
 target_include_directories(genesis-editor PRIVATE src)
 
-if(CMAKE_CXX_COMPILER_ID STREQUAL Clang OR CMAKE_CXX_COMPILER_ID STREQUAL GNU)
+if (CMAKE_CXX_COMPILER_ID STREQUAL Clang OR CMAKE_CXX_COMPILER_ID STREQUAL GNU)
   target_compile_options(genesis-editor PRIVATE
           -Wall -Wextra -Wpedantic -Wconversion -Werror=return-type
           )
@@ -14,14 +14,14 @@ elseif (CMAKE_CXX_COMPILER_ID STREQUAL MSVC)
   target_compile_options(genesis-editor PRIVATE
           /W4 /WX
           )
-endif()
+endif ()
 
 
 target_sources(genesis-editor PRIVATE
         src/main.cpp
         )
 
-if(GENESIS_PCH)
+if (GENESIS_PCH)
   target_precompile_headers(genesis-editor PRIVATE
           <algorithm>
           <atomic>
@@ -37,4 +37,4 @@ if(GENESIS_PCH)
           <variant>
           <vector>
           )
-endif()
+endif ()

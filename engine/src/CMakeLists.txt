@@ -6,5 +6,5 @@ add_subdirectory(windowing)
 target_sources(${PROJECT_NAME} PRIVATE
         application.cpp
         log.cpp
-		time.cpp
+        time.cpp
         )

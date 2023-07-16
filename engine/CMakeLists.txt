@@ -18,7 +18,7 @@ if (GENESIS_ENABLE_SIMD)
   # If the code decides it can then GEN_SIMD will be defined along with a bunch of other SIMD related defines.
   # This definition is only used once to to allow GEN_SIMD to figure out if it can be enabled and nowhere else.
   add_compile_definitions(INTERNAL_GEN_SIMD_ENABLE)
-endif()
+endif ()
 
 if (CMAKE_CXX_COMPILER_ID STREQUAL MSVC)
   # Make MSVC shut up about not actually deprecated functions
@@ -27,7 +27,7 @@ endif ()
 
 
 # COMPILER FLAGS
-if(CMAKE_CXX_COMPILER_ID STREQUAL Clang OR CMAKE_CXX_COMPILER_ID STREQUAL GNU)
+if (CMAKE_CXX_COMPILER_ID STREQUAL Clang OR CMAKE_CXX_COMPILER_ID STREQUAL GNU)
   target_compile_options(genesis PRIVATE
           -Wall -Wextra -Wpedantic -Wconversion -Werror=return-type
           )
@@ -35,7 +35,7 @@ elseif (CMAKE_CXX_COMPILER_ID STREQUAL MSVC)
   target_compile_options(genesis PRIVATE
           /W4 /WX
           )
-endif()
+endif ()
 
 if (GENESIS_BUILD_SHADERS)
 
@@ -51,7 +51,6 @@ if (GENESIS_BUILD_SHADERS)
   endif ()
 
 
-
   # Identify the DXC executable path based on the current platform
   if (GENESIS_OS_WINDOWS)
     if (GENESIS_ARCH_X64)
@@ -60,7 +59,7 @@ if (GENESIS_BUILD_SHADERS)
       set(DXC_EXECUTABLE_PATH "${CMAKE_SOURCE_DIR}/tools/dxc/windows/bin/x86/dxc.exe")
     elseif (GENESIS_ARCH_ARM OR GENESIS_ARCH_ARM64)
       set(DXC_EXECUTABLE_PATH "${CMAKE_SOURCE_DIR}/tools/dxc/windows/bin/arm64/dxc.exe")
-    else()
+    else ()
       message(FATAL_ERROR "DXC does not support this platform")
     endif ()
   elseif (GENESIS_OS_LINUX)
@@ -68,7 +67,7 @@ if (GENESIS_BUILD_SHADERS)
   elseif (GENESIS_OS_MACOS)
     message(STATUS "Genesis has not tested DXC with MacOS and it may not work at all")
     set(DXC_EXECUTABLE_PATH "${CMAKE_SOURCE_DIR}/tools/dxc/linux/bin/dxc")
-  else()
+  else ()
     message(FATAL_ERROR "DXC does not support this platform")
   endif ()
 
@@ -101,7 +100,7 @@ if (GENESIS_BUILD_SHADERS)
           "${INPUT_DIRECTORY}/*.hlsl"
           )
 
-  foreach(SHADER_SOURCE_FILE ${SHADER_SOURCE_FILES})
+  foreach (SHADER_SOURCE_FILE ${SHADER_SOURCE_FILES})
     get_filename_component(SHADER_NAME ${SHADER_SOURCE_FILE} NAME)
     get_filename_component(SHADER_EXTENSION ${SHADER_NAME} EXT)
 
@@ -124,17 +123,17 @@ if (GENESIS_BUILD_SHADERS)
         endif ()
         message(WARNING "WARNING: Library shaders may not work with spirv")
         set(SHADER_TYPE "lib")
-      else()
+      else ()
         set(SHADER_TYPE "UNKNOWN")
-      endif()
+      endif ()
 
       set_source_files_properties(${SHADER_SOURCE_FILE} PROPERTIES ShaderType ${SHADER_TYPE})
-    endif()
-  endforeach()
+    endif ()
+  endforeach ()
 
 
   # Iterate over each source file and add a custom command for conversion
-  foreach(SHADER_SOURCE_FILE ${SHADER_SOURCE_FILES})
+  foreach (SHADER_SOURCE_FILE ${SHADER_SOURCE_FILES})
     # Get the filename without extension
     get_filename_component(SHADER_NAME ${SHADER_SOURCE_FILE} NAME_WE)
     get_source_file_property(SHADER_TYPE ${SHADER_SOURCE_FILE} ShaderType)
@@ -161,7 +160,7 @@ if (GENESIS_BUILD_SHADERS)
             COMMENT "Compiling ${SHADER_SOURCE_FILE} to SPIR-V"
             VERBATIM
     )
-  endforeach()
+  endforeach ()
 
   add_dependencies(genesis CmakeCompileShaders)
 endif ()
@@ -190,33 +189,33 @@ target_include_directories(genesis
 # Generate build version header
 configure_file(src/genesis_version.hpp.in "${CMAKE_CURRENT_BINARY_DIR}/include/genesis_version.hpp" @ONLY)
 
-if(CMAKE_GENERATOR MATCHES "^(Visual Studio)")
-    target_compile_options(genesis INTERFACE /MP)
-endif()
+if (CMAKE_GENERATOR MATCHES "^(Visual Studio)")
+  target_compile_options(genesis INTERFACE /MP)
+endif ()
 
 
 # PRECOMPILED HEADERS
-if(GENESIS_PCH)
-    target_precompile_headers(genesis PRIVATE
-            <vulkan/vulkan.hpp>
-            <vk_mem_alloc.h>
-            <algorithm>
-            <atomic>
-            <chrono>
-            <filesystem>
-            <functional>
-            <future>
-            <memory>
-            <mutex>
-            <optional>
-            <span>
-            <string>
-            <unordered_map>
-            <unordered_set>
-            <variant>
-            <vector>
-            )
-endif()
+if (GENESIS_PCH)
+  target_precompile_headers(genesis PRIVATE
+          <vulkan/vulkan.hpp>
+          <vk_mem_alloc.h>
+          <algorithm>
+          <atomic>
+          <chrono>
+          <filesystem>
+          <functional>
+          <future>
+          <memory>
+          <mutex>
+          <optional>
+          <span>
+          <string>
+          <unordered_map>
+          <unordered_set>
+          <variant>
+          <vector>
+          )
+endif ()
 message(STATUS "PRECOMPILED HEADERS: ${GENESIS_PCH}")
 
 

@@ -11,43 +11,42 @@
 // Forward declare GLFWwindow
 struct GLFWwindow;
 
-namespace gen {
+namespace gen
+{
 
-class Window {
-public:
-    Window(int w, int h, std::string title);
-    ~Window();
+	class Window
+	{
+	public:
+		Window(int w, int h, std::string title);
+		~Window();
 
-	Window(const Window&) = delete;
-	Window& operator=(const Window&) = delete;
+		Window(const Window &)			   = delete;
+		Window & operator=(const Window &) = delete;
 
+	public:
+		GEN_NODISCARD bool shouldClose() const;
+		static void pollEvents();
 
-public:
-	GEN_NODISCARD bool shouldClose() const;
-	static void pollEvents() ;
+	public:
+		GEN_NODISCARD inline int GetWidth() const { return m_width; }
+		GEN_NODISCARD inline int GetHeight() const { return m_height; }
+		GEN_NODISCARD inline const std::string & GetTitle() const { return m_title; }
 
+		// TODO: Currently these functions will break the window.
 
-public:
-	GEN_NODISCARD inline int GetWidth() const { return m_width; }
-	GEN_NODISCARD inline int GetHeight() const { return m_height; }
-	GEN_NODISCARD inline const std::string& GetTitle() const { return m_title; }
+		void inline SetWidth(int width) { m_width = width; }
+		void inline SetHeight(int height) { m_height = height; }
+		void inline SetTitle(const std::string & title) { m_title = title; }
 
+	private:
+		void init();
 
-	// TODO: Currently these functions will break the window.
+	private:
+		int m_width;
+		int m_height;
+		std::string m_title;
 
-	void inline SetWidth(int width) { m_width = width; }
-	void inline SetHeight(int height) { m_height = height; }
-	void inline SetTitle(const std::string& title) { m_title = title; }
-
-private:
-	void init();
-
-private:
-	int m_width;
-	int m_height;
-	std::string m_title;
-
-	GLFWwindow* m_window;
-};
+		GLFWwindow * m_window;
+	};
 
 } // namespace gen

@@ -8,15 +8,17 @@
 
 int main()
 {
-    gen::Application app;
+	gen::Application app;
 
-	try {
+	try
+	{
 		app.run();
-	} catch (const std::exception& e) {
+	}
+	catch (const std::exception & e)
+	{
 		gen::logger::fatal(e.what());
-        return 1;
+		return 1;
 	}
 
-    return 0;
+	return 0;
 }
-

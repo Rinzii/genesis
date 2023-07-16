@@ -45,26 +45,26 @@
 
 // Clang's GCC-compatible driver.
 #if defined(__clang__) && !defined(_MSC_VER)
-	#define GEN_COMPILER_CLANG 1
+	#define GEN_COMPILER_CLANG	 1
 	#define GEN_COMPILER_VERSION (__clang_major__ * 100 + __clang_minor__)
-	#define GEN_COMPILER_NAME "clang"
-	#define GEN_COMPILER_STRING GEN_COMPILER_NAME __clang_version__
+	#define GEN_COMPILER_NAME	 "clang"
+	#define GEN_COMPILER_STRING	 GEN_COMPILER_NAME __clang_version__
 
 // GCC (a.k.a. GNUC)
 #elif defined(__GNUC__)
 	// Define interchangeably between GCC and GNUC. Though GEN_COMPILER_GCC is preferred.
-	#define GEN_COMPILER_GCC 1
-	#define GEN_COMPILER_GNUC 1
+	#define GEN_COMPILER_GCC	 1
+	#define GEN_COMPILER_GNUC	 1
 	#define GEN_COMPILER_VERSION (__GNUC__ * 1000 + __GNUC_MINOR__)
-	#define GEN_COMPILER_NAME "GCC"
-	#define GEN_COMPILER_STRING GEN_COMPILER_NAME " compiler, version " INTERNAL_STRINGIFY(__GNUC__) "." INTERNAL_STRINGIFY(__GNUC_MINOR__)
+	#define GEN_COMPILER_NAME	 "GCC"
+	#define GEN_COMPILER_STRING	 GEN_COMPILER_NAME " compiler, version " INTERNAL_STRINGIFY(__GNUC__) "." INTERNAL_STRINGIFY(__GNUC_MINOR__)
 
 #elif defined(_MSC_VER) // TODO: Validate everything is properly being set for MSVC
-	#define GEN_COMPILER_MSVC 1
+	#define GEN_COMPILER_MSVC	   1
 	#define GEN_COMPILER_MICROSOFT 1
-	#define GEN_COMPILER_VERSION _MSC_VER
-	#define GEN_COMPILER_NAME "Microsoft Visual C++"
-	#define GEN_COMPILER_STRING GEN_COMPILER_NAME " compiler, version " INTERNAL_STRINGIFY(_MSC_VER)
+	#define GEN_COMPILER_VERSION   _MSC_VER
+	#define GEN_COMPILER_NAME	   "Microsoft Visual C++"
+	#define GEN_COMPILER_STRING	   GEN_COMPILER_NAME " compiler, version " INTERNAL_STRINGIFY(_MSC_VER)
 
 	#if defined(__clang__)
 		// Clang's MSVC-compatible driver.
