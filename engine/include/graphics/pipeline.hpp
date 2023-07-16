@@ -7,14 +7,14 @@
 
 namespace gen {
 
-    class Pipeline {
-    public:
-        Pipeline(const std::string& vertFilePath, const std::string& fragFilePath);
+class Pipeline {
+public:
+	Pipeline(std::string const& vertFilePath, std::string const& fragFilePath);
 
-    private:
-        static std::vector<char> readFile(const std::string& filePath);
+private:
+	static std::vector<char> readFile(std::string const& filePath);
 
-        void createGraphicsPipeline(const std::string& vertFilePath, const std::string &fragFilePath);
-    };
+	void createGraphicsPipeline(std::string const& vertFilePath, std::string const& fragFilePath);
+};
 
 } // namespace gen

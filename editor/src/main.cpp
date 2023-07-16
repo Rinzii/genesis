@@ -6,19 +6,17 @@
 #include <iostream>
 #include <stdexcept>
 
-int main()
-{
-    gen::Application app;
+int main() {
+	gen::Application app;
 
 	gen::logger::log("Hello, world!");
 
 	try {
 		app.run();
-	} catch (const std::exception& e) {
-		//gen::logger::fatal(e.what());
-        return 1;
+	} catch (std::exception const& e) {
+		// gen::logger::fatal(e.what());
+		return 1;
 	}
 
-    return 0;
+	return 0;
 }
-

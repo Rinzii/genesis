@@ -2,6 +2,4 @@
 
 #include "io/fileAsync.hpp"
 
-namespace gen {
-
-} // namespace gen
+namespace gen {} // namespace gen
