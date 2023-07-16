@@ -20,6 +20,8 @@ jobs:
         run: cmake -S . --preset=default -B build -DCMAKE_CXX_COMPILER=g++-13
       - name: configure clang
         run: cmake -S . --preset=default -B clang -DCMAKE_CXX_COMPILER=clang++-16
+      - name: configure gcc no pch
+        run: cmake -S . --preset=ninja-nopch -B nopch -DCMAKE_CXX_COMPILER=clang++-16
       - name: build gcc release
         run: cmake --build build --config=Release
       - name: build gcc debug
@@ -28,6 +30,8 @@ jobs:
         run: cmake --build clang --config=Release
       - name: build clang debug
         run: cmake --build clang --config=Debug
+      - name: build no pch
+        run: cmake --build nopch --config=Debug
 
   build-windows:
     runs-on: windows-latest
@@ -35,8 +39,11 @@ jobs:
       - uses: actions/checkout@v2
       - name: configure
         run: cmake -S . --preset=vs22 -B build
+      - name: configure nopch
+        run: cmake -S . --preset=vs22-nopch -B nopch
       - name: build release
         run: cmake --build build --config=Release
       - name: build debug
         run: cmake --build build --config=Debug
-
+      - name: build no pch
+        run: cmake --build nopch --config=Debug

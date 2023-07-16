@@ -60,6 +60,15 @@
       "generator": "Visual Studio 17 2022"
     },
     {
+      "name": "vs22-nopch",
+      "description": "Build configuration using Visual Studio 17 (2022) / No PCH",
+      "inherits": "vs19",
+      "generator": "Visual Studio 17 2022",
+      "cacheVariables": {
+        "GENESIS_PCH": "OFF"
+      }
+    },
+    {
       "name": "pre-install",
       "description": "Debug build using Ninja Multi-config and install prefix",
       "inherits": "default",
