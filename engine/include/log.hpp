@@ -4,6 +4,7 @@
 
 #include "core.hpp"
 #include <source_location>
+#include <ostream>
 
 
 namespace gen::logger
