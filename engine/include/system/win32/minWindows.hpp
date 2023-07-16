@@ -2,6 +2,8 @@
 
 #include "core.hpp"
 
+// clang-format off
+
 #if defined(GEN_PLATFORM_WINDOWS)
 
 #if defined(_WINDOWS_) && !defined(GEN_MINIMAL_WINDOWS_INCLUDE)

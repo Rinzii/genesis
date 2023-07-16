@@ -2,6 +2,8 @@
 
 #pragma once
 
+// clang-format off
+
 #if (defined(GEN_PLATFORM_WINDOWS) || (defined(_WIN32) || defined(__WIN32__) || defined(_WIN64))) && !defined(CS_UNDEFINED_STRING)
 	#undef GEN_PLATFORM_WINDOWS
 	#define GEN_PLATFORM_WINDOWS 1
