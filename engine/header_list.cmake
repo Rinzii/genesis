@@ -35,7 +35,6 @@ set(system_win32_headers
 
 set(system_headers
         ${system_win32_headers}
-        include/system/hash.hpp
         include/system/types.hpp
         )
 

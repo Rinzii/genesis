@@ -14,16 +14,20 @@ public:
     void run();
 
 private:
+	/// Core functions
+
 	void init();
 	void gameLoop();
 	void shutdown();
 
-private:
+
+	/// Initialization functions
+
 	void initializeGraphics();
 
 public:
-	static constexpr u32 m_width = 800;
-	static constexpr u32 m_height = 600;
+	static const u32 m_width = 800;
+	static const u32 m_height = 600;
 
 private:
 	Window m_window{ m_width, m_height, "Genesis Engine" };

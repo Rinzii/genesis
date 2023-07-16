@@ -35,6 +35,15 @@
       }
     },
     {
+      "name": "ninja-nopch",
+      "description": "Build configuration using Ninja Multi-config / no PCH",
+      "inherits": "default",
+      "binaryDir": "${sourceDir}/out/nopch",
+      "cacheVariables": {
+        "GENESIS_PCH": "OFF"
+      }
+    },
+    {
       "name": "vs19",
       "description": "Build configuration using Visual Studio 16 (2019)",
       "generator": "Visual Studio 16 2019",
