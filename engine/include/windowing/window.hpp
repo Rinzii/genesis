@@ -31,6 +31,7 @@ public:
 	GEN_NODISCARD inline int GetWidth() const { return m_width; }
 	GEN_NODISCARD inline int GetHeight() const { return m_height; }
 	GEN_NODISCARD inline const std::string& GetTitle() const { return m_title; }
+	GEN_NODISCARD inline GLFWwindow& GetGLFWWindow() { return *m_window; }
 
 
 	// TODO: Currently these functions will break the window.

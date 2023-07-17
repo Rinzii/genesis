@@ -17,6 +17,8 @@ public:
 	static constexpr u32 m_width = 800;
 	static constexpr u32 m_height = 600;
 
+	Window& GetWindow();
+
 private:
 	Window m_window{ 800, 600, "Genesis Engine" };
 
