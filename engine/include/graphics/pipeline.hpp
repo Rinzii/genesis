@@ -19,16 +19,7 @@ namespace gen {
         static std::vector<char> readFile(const std::string& filePath);
 
         void createGraphicsPipeline();
-		void destroyGraphicsPipeline();
 
-		void createInstance(std::string const & appName,
-							std::string const & engineName,
-							std::vector<std::string> const & layers,
-							std::vector<std::string> const & extensions,
-							u32 const & appVersion
-		);
-
-		void createDebugMessenger();
 
 
 		vk::Instance m_instance;
