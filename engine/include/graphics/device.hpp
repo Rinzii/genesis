@@ -91,6 +91,12 @@ namespace gen
 		void createLogicalDevice();
 		void createCommandPool();
 
+		bool isDeviceSuitable(vk::PhysicalDevice device);
+		std::vector<const char *> getRequiredExtensions();
+		bool checkValidationLayerSupport();
+		QueueFamilyIndices findQueueFamilies(vk::PhysicalDevice device);
+
+
 
 
 

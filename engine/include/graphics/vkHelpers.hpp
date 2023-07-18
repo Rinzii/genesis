@@ -2,10 +2,12 @@
 
 #pragma once
 
-#include "core.hpp"
 #include <vulkan/vulkan.hpp>
-#include <vector>
+#include <set>
 #include <string>
+#include <unordered_set>
+#include <vector>
+#include "core.hpp"
 
 namespace vk::util {
 
@@ -104,5 +106,49 @@ VKAPI_ATTR VkBool32 VKAPI_CALL debugUtilsMessengerCallback( VkDebugUtilsMessageS
 					vk::DebugUtilsMessageTypeFlagBitsEXT::eValidation,
 				&vk::util::debugUtilsMessengerCallback };
 	}
+
+	bool checkValidationLayerSupport(const std::vector<const char*>& validationLayers)
+	{
+#if !defined(NDEBUG) || !defined(GEN_NDEBUG)
+        auto availableLayers = vk::enumerateInstanceLayerProperties();
+
+        for (auto const& layerName : validationLayers)
+        {
+            bool layerFound = false;
+
+            for (auto const& layerProperties : availableLayers)
+            {
+                if (strcmp(layerName, layerProperties.layerName) == 0)
+                {
+                    layerFound = true;
+                    break;
+                }
+            }
+
+            if (!layerFound)
+            {
+                return false;
+            }
+        }
+
+        return true;
+#else
+		return true;
+#endif
+	}
+
+	bool checkDeviceExtensionSupport(vk::PhysicalDevice device, const std::vector<const char*>& deviceExtensions)
+    {
+        auto availableExtensions = device.enumerateDeviceExtensionProperties();
+
+        std::set<std::string> requiredExtensions(deviceExtensions.begin(), deviceExtensions.end());
+
+        for (auto const& extension : availableExtensions)
+        {
+            requiredExtensions.erase(extension.extensionName);
+        }
+
+        return requiredExtensions.empty();
+    }
 
 } // namespace vk::util

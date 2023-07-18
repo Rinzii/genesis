@@ -8,7 +8,7 @@ namespace gen
 
 	GraphicsDevice::GraphicsDevice(gen::Window & window) : m_window{window}
 	{
-		createInstance("Genesis Engine", "Genesis Engine", {}, {}, VK_API_VERSION_1_0);
+		createInstance(window.GetTitle(), "Genesis Engine", {}, {}, VK_API_VERSION_1_0);
 	    createDebugMessenger();
 	}
 
@@ -29,12 +29,21 @@ namespace gen
 											 const std::vector<std::string> & extensions, const gen::u32 & apiVersion)
 	{
 #if (VULKAN_HPP_DISPATCH_LOADER_DYNAMIC == 1)
-		static vk::DynamicLoader dl;
-		auto vkGetInstanceProcAddr = dl.getProcAddress<PFN_vkGetInstanceProcAddr>("vkGetInstanceProcAddr");
+		static vk::DynamicLoader const vkdl;
+		auto vkGetInstanceProcAddr = vkdl.getProcAddress<PFN_vkGetInstanceProcAddr>("vkGetInstanceProcAddr");
 		VULKAN_HPP_DEFAULT_DISPATCHER.init(vkGetInstanceProcAddr);
 #endif
+		if (enableValidationLayers && !vk::util::checkValidationLayerSupport(validationLayers))
+        {
+            throw std::runtime_error("validation layers requested, but not available!");
+        }
 
-		vk::ApplicationInfo const appInfo(appName.c_str(), gen::version_v.getVersion(), engineName.c_str(), gen::version_v.getVersion(), apiVersion);
+		vk::ApplicationInfo const appInfo(
+			appName.c_str(),
+			gen::version_v.getVersion(),
+			engineName.c_str(),
+			gen::version_v.getVersion(),
+			apiVersion);
 
 		vk::InstanceCreateInfo const createInfo({}, &appInfo);
 
@@ -59,6 +68,8 @@ namespace gen
 		VULKAN_HPP_DEFAULT_DISPATCHER.init(m_instance);
 #endif
 	}
+
+
 	void GraphicsDevice::createDebugMessenger()
 	{
 #if !defined(NDEBUG) || !defined(GEN_NDEBUG)
