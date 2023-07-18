@@ -10,8 +10,8 @@ namespace gen
 	{
 	public:
 
-		void setWorldRotation(mim::quat<float>& newRot);
-		void setWorldRotation(mim::vec3<float>& newRot);
+		void setWorldRotation(const mim::quat<float>& newRot);
+		void setWorldRotation(const mim::vec3<float>& newRot);
 		void setWorldPosition(const mim::vec3<float>& newPos);
 		void setWorldScale(const mim::vec3<float>& newScale);
 
