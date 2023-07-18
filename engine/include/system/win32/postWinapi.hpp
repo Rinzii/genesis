@@ -4,6 +4,8 @@
 
 #include "core.hpp"
 
+// clang-format off
+
 #if GEN_PLATFORM_WINDOWS
 
 // Hide Windows-only types (same as HideWindowsPlatformTypes.h)

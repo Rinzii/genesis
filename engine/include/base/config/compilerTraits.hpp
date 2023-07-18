@@ -6,6 +6,8 @@
 
 #include "base/config/compiler.hpp"
 
+// clang-format off
+
 // https://learn.microsoft.com/en-us/cpp/intrinsics/compiler-intrinsics?view=msvc-170
 // https://clang.llvm.org/docs/LanguageExtensions.html
 // https://gcc.gnu.org/onlinedocs/gcc-4.8.5/gcc/X86-Built-in-Functions.html
