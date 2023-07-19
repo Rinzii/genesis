@@ -5,6 +5,7 @@
 #include "inputs/controller.hpp"
 #include <iostream>
 #include <stdexcept>
+#include "../../ext/src/glfw/include/GLFW/glfw3.h" //temp
 
 int main()
 {
@@ -16,7 +17,10 @@ int main()
 		while (!app.getWindow().shouldClose()) {
 			gen::Window::pollEvents();
 			gen::controllerManager::updateControllers();
-			//gen::controllerManager::getController(0)->printKey();
+
+			if (gen::controllerManager::getController(0) != nullptr)
+				std::cout << glfwGetGamepadName(0) << std::endl;
+			
 		}
 	} catch (const std::exception& e) {
 		//gen::logger::fatal(e.what());

@@ -34,10 +34,15 @@ namespace gen
 		GEN_NODISCARD mim::vec2<float> getLeftJoystick() const;
 		GEN_NODISCARD float getLeftJoystickX() const;
 		GEN_NODISCARD float getLeftJoystickY() const;
+		GEN_NODISCARD bool getLeftJoystickButton() const;
 
 		GEN_NODISCARD mim::vec2<float> getRightJoystick() const;
 		GEN_NODISCARD float getRightJoystickX() const;
 		GEN_NODISCARD float getRightJoystickY() const;
+		GEN_NODISCARD bool getRightJoystickButton() const;
+
+		GEN_NODISCARD bool getLeftBumper() const;
+		GEN_NODISCARD bool getRightBumper() const;
 
 		GEN_NODISCARD bool getUp() const;
 		GEN_NODISCARD bool getDown() const;
@@ -51,7 +56,7 @@ namespace gen
 
 		GEN_NODISCARD int getID() const;
 
-	//private:
+	private:
 
 		int m_id;
 

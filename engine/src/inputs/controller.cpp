@@ -3,6 +3,8 @@
 #include "inputs/controller.hpp"
 
 #include <vector>
+#include <map>
+#include <string>
 #include <GLFW/glfw3.h>
 #include <iostream>
 
@@ -12,6 +14,24 @@ namespace gen
 	{
 		namespace
 		{
+			std::map<int, std::string> g_inputsToText = {
+				{ GLFW_GAMEPAD_BUTTON_A, "A" },
+				{ GLFW_GAMEPAD_BUTTON_B, "B" },
+				{ GLFW_GAMEPAD_BUTTON_X, "X" },
+				{ GLFW_GAMEPAD_BUTTON_Y, "Y" },
+				{ GLFW_GAMEPAD_BUTTON_DPAD_UP,"DPadUp" },
+				{ GLFW_GAMEPAD_BUTTON_DPAD_LEFT, "DPadLeft" },
+				{ GLFW_GAMEPAD_BUTTON_DPAD_RIGHT, "DPadRight" },
+				{ GLFW_GAMEPAD_BUTTON_DPAD_DOWN, "DPadDown" },
+				{ GLFW_GAMEPAD_BUTTON_LEFT_BUMPER, "LeftBumper" },
+				{ GLFW_GAMEPAD_BUTTON_RIGHT_BUMPER, "RightBumper" },
+				{ GLFW_GAMEPAD_BUTTON_LEFT_THUMB, "LeftJoystickPress" },
+				{ GLFW_GAMEPAD_AXIS_LEFT_TRIGGER,"LeftTrigger" },
+				{ GLFW_GAMEPAD_AXIS_RIGHT_TRIGGER,"RightTrigger" },
+				{ GLFW_GAMEPAD_BUTTON_START,"Start" },
+				{ GLFW_GAMEPAD_BUTTON_GUIDE,"Guide" },
+			};
+
 			std::vector<Controller> g_connectedControllers; //Max 16 (because of GLFW)
 		}
 
@@ -81,13 +101,13 @@ namespace gen
 
 	void Controller::printKey() const
 	{
-		for (unsigned i = 0; i < m_buttonsCount; i++)
+		for (int i = 0; i < m_buttonsCount; i++)
 			if (m_buttons[i] == GLFW_PRESS)
-				std::cout << i << std::endl;
+				std::cout << controllerManager::g_inputsToText[i] << std::endl;
 
-		for (unsigned i = 0; i < m_axesCount; i++)
+		for (int i = 0; i < m_axesCount; i++)
 			if (m_axes[i] == GLFW_PRESS)
-				std::cout << i << std::endl;
+				std::cout << controllerManager::g_inputsToText[i] << std::endl;
 	}
 
 	mim::vec2<float> Controller::getLeftJoystick() const
@@ -105,6 +125,11 @@ namespace gen
 		return m_axes[GLFW_GAMEPAD_AXIS_LEFT_Y];
 	}
 
+	bool Controller::getLeftJoystickButton() const
+	{
+		return m_buttons[GLFW_GAMEPAD_BUTTON_LEFT_THUMB];
+	}
+
 	mim::vec2<float> Controller::getRightJoystick() const
 	{
 		return { m_axes[GLFW_GAMEPAD_AXIS_RIGHT_X], m_axes[GLFW_GAMEPAD_AXIS_RIGHT_Y] };
@@ -118,6 +143,21 @@ namespace gen
 	float Controller::getRightJoystickY() const
 	{
 		return m_axes[GLFW_GAMEPAD_AXIS_RIGHT_Y];
+	}
+
+	bool Controller::getRightJoystickButton() const
+	{
+		return m_buttons[GLFW_GAMEPAD_BUTTON_RIGHT_THUMB];
+	}
+
+	bool Controller::getLeftBumper() const
+	{
+		return m_buttons[GLFW_GAMEPAD_BUTTON_LEFT_BUMPER];
+	}
+
+	bool Controller::getRightBumper() const
+	{
+		return m_buttons[GLFW_GAMEPAD_BUTTON_RIGHT_BUMPER];
 	}
 
 	bool Controller::getUp() const
