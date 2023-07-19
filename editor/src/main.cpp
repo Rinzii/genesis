@@ -2,18 +2,22 @@
 
 #include <application.hpp>
 #include <log.hpp>
-
+#include "inputs/controller.hpp"
 #include <iostream>
 #include <stdexcept>
-
+#include "../../ext/src/glfw/include/GLFW/glfw3.h"
 int main()
 {
     gen::Application app;
-
+	gen::controllerManager::init();
 	gen::logger::log("Hello, world!");
 
 	try {
-		app.run();
+		while (!app.getWindow().shouldClose()) {
+			gen::Window::pollEvents();
+			gen::controllerManager::updateControllers();
+			gen::controllerManager::getController(0)->printKey();
+		}
 	} catch (const std::exception& e) {
 		//gen::logger::fatal(e.what());
         return 1;
