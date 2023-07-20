@@ -26,8 +26,8 @@ namespace gen
 				{ GLFW_GAMEPAD_BUTTON_LEFT_BUMPER, "LeftBumper" },
 				{ GLFW_GAMEPAD_BUTTON_RIGHT_BUMPER, "RightBumper" },
 				{ GLFW_GAMEPAD_BUTTON_LEFT_THUMB, "LeftJoystickPress" },
-				{ GLFW_GAMEPAD_AXIS_LEFT_TRIGGER,"LeftTrigger" },
-				{ GLFW_GAMEPAD_AXIS_RIGHT_TRIGGER,"RightTrigger" },
+				//{ GLFW_GAMEPAD_AXIS_LEFT_TRIGGER,"LeftTrigger" },
+				//{ GLFW_GAMEPAD_AXIS_RIGHT_TRIGGER,"RightTrigger" },
 				{ GLFW_GAMEPAD_BUTTON_START,"Start" },
 				{ GLFW_GAMEPAD_BUTTON_GUIDE,"Guide" },
 			};
@@ -105,9 +105,9 @@ namespace gen
 			if (m_buttons[i] == GLFW_PRESS)
 				std::cout << controllerManager::g_inputsToText[i] << std::endl;
 
-		for (int i = 0; i < m_axesCount; i++)
-			if (m_axes[i] == GLFW_PRESS)
-				std::cout << controllerManager::g_inputsToText[i] << std::endl;
+		//for (int i = 0; i < m_axesCount; i++)
+		//	if (m_axes[i] == GLFW_PRESS)
+		//		std::cout << controllerManager::g_inputsToText[i] << std::endl;
 	}
 
 	mim::vec2<float> Controller::getLeftJoystick() const
@@ -148,6 +148,16 @@ namespace gen
 	bool Controller::getRightJoystickButton() const
 	{
 		return m_buttons[GLFW_GAMEPAD_BUTTON_RIGHT_THUMB];
+	}
+
+	float Controller::getLeftTrigger() const
+	{
+		return m_axes[GLFW_GAMEPAD_AXIS_LEFT_TRIGGER];
+	}
+
+	float Controller::getRightTrigger() const
+	{
+		return m_axes[GLFW_GAMEPAD_AXIS_LEFT_TRIGGER];
 	}
 
 	bool Controller::getLeftBumper() const

@@ -41,6 +41,9 @@ namespace gen
 		GEN_NODISCARD float getRightJoystickY() const;
 		GEN_NODISCARD bool getRightJoystickButton() const;
 
+		GEN_NODISCARD float getLeftTrigger() const;
+		GEN_NODISCARD float getRightTrigger() const;
+
 		GEN_NODISCARD bool getLeftBumper() const;
 		GEN_NODISCARD bool getRightBumper() const;
 
@@ -56,7 +59,7 @@ namespace gen
 
 		GEN_NODISCARD int getID() const;
 
-	private:
+	//private:
 
 		int m_id;
 

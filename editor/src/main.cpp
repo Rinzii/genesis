@@ -19,8 +19,9 @@ int main()
 			gen::controllerManager::updateControllers();
 
 			if (gen::controllerManager::getController(0) != nullptr)
-				std::cout << glfwGetGamepadName(0) << std::endl;
-			
+				for (int i = 0; i < gen::controllerManager::getController(0)->m_buttonsCount; i++)
+					if (gen::controllerManager::getController(0)->m_buttons[i] == GLFW_PRESS)
+						std::cout << i << std::endl;
 		}
 	} catch (const std::exception& e) {
 		//gen::logger::fatal(e.what());
