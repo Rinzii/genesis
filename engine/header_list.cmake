@@ -55,6 +55,10 @@ set(windowing_headers
         include/windowing/window.hpp
         )
 
+set(entities_headers
+	include/entities/transform.hpp
+	)
+	
 # core header include
 set(genesis_headers
         ${base_headers}
@@ -64,11 +68,11 @@ set(genesis_headers
         ${util_headers}
         ${logger_headers}
         ${windowing_headers}
+		${entities_headers}
         include/application.hpp
         include/core.hpp
 		include/time.hpp
         )
-
 
 ##### General consensus on how we setup header_list.cmake #####
 #
