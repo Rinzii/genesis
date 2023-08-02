@@ -43,8 +43,6 @@ set(system_headers
 
 set(util_headers
         include/util/fixed_string.hpp
-        include/util/nonCopyable.hpp
-        include/util/nonMovable.hpp
         include/util/version.hpp
         )
 
