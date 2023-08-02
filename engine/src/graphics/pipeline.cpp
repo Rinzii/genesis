@@ -3,7 +3,7 @@
 #include "core.hpp"
 #include "graphics/pipeline.hpp"
 #include "graphics/vkHelpers.hpp"
-#include "log.hpp"
+#include "logger/log.hpp"
 
 #include <fstream>
 #include <stdexcept>
@@ -22,11 +22,13 @@ namespace gen {
     std::vector<char> GraphicsPipeline::readFile(const std::string & filePath) {
         std::ifstream file(filePath, std::ios::ate | std::ios::binary);
 
-	    if (!file.is_open()) {
+	    if (!file.is_open())
+		{
+			gen::logger::error("graphics", "failed to open file: " + filePath);
             throw std::runtime_error("failed to open file: " + filePath);
         }
 
-	    std::size_t fileSize = static_cast<size_t>(file.tellg());
+	    std::size_t const fileSize = static_cast<std::size_t>(file.tellg());
 
 		return std::vector<char>();
     }
@@ -34,6 +36,11 @@ namespace gen {
 	void GraphicsPipeline::createGraphicsPipeline() {
 
     }
+
+	void GraphicsPipeline::destroyGraphicsPipeline()
+	{
+
+	}
 
 
 

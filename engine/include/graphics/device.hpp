@@ -5,10 +5,10 @@
 
 #include "core.hpp"
 #include "windowing/window.hpp"
-#include "util/nonCopyable.hpp"
-#include "util/nonMovable.hpp"
 
 #include <vulkan/vulkan.hpp>
+
+#include <memory>
 
 
 
@@ -33,9 +33,15 @@ namespace gen
         }
     };
 
-	class GraphicsDevice : public NonCopyable, public NonMovable
+	class GraphicsDevice
 	{
 	public:
+		GraphicsDevice(const GraphicsDevice&) = delete;
+		GraphicsDevice& operator=(const GraphicsDevice&) = delete;
+		GraphicsDevice(GraphicsDevice&&) = delete;
+		GraphicsDevice& operator=(GraphicsDevice&&) = delete;
+
+
 #if defined(NDEBUG) || defined(GEN_NDEBUG)
 		static constexpr bool enableValidationLayers = false;
 #else
@@ -67,15 +73,21 @@ namespace gen
 
 		// Buffer helper functions
 
-		void createBuffer(vk::DeviceSize size, vk::BufferUsageFlags usage, vk::MemoryPropertyFlags properties, vk::Buffer& buffer, vk::DeviceMemory& bufferMemory);
+		void createBuffer(vk::DeviceSize size,
+						  vk::BufferUsageFlags usage,
+						  vk::MemoryPropertyFlags properties,
+						  vk::Buffer& buffer,
+						  vk::DeviceMemory& bufferMemory
+		);
 		vk::CommandBuffer beginSingleTimeCommands();
 		void endSingleTimeCommands(vk::CommandBuffer commandBuffer);
 		void copyBuffer(vk::Buffer srcBuffer, vk::Buffer dstBuffer, vk::DeviceSize size);
 		void copyBufferToImage(vk::Buffer buffer, vk::Image image, u32 width, u32 height, u32 layerCount);
-
-		void createImageWithInfo(const vk::ImageCreateInfo& imageInfo, vk::MemoryPropertyFlags properties, vk::Image& image, vk::DeviceMemory& imageMemory);
-
-		vk::PhysicalDeviceProperties m_physicalDeviceProperties;
+		void createImageWithInfo(const vk::ImageCreateInfo & imageInfo,
+								 vk::MemoryPropertyFlags properties,
+								 vk::Image & image,
+								 vk::DeviceMemory & imageMemory
+        );
 
 
 	private:
@@ -92,13 +104,9 @@ namespace gen
 		void createCommandPool();
 
 		bool isDeviceSuitable(vk::PhysicalDevice device);
-		std::vector<const char *> getRequiredExtensions();
-		bool checkValidationLayerSupport();
 		QueueFamilyIndices findQueueFamilies(vk::PhysicalDevice device);
-
-
-
-
+		bool checkDeviceExtensionSupport(vk::PhysicalDevice device);
+		SwapChainSupportDetails querySwapChainSupport(vk::PhysicalDevice device);
 
 
 
@@ -107,11 +115,14 @@ namespace gen
 		vk::PhysicalDevice m_physicalDevice;
 		vk::Device m_device;
 		vk::SurfaceKHR m_surface;
+
+		vk::PhysicalDeviceProperties m_physicalDeviceProperties;
+
 		vk::Queue m_graphicsQueue;
 		vk::Queue m_presentQueue;
 		vk::CommandPool m_commandPool;
 
-		Window &m_window;
+		Window &m_window; // NOLINT(cppcoreguidelines-avoid-const-or-ref-data-members)
 
 		const std::vector<const char *> validationLayers = {"VK_LAYER_KHRONOS_validation"};
 		const std::vector<const char *> deviceExtensions = {VK_KHR_SWAPCHAIN_EXTENSION_NAME};

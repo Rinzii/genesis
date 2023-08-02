@@ -2,7 +2,12 @@
 
 #include "windowing/window.hpp"
 
+#include "graphics/device.hpp"
+
 #include <GLFW/glfw3.h>
+
+#include <vulkan/vulkan.hpp>
+
 
 #include <utility>
 
@@ -18,7 +23,7 @@ namespace gen {
     }
 
 	bool Window::shouldClose() const {
-        return glfwWindowShouldClose(m_window);
+        return glfwWindowShouldClose(m_window) != 0;
     }
 
 	void Window::pollEvents() {
@@ -34,6 +39,14 @@ namespace gen {
 
     }
 
-
+	vk::SurfaceKHR Window::createWindowSurface(vk::Instance instance) {
+		VkSurfaceKHR _surface = nullptr;
+		const VkResult err = glfwCreateWindowSurface( static_cast<VkInstance>( instance ), m_window, nullptr, &_surface );
+		if ( err != VK_SUCCESS )
+		{
+			throw std::runtime_error( "Failed to create window!" );
+		}
+		return vk::SurfaceKHR( _surface ); // NOLINT(modernize-return-braced-init-list)
+    }
 
 } // namespace gwn

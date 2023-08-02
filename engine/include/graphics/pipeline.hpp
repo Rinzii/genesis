@@ -19,6 +19,7 @@ namespace gen {
         static std::vector<char> readFile(const std::string& filePath);
 
         void createGraphicsPipeline();
+		void destroyGraphicsPipeline();
 
 
 

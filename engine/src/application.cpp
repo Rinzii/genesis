@@ -1,4 +1,4 @@
-// Copyright Ian Pike. All Rights Reserved.
+// Copyright (c) 2023-present Genesis Engine contributors (see LICENSE.txt)
 
 // TODO: Replace this with a proper implementation
 
@@ -7,11 +7,11 @@
 namespace gen {
 
 	void Application::run() {
-        init();
+		initialize();
 		gameLoop();
 		shutdown();
     }
-	void Application::init() {
+	void Application::initialize() {
 		initializeGraphics();
 	}
 	void Application::gameLoop() {

@@ -8,12 +8,22 @@
 
 // TODO: Replace this with a proper implementation
 
-// Forward declare GLFWwindow
+// Start Forward declarations
+
 struct GLFWwindow;
+
+namespace vk
+{
+    struct Instance;
+	struct SurfaceKHR;
+}
+
+// End Forward declarations
 
 namespace gen {
 
-class Window {
+class Window
+{
 public:
     Window(int w, int h, std::string title);
     ~Window();
@@ -21,19 +31,25 @@ public:
 	Window(const Window&) = delete;
 	Window& operator=(const Window&) = delete;
 
+	// Member functions
 
-public:
 	GEN_NODISCARD bool shouldClose() const;
 	static void pollEvents() ;
 
+	// Helper functions
 
-public:
-	GEN_NODISCARD inline int GetWidth() const { return m_width; }
-	GEN_NODISCARD inline int GetHeight() const { return m_height; }
-	GEN_NODISCARD inline const std::string& GetTitle() const { return m_title; }
+	vk::SurfaceKHR createWindowSurface(vk::Instance instance);
 
 
-	// TODO: Currently these functions will break the window.
+	// Getters
+
+	GEN_NODISCARD inline int getWidth() const { return m_width; }
+	GEN_NODISCARD inline int getHeight() const { return m_height; }
+	GEN_NODISCARD inline const std::string& getTitle() const { return m_title; }
+	GEN_NODISCARD inline GLFWwindow* getHandle() const { return m_window; }
+
+
+	// TODO: Currently these functions will break the window. Have not yet implemented window resizing.
 
 	void inline SetWidth(int width) { m_width = width; }
 	void inline SetHeight(int height) { m_height = height; }
@@ -42,7 +58,6 @@ public:
 private:
 	void init();
 
-private:
 	int m_width;
 	int m_height;
 	std::string m_title;
