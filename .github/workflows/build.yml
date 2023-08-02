@@ -15,7 +15,7 @@ jobs:
       - name: install ninja and g++13
         run: sudo apt update -yqq && sudo apt install -yqq ninja-build xorg-dev g++-13
       - name: update to clang 16
-        run: sudo wget https://apt.llvm.org/llvm.sh && sudo chmod +x llvm.sh && sudo ./llvm.sh 16
+        run: sudo apt --purge remove python3-lldb-14 && sudo wget https://apt.llvm.org/llvm.sh && sudo chmod +x llvm.sh && sudo ./llvm.sh 16
       - name: configure gcc
         run: cmake -S . --preset=default -B build -DCMAKE_CXX_COMPILER=g++-13
       - name: configure clang
