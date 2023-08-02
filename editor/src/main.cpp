@@ -5,8 +5,6 @@
 #include <logger/log.hpp>
 
 int main() {
-	auto logger = gen::logger::Instance{};
-
 	gen::Application app;
 
 	try {
