@@ -3,10 +3,9 @@
 #include "windowing/window.hpp"
 
 #include "graphics/device.hpp"
+#include "logger/log.hpp"
 
 #include <GLFW/glfw3.h>
-
-#include <vulkan/vulkan.hpp>
 
 
 #include <utility>
@@ -39,11 +38,13 @@ namespace gen {
 
     }
 
-	vk::SurfaceKHR Window::createWindowSurface(vk::Instance instance) {
+	vk::SurfaceKHR Window::createWindowSurface(vk::Instance & instance)
+	{
 		VkSurfaceKHR _surface = nullptr;
-		const VkResult err = glfwCreateWindowSurface( static_cast<VkInstance>( instance ), m_window, nullptr, &_surface );
+		VkResult const err = glfwCreateWindowSurface( static_cast<VkInstance>( instance ) , m_window, nullptr, &_surface );
 		if ( err != VK_SUCCESS )
 		{
+			gen::logger::error( "Failed to create window surface!" );
 			throw std::runtime_error( "Failed to create window!" );
 		}
 		return vk::SurfaceKHR( _surface ); // NOLINT(modernize-return-braced-init-list)

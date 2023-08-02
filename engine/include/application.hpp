@@ -5,6 +5,7 @@
 #include "core.hpp"
 #include "windowing/window.hpp"
 #include "graphics/pipeline.hpp"
+#include "graphics/device.hpp"
 
 namespace gen {
 
@@ -29,7 +30,8 @@ public:
 
 private:
 	Window m_window { m_width, m_height, "Genesis Engine" };
-	GraphicsPipeline m_graphicsPipeline { };
+	GraphicsDevice m_graphicsDevice { m_window };
+	GraphicsPipeline m_graphicsPipeline { m_graphicsDevice , GraphicsPipeline::defaultPipelineConfigInfo(m_width, m_height)};
 
 };
 

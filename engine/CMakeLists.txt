@@ -175,6 +175,7 @@ target_link_libraries(genesis
         PUBLIC
         mim::mim
         imgui::imgui
+        glfw::glfw
         vk-dynamic::vk-dynamic
 
         PRIVATE

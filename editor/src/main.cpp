@@ -5,6 +5,8 @@
 #include <logger/log.hpp>
 
 int main() {
+	auto logger = gen::logger::Instance{}; // Required to initialize the logger
+
 	gen::Application app;
 
 	try {

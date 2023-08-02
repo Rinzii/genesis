@@ -10,13 +10,9 @@
 
 // Start Forward declarations
 
-struct GLFWwindow;
+#include <GLFW/glfw3.h>
 
-namespace vk
-{
-    struct Instance;
-	struct SurfaceKHR;
-}
+#include <vulkan/vulkan.hpp>
 
 // End Forward declarations
 
@@ -38,7 +34,7 @@ public:
 
 	// Helper functions
 
-	vk::SurfaceKHR createWindowSurface(vk::Instance instance);
+	vk::SurfaceKHR createWindowSurface(vk::Instance & instance);
 
 
 	// Getters

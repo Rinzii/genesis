@@ -12,11 +12,13 @@ namespace gen
 	GraphicsDevice::GraphicsDevice(gen::Window & window) : m_window{window}
 	{
 		createInstance(window.getTitle(), "Genesis Engine", {}, {}, VK_API_VERSION_1_0);
+		/*
 	    createDebugMessenger();
         createSurface();
 		pickPhysicalDevice();
 		createLogicalDevice();
 		createCommandPool();
+		 */
 	}
 
 	GraphicsDevice::~GraphicsDevice()
@@ -78,7 +80,7 @@ namespace gen
 		VULKAN_HPP_DEFAULT_DISPATCHER.init(m_instance);
 #endif
 	}
-
+/*
 
 	void GraphicsDevice::createDebugMessenger()
 	{
@@ -334,5 +336,5 @@ namespace gen
 		gen::logger::error("vulkan", "failed to find suitable memory type!");
         throw std::runtime_error("failed to find suitable memory type!");
 	}
-
+*/
 }

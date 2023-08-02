@@ -57,6 +57,7 @@ namespace gen
 		GEN_NODISCARD vk::Queue getGraphicsQueue() const { return m_graphicsQueue; }
 		GEN_NODISCARD vk::Queue getPresentQueue() const { return m_presentQueue; }
 
+		/*
 		GEN_NODISCARD SwapChainSupportDetails getSwapChainSupport()
 		{
 			return querySwapChainSupport(m_physicalDevice);
@@ -88,7 +89,7 @@ namespace gen
 								 vk::Image & image,
 								 vk::DeviceMemory & imageMemory
         );
-
+*/
 
 	private:
 		void createInstance(std::string const & appName,
@@ -97,6 +98,7 @@ namespace gen
 							std::vector<std::string> const & extensions,
 							u32 const & apiVersion
 		);
+		/*
 		void createDebugMessenger();
 		void createSurface();
 		void pickPhysicalDevice();
@@ -108,7 +110,7 @@ namespace gen
 		bool checkDeviceExtensionSupport(vk::PhysicalDevice device);
 		SwapChainSupportDetails querySwapChainSupport(vk::PhysicalDevice device);
 
-
+*/
 
 		vk::Instance m_instance;
 		vk::DebugUtilsMessengerEXT m_debugMessenger;
