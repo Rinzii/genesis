@@ -46,17 +46,18 @@ namespace gen {
 
 	void GraphicsPipeline::createGraphicsPipeline()
 	{
-        auto vertShaderCode = readFile("shaders/vert.spv");
-		auto fragShaderCode = readFile("shaders/frag.spv");
+        //auto vertShaderCode = readFile("shaders/vert.spv");
+		//auto fragShaderCode = readFile("shaders/frag.spv");
 
-		gen::logger::debug("graphics", "vertShaderCode size: " + std::to_string(vertShaderCode.size()));
-		gen::logger::debug("graphics", "fragShaderCode size: " + std::to_string(fragShaderCode.size()));
+		//gen::logger::debug("graphics", "vertShaderCode size: " + std::to_string(vertShaderCode.size()));
+		//gen::logger::debug("graphics", "fragShaderCode size: " + std::to_string(fragShaderCode.size()));
     }
 
 	void GraphicsPipeline::destroyGraphicsPipeline()
 	{
 
 	}
+
 	void GraphicsPipeline::createShaderModule(const std::vector<char> & code, vk::ShaderModule * shaderModule)
 	{
 		m_vertShaderModule = vk::util::createShaderModule(m_device.getDevice(), vk::ShaderStageFlagBits::eVertex, code.data());
