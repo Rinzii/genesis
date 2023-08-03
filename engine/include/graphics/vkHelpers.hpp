@@ -21,20 +21,20 @@ VKAPI_ATTR VkBool32 VKAPI_CALL debugUtilsMessengerCallback( VkDebugUtilsMessageS
 														   void * /*pUserData*/ );
 
     std::vector<char const*> gatherExtensions(std::vector<std::string> const& extensions
-    #if !defined(NDEBUG) || !defined(GEN_NDEBUG)
+    #ifndef GEN_NDEBUG
                                               ,
                                               std::vector<vk::ExtensionProperties> const& extensionProperties
     #endif
     );
 
     std::vector<char const*> gatherLayers(std::vector<std::string> const& layers
-    #if !defined(NDEBUG) || !defined(GEN_NDEBUG)
+    #ifndef GEN_NDEBUG
                                           ,
                                           std::vector<vk::LayerProperties> const& layerProperties
     #endif
     );
 
-#if defined(NDEBUG) || defined(GEN_NDEBUG)
+#ifdef GEN_NDEBUG
     vk::StructureChain<vk::InstanceCreateInfo>
 #else
     vk::StructureChain<vk::InstanceCreateInfo, vk::DebugUtilsMessengerCreateInfoEXT>
@@ -45,7 +45,7 @@ VKAPI_ATTR VkBool32 VKAPI_CALL debugUtilsMessengerCallback( VkDebugUtilsMessageS
 
 	vk::DebugUtilsMessengerCreateInfoEXT makeDebugUtilsMessengerCreateInfoEXT();
 
-	bool checkValidationLayerSupport(const std::vector<const char*>& validationLayers);
+	bool checkValidationLayerSupport(const std::vector<std::string>& validationLayers);
 
 	bool checkDeviceExtensionSupport(vk::PhysicalDevice device, const std::vector<const char*>& deviceExtensions);
 

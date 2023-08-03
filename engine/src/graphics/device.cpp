@@ -11,14 +11,15 @@ namespace gen
 
 	GraphicsDevice::GraphicsDevice(gen::Window & window) : m_window{window}
 	{
-		createInstance(window.getTitle(), "Genesis Engine", {}, {}, VK_API_VERSION_1_0);
-		/*
-	    createDebugMessenger();
-        createSurface();
-		pickPhysicalDevice();
-		createLogicalDevice();
-		createCommandPool();
-		 */
+		// TODO: Allow for the vulkan api to be specified in a config file or through command line arguments.
+		// We could also dynamically check for the highest supported version of the vulkan api, but that feels outside the scope of this project.
+		createInstance(window.getTitle(), "Genesis Engine", validationLayers, {}, VK_API_VERSION_1_0);
+
+	    //createDebugMessenger();
+        //createSurface();
+		//pickPhysicalDevice();
+		//createLogicalDevice();
+		//createCommandPool();
 	}
 
 	GraphicsDevice::~GraphicsDevice()
@@ -41,6 +42,7 @@ namespace gen
 		auto vkGetInstanceProcAddr = vkdl.getProcAddress<PFN_vkGetInstanceProcAddr>("vkGetInstanceProcAddr");
 		VULKAN_HPP_DEFAULT_DISPATCHER.init(vkGetInstanceProcAddr);
 #endif
+
 		if (enableValidationLayers) //NOLINT validation layers are enabled conditionally and this trips up clang-tidy
         {
 			if (!vk::util::checkValidationLayerSupport(validationLayers))
@@ -50,6 +52,7 @@ namespace gen
 			}
         }
 
+		// TODO: Allow for the application to be able to specify its version itself. Instead of just using the engine version.
 		vk::ApplicationInfo const appInfo(
 			appName.c_str(),
 			gen::version_v.getVersion(),
@@ -60,14 +63,14 @@ namespace gen
 		vk::InstanceCreateInfo const createInfo({}, &appInfo);
 
 		auto enabledLayers = vk::util::gatherLayers(layers
-#if !defined(NDEBUG) || !defined(GEN_NDEBUG)
+#ifndef GEN_NDEBUG
 													,
 													vk::enumerateInstanceLayerProperties()
 #endif
 		);
 
 		auto enabledExtensions = vk::util::gatherExtensions(extensions
-#if !defined(NDEBUG) || !defined(GEN_NDEBUG)
+#ifndef GEN_NDEBUG
 															,
 															vk::enumerateInstanceExtensionProperties()
 #endif
@@ -80,7 +83,53 @@ namespace gen
 		VULKAN_HPP_DEFAULT_DISPATCHER.init(m_instance);
 #endif
 	}
-/*
+
+	/*
+	QueueFamilyIndices GraphicsDevice::findQueueFamilies(vk::PhysicalDevice device)
+	{
+		QueueFamilyIndices indices;
+
+		std::vector<vk::QueueFamilyProperties> const queueFamilies = device.getQueueFamilyProperties();
+
+		gen::u32 index = 0;
+		for (const auto & queueFamily : queueFamilies)
+		{
+			if (queueFamily.queueFlags & vk::QueueFlagBits::eGraphics)
+			{
+				indices.graphicsFamily = index;
+			}
+
+			vk::Bool32 const presentSupport = device.getSurfaceSupportKHR(index, m_surface);
+			if (presentSupport != 0U)
+			{
+				indices.presentFamily = index;
+			}
+
+			if (indices.isComplete())
+			{
+				break;
+			}
+
+			index++;
+		}
+
+		return indices;
+	}
+
+	bool GraphicsDevice::checkDeviceExtensionSupport(vk::PhysicalDevice device)
+	{
+		std::vector<vk::ExtensionProperties> const availableExtensions = device.enumerateDeviceExtensionProperties();
+
+		std::set<std::string> requiredExtensions(deviceExtensions.begin(), deviceExtensions.end());
+
+		for (const auto & extension : availableExtensions)
+		{
+			requiredExtensions.erase(extension.extensionName.data());
+		}
+
+		return requiredExtensions.empty();
+	}
+
 
 	void GraphicsDevice::createDebugMessenger()
 	{
@@ -88,6 +137,24 @@ namespace gen
 		m_debugMessenger = m_instance.createDebugUtilsMessengerEXT(vk::util::makeDebugUtilsMessengerCreateInfoEXT());
 #endif
 	}
+
+	bool GraphicsDevice::isDeviceSuitable(const vk::PhysicalDevice & device)
+	{
+		QueueFamilyIndices const indices = findQueueFamilies(device);
+
+		bool const extensionsSupported = checkDeviceExtensionSupport(device);
+
+		bool swapChainAdequate = false;
+		if (extensionsSupported)
+		{
+			SwapChainSupportDetails const swapChainSupport = querySwapChainSupport(device);
+			swapChainAdequate = !swapChainSupport.formats.empty() && !swapChainSupport.presentModes.empty();
+		}
+
+		return indices.isComplete() && extensionsSupported && swapChainAdequate;
+	}
+	*/
+	/*
 
 	void GraphicsDevice::createSurface()
     {
@@ -120,6 +187,9 @@ namespace gen
         }
 	}
 
+*/
+
+	/*
 	void GraphicsDevice::createLogicalDevice()
 	{
 		QueueFamilyIndices indices = findQueueFamilies(m_physicalDevice);
@@ -153,65 +223,10 @@ namespace gen
 
         m_commandPool = m_device.createCommandPool(poolInfo);
     }
-	bool GraphicsDevice::isDeviceSuitable(vk::PhysicalDevice device)
-	{
-		QueueFamilyIndices const indices = findQueueFamilies(device);
 
-        bool const extensionsSupported = checkDeviceExtensionSupport(device);
 
-        bool swapChainAdequate = false;
-        if (extensionsSupported)
-        {
-            SwapChainSupportDetails const swapChainSupport = querySwapChainSupport(device);
-            swapChainAdequate = !swapChainSupport.formats.empty() && !swapChainSupport.presentModes.empty();
-        }
 
-        return indices.isComplete() && extensionsSupported && swapChainAdequate;
-	}
-	bool GraphicsDevice::checkDeviceExtensionSupport(vk::PhysicalDevice device)
-	{
-        std::vector<vk::ExtensionProperties> const availableExtensions = device.enumerateDeviceExtensionProperties();
 
-        std::set<std::string> requiredExtensions(deviceExtensions.begin(), deviceExtensions.end());
-
-        for (const auto & extension : availableExtensions)
-        {
-            requiredExtensions.erase(extension.extensionName.data());
-        }
-
-        return requiredExtensions.empty();
-	}
-
-	QueueFamilyIndices GraphicsDevice::findQueueFamilies(vk::PhysicalDevice device)
-	{
-		QueueFamilyIndices indices;
-
-        std::vector<vk::QueueFamilyProperties> const queueFamilies = device.getQueueFamilyProperties();
-
-        gen::u32 index = 0;
-        for (const auto & queueFamily : queueFamilies)
-        {
-            if (queueFamily.queueFlags & vk::QueueFlagBits::eGraphics)
-            {
-                indices.graphicsFamily = index;
-            }
-
-            vk::Bool32 const presentSupport = device.getSurfaceSupportKHR(index, m_surface);
-            if (presentSupport != 0U)
-            {
-                indices.presentFamily = index;
-            }
-
-            if (indices.isComplete())
-            {
-                break;
-            }
-
-			index++;
-        }
-
-        return indices;
-	}
 
 	SwapChainSupportDetails GraphicsDevice::querySwapChainSupport(vk::PhysicalDevice device)
 	{

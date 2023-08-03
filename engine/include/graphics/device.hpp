@@ -42,7 +42,7 @@ namespace gen
 		GraphicsDevice& operator=(GraphicsDevice&&) = delete;
 
 
-#if defined(NDEBUG) || defined(GEN_NDEBUG)
+#if defined(GEN_NDEBUG)
 		static constexpr bool enableValidationLayers = false;
 #else
 		static constexpr bool enableValidationLayers = true;
@@ -98,19 +98,19 @@ namespace gen
 							std::vector<std::string> const & extensions,
 							u32 const & apiVersion
 		);
-		/*
-		void createDebugMessenger();
-		void createSurface();
-		void pickPhysicalDevice();
-		void createLogicalDevice();
-		void createCommandPool();
 
-		bool isDeviceSuitable(vk::PhysicalDevice device);
-		QueueFamilyIndices findQueueFamilies(vk::PhysicalDevice device);
-		bool checkDeviceExtensionSupport(vk::PhysicalDevice device);
-		SwapChainSupportDetails querySwapChainSupport(vk::PhysicalDevice device);
+		//void createDebugMessenger();
+		//void createSurface();
+		//void pickPhysicalDevice();
+		//void createLogicalDevice();
+		//void createCommandPool();
 
-*/
+		//bool isDeviceSuitable(const vk::PhysicalDevice & device);
+		//QueueFamilyIndices findQueueFamilies(vk::PhysicalDevice device);
+		//bool checkDeviceExtensionSupport(vk::PhysicalDevice device);
+		//SwapChainSupportDetails querySwapChainSupport(vk::PhysicalDevice device);
+
+
 
 		vk::Instance m_instance;
 		vk::DebugUtilsMessengerEXT m_debugMessenger;
@@ -126,8 +126,8 @@ namespace gen
 
 		Window &m_window; // NOLINT(cppcoreguidelines-avoid-const-or-ref-data-members)
 
-		const std::vector<const char *> validationLayers = {"VK_LAYER_KHRONOS_validation"};
-		const std::vector<const char *> deviceExtensions = {VK_KHR_SWAPCHAIN_EXTENSION_NAME};
+		const std::vector<std::string> validationLayers = {"VK_LAYER_KHRONOS_validation"};
+		const std::vector<std::string> deviceExtensions = {VK_KHR_SWAPCHAIN_EXTENSION_NAME};
 
 
 	};
