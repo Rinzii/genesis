@@ -3,6 +3,7 @@
 
 namespace gen
 {
+	// TODO: It may be better to instead set the logger to only log errors in release mode, but this should be discussed further.
 #ifndef GEN_NDEBUG
     void logger::error(std::string_view category, std::string_view message, SrcLoc const& location)
 	{
