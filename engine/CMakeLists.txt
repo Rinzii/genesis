@@ -9,8 +9,9 @@ add_library(genesis::lib ALIAS genesis)
 
 target_compile_definitions(genesis
         PUBLIC
-        $<$<CONFIG:Debug>:GENESIS_DEBUG>
-        $<$<CONFIG:Release>:GENESIS_NDEBUG>
+        $<$<CONFIG:Debug>:GEN_DEBUG>
+        $<$<CONFIG:RelWithDebInfo>:GEN_DEBUG>
+        $<$<CONFIG:Release>:GEN_NDEBUG>
         )
 
 if (GENESIS_ENABLE_SIMD)
