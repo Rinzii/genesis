@@ -61,26 +61,50 @@ namespace vk::util
 #endif
 	)
 	{
-		std::vector<char const*> enabledExtensions;
-		enabledExtensions.reserve(extensions.size());
-		for (auto const& ext : extensions) {
-			// Check if the requested extension exists in the available extension properties.
-			assert(
-				std::any_of(extensionProperties.begin(),
-							extensionProperties.end(),
-							[ext](vk::ExtensionProperties const& eProp)
-							{
-								return ext == eProp.extensionName;
-							})
-				);
-			enabledExtensions.push_back(ext.data());
+		std::vector<char const *> enabledExtensions;
+		enabledExtensions.reserve( extensions.size() );
+		for ( auto const & ext : extensions )
+		{
+			gen::logger::debug("vulkan", std::format("Enabling extension: {}", ext));
+			std::vector<std::string> availableExtensions;
+			for ( auto const & ep : extensionProperties )
+            {
+				availableExtensions.push_back( ep.extensionName );
+            }
+			gen::logger::debug("vulkan", std::format("Available extensions: \t{}", std::accumulate(availableExtensions.begin(),
+                                                                                               availableExtensions.end(),
+                                                                                               std::string{},
+                                                                                               [](std::string const & a,
+                                                                                                  std::string const & b)
+                                                                                               {
+                                                                                                   return a + ",\n\t " + b;
+                                                                                               })));
+
+			assert(std::any_of(extensionProperties.begin(),
+							   extensionProperties.end(),
+							   [ext]( vk::ExtensionProperties const & ep )
+							   {
+								   return ext == ep.extensionName;
+							   })
+				   );
+			enabledExtensions.push_back( ext.data() );
 		}
+
 #ifndef GEN_NDEBUG
-		// In debug mode, check if the VK_EXT_DEBUG_UTILS_EXTENSION_NAME is requested and not already enabled.
-		if (std::none_of(extensions.begin(), extensions.end(), [](std::string const& extension) { return extension == VK_EXT_DEBUG_UTILS_EXTENSION_NAME; }) &&
-			std::any_of(extensionProperties.begin(), extensionProperties.end(),
-						[](vk::ExtensionProperties const& eProp) { return (std::strcmp(VK_EXT_DEBUG_UTILS_EXTENSION_NAME, eProp.extensionName) == 0); })) {
-			enabledExtensions.push_back(VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
+		if (std::none_of(extensions.begin(),
+						 extensions.end(),
+						 [](std::string const & extension)
+						 {
+							 return extension == VK_EXT_DEBUG_UTILS_EXTENSION_NAME;
+						 })
+			&& std::any_of(extensionProperties.begin(),
+						   extensionProperties.end(),
+						   []( vk::ExtensionProperties const & ep )
+						   {
+							   return ( std::strcmp( VK_EXT_DEBUG_UTILS_EXTENSION_NAME, ep.extensionName ) == 0 );
+						   }))
+		{
+			enabledExtensions.push_back( VK_EXT_DEBUG_UTILS_EXTENSION_NAME );
 		}
 #endif
 		return enabledExtensions;
@@ -99,14 +123,31 @@ namespace vk::util
 		for (auto const& layer : layers)
 		{
 			// Check if the requested layer exists in the available layer properties.
-			assert(std::any_of(layerProperties.begin(), layerProperties.end(), [layer](vk::LayerProperties const& lp) { return layer == lp.layerName; }));
+			assert(std::any_of(layerProperties.begin(),
+							   layerProperties.end(),
+							   [layer](vk::LayerProperties const& lp)
+							   {
+								   return layer == lp.layerName;
+							   })
+				   );
+
 			enabledLayers.push_back(layer.data());
 		}
 #ifndef GEN_NDEBUG
 		// In debug mode, enable the "VK_LAYER_KHRONOS_validation" standard validation layer if not already enabled.
-		if (std::none_of(layers.begin(), layers.end(), [](std::string const& layer) { return layer == "VK_LAYER_KHRONOS_validation"; }) &&
-			std::any_of(layerProperties.begin(), layerProperties.end(),
-						[](vk::LayerProperties const& lProp) { return (std::strcmp("VK_LAYER_KHRONOS_validation", lProp.layerName) == 0); })) {
+		if (std::none_of(layers.begin(),
+						 layers.end(),
+						 [](std::string const& layer)
+						 {
+							 return layer == "VK_LAYER_KHRONOS_validation";
+						 })
+			&& std::any_of(layerProperties.begin(),
+						   layerProperties.end(),
+						   [](vk::LayerProperties const& lProp)
+						   {
+							   return (std::strcmp("VK_LAYER_KHRONOS_validation", lProp.layerName) == 0);
+						   }))
+		{
 			enabledLayers.push_back("VK_LAYER_KHRONOS_validation");
 		}
 #endif
@@ -119,9 +160,9 @@ namespace vk::util
 #else
 	vk::StructureChain<vk::InstanceCreateInfo, vk::DebugUtilsMessengerCreateInfoEXT>
 #endif
-	makeInstanceCreateInfoChain( vk::ApplicationInfo const & appInfo,
+	makeInstanceCreateInfoChain(vk::ApplicationInfo const & appInfo,
 								std::vector< const char * > const & layers,
-								std::vector< const char * > const & extensions )
+								std::vector< const char * > const & extensions)
 	{
 
 #ifdef GEN_NDEBUG

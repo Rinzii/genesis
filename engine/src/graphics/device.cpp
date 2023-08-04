@@ -16,7 +16,7 @@ namespace gen
 	{
 		// TODO: Allow for the vulkan api to be specified in a config file or through command line arguments.
 		// We could also dynamically check for the highest supported version of the vulkan api, but that feels outside the scope of this project.
-		createInstance(window.getTitle(), "Genesis Engine", validationLayers, deviceExtensions, VK_API_VERSION_1_0);
+		createInstance(window.getTitle(), "Genesis Engine", validationLayers, deviceExtensions, VK_API_VERSION_1_1);
 
 	}
 
