@@ -3,6 +3,7 @@ project(genesis-editor)
 add_executable(genesis-editor)
 target_link_libraries(genesis-editor PRIVATE
         genesis::lib
+		genesis::ext
         )
 target_include_directories(genesis-editor PRIVATE src)
 
