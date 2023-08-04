@@ -4,7 +4,7 @@
 #include "graphics/vkHelpers.hpp"
 #include "logger/log.hpp"
 
-#include <GLFW/glfw3.h>
+#include <numeric>
 
 namespace gen
 {
@@ -54,8 +54,6 @@ namespace gen
 			gen::version_v.getVersion(),
 			apiVersion);
 
-		vk::InstanceCreateInfo const createInfo({}, &appInfo);
-
 		auto enabledLayers = vk::util::gatherLayers(layers
 #ifndef GEN_NDEBUG
 													,
@@ -63,12 +61,30 @@ namespace gen
 #endif
 		);
 
+		gen::logger::debug("vulkan", std::format("Enabled layers: {}", std::accumulate(enabledLayers.begin(),
+                                                                                         enabledLayers.end(),
+                                                                                         std::string{},
+                                                                                         [](std::string const & a,
+                                                                                            std::string const & b)
+                                                                                         {
+                                                                                             return a + ",\n\t " + b;
+                                                                                         })));
+
 		auto enabledExtensions = vk::util::gatherExtensions(extensions
 #ifndef GEN_NDEBUG
 															,
 															vk::enumerateInstanceExtensionProperties()
 #endif
 		);
+
+		gen::logger::debug("vulkan", std::format("Enabled extensions: \t{}", std::accumulate(enabledExtensions.begin(),
+																							   enabledExtensions.end(),
+																							   std::string{},
+																							   [](std::string const & a,
+																								  std::string const & b)
+																							   {
+																								   return a + ",\n\t " + b;
+																							   })));
 
 		m_instance = vk::createInstanceUnique(vk::util::makeInstanceCreateInfoChain(appInfo, enabledLayers, enabledExtensions).get<vk::InstanceCreateInfo>());
 
