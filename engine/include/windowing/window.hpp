@@ -11,12 +11,6 @@
 // Start Forward declarations
 struct GLFWwindow;
 
-namespace vk
-{
-    class UniqueInstance;
-    class UniqueSurfaceKHR;
-}
-
 // End Forward declarations
 
 namespace gen {

@@ -66,7 +66,13 @@ namespace vk::util
 		for (auto const& ext : extensions) {
 			// Check if the requested extension exists in the available extension properties.
 			assert(
-				std::any_of(extensionProperties.begin(), extensionProperties.end(), [ext](vk::ExtensionProperties const& eProp) { return ext == eProp.extensionName; }));
+				std::any_of(extensionProperties.begin(),
+							extensionProperties.end(),
+							[ext](vk::ExtensionProperties const& eProp)
+							{
+								return ext == eProp.extensionName;
+							})
+				);
 			enabledExtensions.push_back(ext.data());
 		}
 #ifndef GEN_NDEBUG
