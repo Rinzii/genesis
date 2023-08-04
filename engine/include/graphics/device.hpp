@@ -7,8 +7,10 @@
 #include "windowing/window.hpp"
 
 #include <vulkan/vulkan.hpp>
+#include <GLFW/glfw3.h>
 
 #include <memory>
+#include <optional>
 
 
 
@@ -112,11 +114,11 @@ namespace gen
 
 
 
-		vk::Instance m_instance;
+		vk::UniqueInstance m_instance;
 		vk::DebugUtilsMessengerEXT m_debugMessenger;
 		vk::PhysicalDevice m_physicalDevice;
 		vk::Device m_device;
-		vk::SurfaceKHR m_surface;
+		vk::UniqueSurfaceKHR m_surface;
 
 		vk::PhysicalDeviceProperties m_physicalDeviceProperties;
 
@@ -126,8 +128,7 @@ namespace gen
 
 		Window &m_window; // NOLINT(cppcoreguidelines-avoid-const-or-ref-data-members)
 
-		const std::vector<std::string> validationLayers = {"VK_LAYER_KHRONOS_validation"};
-		const std::vector<std::string> deviceExtensions = {VK_KHR_SWAPCHAIN_EXTENSION_NAME};
+
 
 
 	};

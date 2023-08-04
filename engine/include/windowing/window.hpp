@@ -9,10 +9,13 @@
 // TODO: Replace this with a proper implementation
 
 // Start Forward declarations
+struct GLFWwindow;
 
-#include <GLFW/glfw3.h>
-
-#include <vulkan/vulkan.hpp>
+namespace vk
+{
+    class UniqueInstance;
+    class UniqueSurfaceKHR;
+}
 
 // End Forward declarations
 
@@ -32,9 +35,6 @@ public:
 	GEN_NODISCARD bool shouldClose() const;
 	static void pollEvents() ;
 
-	// Helper functions
-
-	vk::SurfaceKHR createWindowSurface(vk::Instance & instance);
 
 
 	// Getters

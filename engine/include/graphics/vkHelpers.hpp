@@ -8,9 +8,11 @@
 #include <set>
 
 #include <vulkan/vulkan.hpp>
+#include <GLFW/glfw3.h>
 
 #include "core.hpp"
 #include "logger/log.hpp"
+#include "windowing/window.hpp"
 
 
 namespace vk::util {
@@ -39,9 +41,9 @@ VKAPI_ATTR VkBool32 VKAPI_CALL debugUtilsMessengerCallback( VkDebugUtilsMessageS
 #else
     vk::StructureChain<vk::InstanceCreateInfo, vk::DebugUtilsMessengerCreateInfoEXT>
 #endif
-	makeInstanceCreateInfoChain( vk::ApplicationInfo const & appInfo,
-                                 std::vector< const char * > const & layers,
-                                 std::vector< const char * > const & extensions );
+	makeInstanceCreateInfoChain(vk::ApplicationInfo const & appInfo,
+								std::vector< const char * > const & layers,
+								std::vector< const char * > const & extensions);
 
 	vk::DebugUtilsMessengerCreateInfoEXT makeDebugUtilsMessengerCreateInfoEXT();
 
@@ -49,7 +51,9 @@ VKAPI_ATTR VkBool32 VKAPI_CALL debugUtilsMessengerCallback( VkDebugUtilsMessageS
 
 	bool checkDeviceExtensionSupport(vk::PhysicalDevice device, const std::vector<const char*>& deviceExtensions);
 
-	vk::ShaderModule createShaderModule( vk::Device const & device, vk::ShaderStageFlagBits shaderStage, std::string const & shaderText );
+	vk::UniqueShaderModule createShaderModule( vk::Device const & device, vk::ShaderStageFlagBits shaderStage, std::string const & shaderText );
+
+	vk::UniqueSurfaceKHR createWindowSurface( vk::Instance const & instance, gen::Window const & window );
 
 
 } // namespace vk::util

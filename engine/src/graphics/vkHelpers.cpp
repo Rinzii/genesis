@@ -11,6 +11,7 @@
 #include "logger/log.hpp"
 
 #if ( VULKAN_HPP_DISPATCH_LOADER_DYNAMIC == 1 )
+// NOLINTNEXTLINE
 VULKAN_HPP_DEFAULT_DISPATCH_LOADER_DYNAMIC_STORAGE
 #endif
 
@@ -227,7 +228,7 @@ namespace vk::util
 	}
 
 	// Create a Vulkan shader module from HLSL shader code.
-	vk::ShaderModule createShaderModule( vk::Device const & device, vk::ShaderStageFlagBits shaderStage, std::string const & shaderText )
+	vk::UniqueShaderModule createShaderModule( vk::Device const & device, vk::ShaderStageFlagBits shaderStage, std::string const & shaderText )
 	{
 		std::vector<unsigned int> shaderSPV;
 		if (!HLSLtoSPV(shaderStage, shaderText, shaderSPV))
@@ -236,7 +237,20 @@ namespace vk::util
 			throw std::runtime_error("Failed to compile shader");
 		}
 
-		return device.createShaderModule( vk::ShaderModuleCreateInfo( vk::ShaderModuleCreateFlags(), shaderSPV ) );
+		return device.createShaderModuleUnique(vk::ShaderModuleCreateInfo( vk::ShaderModuleCreateFlags(), shaderSPV ) );
+	}
+
+	vk::UniqueSurfaceKHR createWindowSurface( vk::UniqueInstance const & instance, gen::Window const & window )
+	{
+		VkSurfaceKHR surface_ {};
+		VkResult const err = glfwCreateWindowSurface( VkInstance( instance.get() ), window.getHandle(), nullptr, &surface_ );
+		if ( err != VK_SUCCESS )
+		{
+			gen::logger::error( "vulkan", "Failed to create window surface!" );
+			throw std::runtime_error( "Failed to create window!" );
+		}
+		vk::ObjectDestroy<vk::Instance, VULKAN_HPP_DEFAULT_DISPATCHER_TYPE> const deleter_( instance.get() );
+		return vk::UniqueSurfaceKHR( vk::SurfaceKHR( surface_ ), deleter_ );
 	}
 
 } // namespace vk::util

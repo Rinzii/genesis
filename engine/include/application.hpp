@@ -25,8 +25,8 @@ private:
 	void initializeGraphics();
 
 public:
-	static const u32 m_width = 800;
-	static const u32 m_height = 600;
+	static constexpr u32 m_width = 800;
+	static constexpr u32 m_height = 600;
 
 private:
 	Window m_window { m_width, m_height, "Genesis Engine" };

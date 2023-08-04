@@ -9,11 +9,14 @@
 namespace gen
 {
 
+	static const std::vector<std::string> validationLayers = {"VK_LAYER_KHRONOS_validation"};
+	static const std::vector<std::string> deviceExtensions = {VK_KHR_SWAPCHAIN_EXTENSION_NAME};
+
 	GraphicsDevice::GraphicsDevice(gen::Window & window) : m_window{window}
 	{
 		// TODO: Allow for the vulkan api to be specified in a config file or through command line arguments.
 		// We could also dynamically check for the highest supported version of the vulkan api, but that feels outside the scope of this project.
-		createInstance(window.getTitle(), "Genesis Engine", validationLayers, {}, VK_API_VERSION_1_0);
+		createInstance(window.getTitle(), "Genesis Engine", validationLayers, deviceExtensions, VK_API_VERSION_1_0);
 
 	    //createDebugMessenger();
         //createSurface();
@@ -28,14 +31,20 @@ namespace gen
         m_device.destroy();
 
 		//NOLINTNEXTLINE validation layers are enabled conditionally and this trips up clang-tidy
-		if (enableValidationLayers) { m_instance.destroyDebugUtilsMessengerEXT(m_debugMessenger); }
+		if (enableValidationLayers)
+		{
+			m_instance->destroyDebugUtilsMessengerEXT(m_debugMessenger);
+		}
 
-		m_instance.destroySurfaceKHR(m_surface);
-		m_instance.destroy();
+		m_surface.release();
+		m_instance.release();
 	}
 
-	void GraphicsDevice::createInstance(const std::string & appName, const std::string & engineName, const std::vector<std::string> & layers,
-											 const std::vector<std::string> & extensions, const gen::u32 & apiVersion)
+	void GraphicsDevice::createInstance(const std::string & appName,
+										const std::string & engineName,
+										const std::vector<std::string> & layers,
+										const std::vector<std::string> & extensions,
+										const gen::u32 & apiVersion)
 	{
 #if (VULKAN_HPP_DISPATCH_LOADER_DYNAMIC == 1)
 		static vk::DynamicLoader const vkdl;
@@ -76,11 +85,11 @@ namespace gen
 #endif
 		);
 
-		m_instance = vk::createInstance(vk::util::makeInstanceCreateInfoChain(appInfo, enabledLayers, enabledExtensions).get<vk::InstanceCreateInfo>());
+		m_instance = vk::createInstanceUnique(vk::util::makeInstanceCreateInfoChain(appInfo, enabledLayers, enabledExtensions).get<vk::InstanceCreateInfo>());
 
 #if (VULKAN_HPP_DISPATCH_LOADER_DYNAMIC == 1)
 		// initialize function pointers for instance
-		VULKAN_HPP_DEFAULT_DISPATCHER.init(m_instance);
+		VULKAN_HPP_DEFAULT_DISPATCHER.init(*m_instance);
 #endif
 	}
 

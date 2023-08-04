@@ -42,13 +42,13 @@ namespace gen
 
 		// NOLINTNEXTLINE The assumption with this is that the device will outlive the pipeline at all times since a pipeline fundamentally needs a pipeline to exist
 		GraphicsDevice& m_device;
-		vk::Pipeline m_graphicsPipeline;
-		vk::ShaderModule m_vertShaderModule;
-		vk::ShaderModule m_fragShaderModule;
+		vk::UniquePipeline m_graphicsPipeline;
+		vk::UniqueShaderModule m_vertShaderModule;
+		vk::UniqueShaderModule m_fragShaderModule;
 
 		const PipelineConfigInfo m_configInfo;
 
-		vk::Instance m_instance;
+		vk::UniqueInstance m_instance;
 		vk::DebugUtilsMessengerEXT m_debugMessenger;
     };
 
