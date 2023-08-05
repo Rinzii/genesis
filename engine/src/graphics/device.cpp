@@ -5,6 +5,7 @@
 #include "logger/log.hpp"
 
 #include <numeric>
+#include <format>
 
 namespace gen
 {
