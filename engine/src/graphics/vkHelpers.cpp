@@ -27,14 +27,12 @@ namespace vk::util
 #ifndef GEN_NDEBUG
 		// In debug mode, certain Vulkan validation layer messages are ignored.
 		// Here, we filter out specific validation messages identified by their messageIdNumber.
-		if ( pCallbackData->messageIdNumber == 648835635 )
+		if ( pCallbackData->messageIdNumber == 648835635 ) //NOLINT UNASSIGNED-khronos-Validation-debug-build-warning-message
 		{
-			// UNASSIGNED-khronos-Validation-debug-build-warning-message
 			return vk::False;
 		}
-		if ( pCallbackData->messageIdNumber == 767975156 )
+		if ( pCallbackData->messageIdNumber == 767975156 ) //NOLINT UNASSIGNED-BestPractices-vkCreateInstance-specialuse-extension
 		{
-			// UNASSIGNED-BestPractices-vkCreateInstance-specialuse-extension
 			return vk::False;
 		}
 #endif
@@ -63,30 +61,35 @@ namespace vk::util
 	{
 		std::vector<char const *> enabledExtensions;
 		enabledExtensions.reserve( extensions.size() );
+
+		std::vector<std::string> availableExtensions;
+		for ( auto const & eProp : extensionProperties )
+		{
+			availableExtensions.push_back( eProp.extensionName );
+		}
+
+		gen::logger::debug("vulkan", std::format("Available extensions: \n\t{}",
+												 std::accumulate(availableExtensions.begin(),
+																 availableExtensions.end(),
+																 std::string(),
+																 [](const std::string &acc, const std::string &ext)
+																 {
+																	 return acc.empty() ? ext : acc + ", \n\t" + ext;
+																 })));
+
 		for ( auto const & ext : extensions )
 		{
-			gen::logger::debug("vulkan", std::format("Enabling extension: {}", ext));
-			std::vector<std::string> availableExtensions;
-			for ( auto const & ep : extensionProperties )
-            {
-				availableExtensions.push_back( ep.extensionName );
-            }
-			gen::logger::debug("vulkan", std::format("Available extensions: \t{}", std::accumulate(availableExtensions.begin(),
-                                                                                               availableExtensions.end(),
-                                                                                               std::string{},
-                                                                                               [](std::string const & a,
-                                                                                                  std::string const & b)
-                                                                                               {
-                                                                                                   return a + ",\n\t " + b;
-                                                                                               })));
+			gen::logger::info("vulkan", std::format("Enabling extension: {}", ext));
+
 
 			assert(std::any_of(extensionProperties.begin(),
 							   extensionProperties.end(),
-							   [ext]( vk::ExtensionProperties const & ep )
+							   [ext]( vk::ExtensionProperties const & eProp )
 							   {
-								   return ext == ep.extensionName;
+								   return ext == eProp.extensionName;
 							   })
 				   );
+
 			enabledExtensions.push_back( ext.data() );
 		}
 
@@ -96,12 +99,12 @@ namespace vk::util
 						 [](std::string const & extension)
 						 {
 							 return extension == VK_EXT_DEBUG_UTILS_EXTENSION_NAME;
-						 })
-			&& std::any_of(extensionProperties.begin(),
+						 }) &&
+			std::any_of(extensionProperties.begin(),
 						   extensionProperties.end(),
-						   []( vk::ExtensionProperties const & ep )
+						   []( vk::ExtensionProperties const & eProp )
 						   {
-							   return ( std::strcmp( VK_EXT_DEBUG_UTILS_EXTENSION_NAME, ep.extensionName ) == 0 );
+							   return ( std::strcmp( VK_EXT_DEBUG_UTILS_EXTENSION_NAME, eProp.extensionName ) == 0 );
 						   }))
 		{
 			enabledExtensions.push_back( VK_EXT_DEBUG_UTILS_EXTENSION_NAME );
@@ -125,9 +128,9 @@ namespace vk::util
 			// Check if the requested layer exists in the available layer properties.
 			assert(std::any_of(layerProperties.begin(),
 							   layerProperties.end(),
-							   [layer](vk::LayerProperties const& lp)
+							   [layer](vk::LayerProperties const& lProp)
 							   {
-								   return layer == lp.layerName;
+								   return layer == lProp.layerName;
 							   })
 				   );
 
@@ -177,8 +180,10 @@ namespace vk::util
 																 vk::DebugUtilsMessageTypeFlagBitsEXT::ePerformance |
 																 vk::DebugUtilsMessageTypeFlagBitsEXT::eValidation);
 
-		vk::StructureChain<vk::InstanceCreateInfo, vk::DebugUtilsMessengerCreateInfoEXT> instanceCreateInfo(
-			{{}, &appInfo, layers, extensions}, {{}, severityFlags, messageTypeFlags, &vk::util::debugUtilsMessengerCallback});
+		vk::StructureChain<vk::InstanceCreateInfo,
+						   vk::DebugUtilsMessengerCreateInfoEXT> instanceCreateInfo(
+				{{}, &appInfo, layers, extensions},
+				{{}, severityFlags, messageTypeFlags, &vk::util::debugUtilsMessengerCallback});
 #endif
 		return instanceCreateInfo;
 	}

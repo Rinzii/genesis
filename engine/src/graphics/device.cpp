@@ -61,30 +61,34 @@ namespace gen
 #endif
 		);
 
-		gen::logger::debug("vulkan", std::format("Enabled layers: {}", std::accumulate(enabledLayers.begin(),
-                                                                                         enabledLayers.end(),
-                                                                                         std::string{},
-                                                                                         [](std::string const & a,
-                                                                                            std::string const & b)
-                                                                                         {
-                                                                                             return a + ",\n\t " + b;
-                                                                                         })));
 
-		auto enabledExtensions = vk::util::gatherExtensions(extensions
+		gen::logger::debug("vulkan", std::format("Enabled layers: \n\t{}",
+												 std::accumulate(enabledLayers.begin(),
+																 enabledLayers.end(),
+																 std::string(),
+																 [](const std::string &acc, const std::string &ext)
+																 {
+																	 return acc.empty() ? ext : acc + ", \n\t" + ext;
+																 })));
+
+		auto extensionsCount = 0U;
+		auto *requestedExtensions = glfwGetRequiredInstanceExtensions(&extensionsCount);
+		std::vector<std::string> const requestedExtensionsVec(requestedExtensions, requestedExtensions + extensionsCount); //NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+		auto enabledExtensions = vk::util::gatherExtensions(requestedExtensionsVec
 #ifndef GEN_NDEBUG
 															,
 															vk::enumerateInstanceExtensionProperties()
 #endif
 		);
 
-		gen::logger::debug("vulkan", std::format("Enabled extensions: \t{}", std::accumulate(enabledExtensions.begin(),
-																							   enabledExtensions.end(),
-																							   std::string{},
-																							   [](std::string const & a,
-																								  std::string const & b)
-																							   {
-																								   return a + ",\n\t " + b;
-																							   })));
+		gen::logger::debug("vulkan", std::format("Enabled extensions: \n\t{}",
+                                                 std::accumulate(enabledExtensions.begin(),
+                                                                 enabledExtensions.end(),
+                                                                 std::string(),
+                                                                 [](const std::string &acc, const std::string &ext)
+                                                                 {
+                                                                     return acc.empty() ? ext : acc + ", \n\t" + ext;
+                                                                 })));
 
 		m_instance = vk::createInstanceUnique(vk::util::makeInstanceCreateInfoChain(appInfo, enabledLayers, enabledExtensions).get<vk::InstanceCreateInfo>());
 
