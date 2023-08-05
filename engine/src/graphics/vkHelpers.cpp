@@ -2,6 +2,7 @@
 
 #include "graphics/vkHelpers.hpp"
 #include <numeric>
+#include <format>
 #include <vulkan/vulkan.hpp>
 #if defined( VULKAN_HPP_NO_TO_STRING )
 	#  include <vulkan/vulkan_to_string.hpp>
