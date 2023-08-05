@@ -18,7 +18,7 @@ namespace gen {
 class Window
 {
 public:
-    Window(int w, int h, std::string title);
+    Window(int width, int height, std::string title);
     ~Window();
 
 	Window(const Window&) = delete;
@@ -33,17 +33,17 @@ public:
 
 	// Getters
 
-	GEN_NODISCARD inline int getWidth() const { return m_width; }
-	GEN_NODISCARD inline int getHeight() const { return m_height; }
-	GEN_NODISCARD inline const std::string& getTitle() const { return m_title; }
-	GEN_NODISCARD inline GLFWwindow* getHandle() const { return m_window; }
+	GEN_NODISCARD int getWidth() const { return m_width; }
+	GEN_NODISCARD int getHeight() const { return m_height; }
+	GEN_NODISCARD const std::string& getTitle() const { return m_title; }
+	GEN_NODISCARD GLFWwindow* getHandle() const { return m_window; }
 
 
 	// TODO: Currently these functions will break the window. Have not yet implemented window resizing.
 
-	void inline SetWidth(int width) { m_width = width; }
-	void inline SetHeight(int height) { m_height = height; }
-	void inline SetTitle(const std::string& title) { m_title = title; }
+	void SetWidth(int width) { m_width = width; }
+	void SetHeight(int height) { m_height = height; }
+	void SetTitle(const std::string& title) { m_title = title; }
 
 private:
 	void init();

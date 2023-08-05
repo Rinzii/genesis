@@ -49,7 +49,7 @@ VKAPI_ATTR VkBool32 VKAPI_CALL debugUtilsMessengerCallback( VkDebugUtilsMessageS
 
 	bool checkValidationLayerSupport(const std::vector<std::string>& validationLayers);
 
-	bool checkDeviceExtensionSupport(vk::PhysicalDevice device, const std::vector<const char*>& deviceExtensions);
+	bool checkDeviceExtensionSupport(const --vk::PhysicalDevice device, const std::vector<const char*>& deviceExtensions);
 
 	vk::UniqueShaderModule createShaderModule( vk::Device const & device, vk::ShaderStageFlagBits shaderStage, std::string const & shaderText );
 

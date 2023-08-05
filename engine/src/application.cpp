@@ -11,9 +11,7 @@ namespace gen {
 		gameLoop();
 		shutdown();
     }
-	void Application::initialize() {
-		initializeGraphics();
-	}
+
 	void Application::gameLoop() {
 		while (!m_window.shouldClose()) {
             Window::pollEvents();
@@ -23,8 +21,5 @@ namespace gen {
 	void Application::shutdown() {
 	}
 
-	void Application::initializeGraphics() {
-
-	}
 
 	} // namespace gen

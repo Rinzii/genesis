@@ -17,24 +17,6 @@
 namespace gen
 {
 
-	struct SwapChainSupportDetails
-    {
-        vk::SurfaceCapabilitiesKHR capabilities;
-        std::vector<vk::SurfaceFormatKHR> formats;
-        std::vector<vk::PresentModeKHR> presentModes;
-    };
-
-	struct QueueFamilyIndices
-    {
-        std::optional<u32> graphicsFamily;
-        std::optional<u32> presentFamily;
-
-        GEN_NODISCARD bool isComplete() const
-        {
-            return graphicsFamily.has_value() && presentFamily.has_value();
-        }
-    };
-
 	class GraphicsDevice
 	{
 	public:
@@ -63,13 +45,7 @@ namespace gen
 		);
 
 
-
-
 		vk::UniqueInstance m_instance;
-		vk::DebugUtilsMessengerEXT m_debugMessenger;
-
-
-
 
 
 	};

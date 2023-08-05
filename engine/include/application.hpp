@@ -15,14 +15,9 @@ public:
     void run();
 
 private:
-	void initialize();
 	void gameLoop();
 	void shutdown();
 
-
-	// Initialization functions
-
-	void initializeGraphics();
 
 public:
 	static constexpr u32 m_width = 800;
@@ -31,7 +26,7 @@ public:
 private:
 	Window m_window { m_width, m_height, "Genesis Engine" };
 	GraphicsDevice m_graphicsDevice { m_window };
-	GraphicsPipeline m_graphicsPipeline { m_graphicsDevice , GraphicsPipeline::defaultPipelineConfigInfo(m_width, m_height)};
+	//GraphicsPipeline m_graphicsPipeline { m_graphicsDevice , GraphicsPipeline::defaultPipelineConfigInfo(m_width, m_height)};
 
 };
 

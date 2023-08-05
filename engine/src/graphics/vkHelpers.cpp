@@ -1,8 +1,12 @@
 // Copyright (c) 2023-present Genesis Engine contributors (see LICENSE.txt)
 
 #include "graphics/vkHelpers.hpp"
+
 #include <numeric>
 #include <format>
+#include <span>
+#include <unordered_set>
+
 #include <vulkan/vulkan.hpp>
 #if defined( VULKAN_HPP_NO_TO_STRING )
 	#  include <vulkan/vulkan_to_string.hpp>
@@ -234,18 +238,22 @@ namespace vk::util
 	}
 
 	// Check if the required device extensions are supported by the given physical device.
-	bool checkDeviceExtensionSupport(vk::PhysicalDevice device, const std::vector<const char*>& deviceExtensions)
+	bool checkDeviceExtensionSupport(const vk::PhysicalDevice device, const std::span<const char*>& deviceExtensions)
 	{
 		auto availableExtensions = device.enumerateDeviceExtensionProperties();
 
-		std::set<std::string> requiredExtensions(deviceExtensions.begin(), deviceExtensions.end());
+		std::unordered_set<std::string> requiredExtensions(deviceExtensions.begin(), deviceExtensions.end());
 
-		for (auto const& extension : availableExtensions)
+		for (const auto& extension : availableExtensions)
 		{
 			requiredExtensions.erase(extension.extensionName);
+			if (requiredExtensions.empty())
+			{
+				return true; // All required extensions are supported, early exit.
+            }
 		}
 
-		return requiredExtensions.empty();
+		return false; // Some required extensions are not supported.
 	}
 
 	// Convert HLSL shader code to SPIR-V format using SPIRV-Cross.

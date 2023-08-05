@@ -12,7 +12,7 @@
 
 namespace gen {
 
-    Window::Window(int w, int h, std::string title) : m_width{w}, m_height{h}, m_title{std::move(title)} { // NOLINT(cppcoreguidelines-pro-type-member-init)
+    Window::Window(int width, int height, std::string title) : m_width{width}, m_height{height}, m_title{std::move(title)} { // NOLINT(cppcoreguidelines-pro-type-member-init)
         init();
     }
 
