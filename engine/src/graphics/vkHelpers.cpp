@@ -59,14 +59,17 @@ namespace vk::util
 #endif
 	)
 	{
-		std::vector<char const *> enabledExtensions;
+		std::vector<char const *> enabledExtensions {};
 		enabledExtensions.reserve( extensions.size() );
 
-		std::vector<std::string> availableExtensions;
+		std::vector<std::string> availableExtensions {};
+
+#ifndef GEN_NDEBUG
 		for ( auto const & eProp : extensionProperties )
 		{
 			availableExtensions.push_back( eProp.extensionName );
 		}
+#endif
 
 		gen::logger::debug("vulkan", std::format("Available extensions: \n\t{}",
 												 std::accumulate(availableExtensions.begin(),
