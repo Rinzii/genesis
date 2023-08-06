@@ -4,17 +4,21 @@
 #include <logger/instance.hpp>
 #include <logger/log.hpp>
 
-int main() {
+int main()
+{
 	auto logger = gen::logger::Instance{}; // Required to initialize the logger
 
 	gen::Application app;
 
-	try {
+	try
+	{
 		app.run();
-	} catch (std::exception const& e) {
+	}
+	catch (std::exception const & e)
+	{
 		gen::logger::error(e.what());
-        return 1;
+		return 1;
 	}
 
-    return 0;
+	return 0;
 }

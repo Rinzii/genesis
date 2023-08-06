@@ -4,22 +4,22 @@
 
 #include "application.hpp"
 
-namespace gen {
+namespace gen
+{
 
-	void Application::run() {
-		initialize();
+	void Application::run()
+	{
 		gameLoop();
 		shutdown();
-    }
-
-	void Application::gameLoop() {
-		while (!m_window.shouldClose()) {
-            Window::pollEvents();
-        }
-
-	}
-	void Application::shutdown() {
 	}
 
+	void Application::gameLoop()
+	{
+		while (!m_window.shouldClose()) { Window::pollEvents(); }
+	}
 
-	} // namespace gen
+	void Application::shutdown()
+	{
+	}
+
+} // namespace gen

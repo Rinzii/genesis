@@ -87,16 +87,12 @@ namespace vk::util
 
 		for ( auto const & ext : extensions )
 		{
-			gen::logger::info("vulkan", std::format("Enabling extension: {}", ext));
-
-
 			assert(std::any_of(extensionProperties.begin(),
 							   extensionProperties.end(),
 							   [ext]( vk::ExtensionProperties const & eProp )
 							   {
 								   return ext == eProp.extensionName;
-							   })
-				   );
+							   }));
 
 			enabledExtensions.push_back( ext.data() );
 		}
