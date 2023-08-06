@@ -70,8 +70,8 @@ namespace gen
 
 		int m_id;
 
-		int m_axesCount = 0;
-		int m_buttonsCount = 0;
+		int m_axesCount { 0 };
+		int m_buttonsCount { 0 };
 
 		void* m_userPointer = nullptr;
 

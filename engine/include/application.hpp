@@ -11,7 +11,6 @@ public:
 
     void run();
 
-	Window& getWindow();
 	// This is all kinda bad but it is gonna be replaced later
 	// Just using it for testing the rendering pipeline
 public:

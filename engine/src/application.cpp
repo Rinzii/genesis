@@ -7,11 +7,10 @@
 namespace gen {
 
 	void Application::run() {
-
-    }
-
-	Window & Application::getWindow()
-	{
-		return m_window;
+		while (!m_window.shouldClose()) {
+			gen::Window::pollEvents();
+		}
 	}
+
 } // namespace gen
+
