@@ -7,8 +7,11 @@
 #include <memory> // std::unique_ptr
 #include <set>
 
-#include <GLFW/glfw3.h>
 #include <vulkan/vulkan.hpp>
+#ifndef GLFW_INCLUDE_NONE
+	#  define GLFW_INCLUDE_NONE
+#endif
+#include <GLFW/glfw3.h>
 
 #include "core.hpp"
 #include "logger/log.hpp"

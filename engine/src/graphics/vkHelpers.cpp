@@ -7,7 +7,6 @@
 #include <span>
 #include <unordered_set>
 
-#include <vulkan/vulkan.hpp>
 #if defined( VULKAN_HPP_NO_TO_STRING )
 	#  include <vulkan/vulkan_to_string.hpp>
 #endif

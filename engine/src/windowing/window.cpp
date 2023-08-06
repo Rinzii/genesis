@@ -3,7 +3,6 @@
 #include "windowing/window.hpp"
 
 #include <format>
-#include "graphics/device.hpp"
 #include "logger/log.hpp"
 
 #include <GLFW/glfw3.h>
