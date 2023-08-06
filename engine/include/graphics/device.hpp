@@ -2,17 +2,14 @@
 
 #pragma once
 
-
 #include "core.hpp"
 #include "windowing/window.hpp"
 
-#include <vulkan/vulkan.hpp>
 #include <GLFW/glfw3.h>
+#include <vulkan/vulkan.hpp>
 
 #include <memory>
 #include <optional>
-
-
 
 namespace gen
 {
@@ -20,11 +17,10 @@ namespace gen
 	class GraphicsDevice
 	{
 	public:
-		GraphicsDevice(const GraphicsDevice&) = delete;
-		GraphicsDevice& operator=(const GraphicsDevice&) = delete;
-		GraphicsDevice(GraphicsDevice&&) = delete;
-		GraphicsDevice& operator=(GraphicsDevice&&) = delete;
-
+		GraphicsDevice(const GraphicsDevice &)			   = delete;
+		GraphicsDevice & operator=(const GraphicsDevice &) = delete;
+		GraphicsDevice(GraphicsDevice &&)				   = delete;
+		GraphicsDevice & operator=(GraphicsDevice &&)	   = delete;
 
 #if defined(GEN_NDEBUG)
 		static constexpr bool enableValidationLayers = false;
@@ -32,23 +28,13 @@ namespace gen
 		static constexpr bool enableValidationLayers = true;
 #endif
 
-		explicit GraphicsDevice(Window &window);
+		explicit GraphicsDevice(Window & window);
 		~GraphicsDevice();
 
-
 	private:
-		void createInstance(std::string const & appName,
-							std::string const & engineName,
-							std::vector<std::string> const & layers,
-							std::vector<std::string> const & extensions,
-							u32 const & apiVersion
-		);
-
+		void createInstance(std::string const & appName, std::string const & engineName, std::vector<std::string> const & layers,
+							std::vector<std::string> const & extensions, u32 const & apiVersion);
 
 		vk::UniqueInstance m_instance;
-
-
 	};
-}
-
-
+} // namespace gen
