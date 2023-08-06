@@ -5,14 +5,9 @@
 #include "core.hpp"
 #include "windowing/window.hpp"
 
-#include <vulkan/vulkan.hpp>
-#ifndef GLFW_INCLUDE_NONE
-	#  define GLFW_INCLUDE_NONE
-#endif
-#include <GLFW/glfw3.h>
+#include <vector>
 
-#include <memory>
-#include <optional>
+#include <vulkan/vulkan.hpp>
 
 namespace gen
 {

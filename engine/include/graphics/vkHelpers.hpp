@@ -22,7 +22,7 @@ namespace vk::util
 
 	VKAPI_ATTR VkBool32 VKAPI_CALL debugUtilsMessengerCallback(VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
 															   VkDebugUtilsMessageTypeFlagsEXT messageTypes,
-															   VkDebugUtilsMessengerCallbackDataEXT const * pCallbackData, void * /*pUserData*/);
+															   VkDebugUtilsMessengerCallbackDataEXT const * pCallbackData, void * /* pUserData */);
 
 	std::vector<char const *> gatherExtensions(std::vector<std::string> const & extensions
 #ifndef GEN_NDEBUG

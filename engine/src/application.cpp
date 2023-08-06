@@ -6,6 +6,7 @@
 
 namespace gen
 {
+	// possibly change this to instead use Update() and Draw() functions
 
 	void Application::run()
 	{

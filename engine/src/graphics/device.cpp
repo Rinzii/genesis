@@ -4,6 +4,11 @@
 #include "graphics/vkHelpers.hpp"
 #include "logger/log.hpp"
 
+#ifndef GLFW_INCLUDE_NONE
+	#  define GLFW_INCLUDE_NONE
+#endif
+#include <GLFW/glfw3.h>
+
 #include <format>
 #include <numeric>
 
@@ -57,7 +62,7 @@ namespace gen
 		auto extensionsCount	   = 0U;
 		auto * requestedExtensions = glfwGetRequiredInstanceExtensions(&extensionsCount);
 		std::vector<std::string> const requestedExtensionsVec(requestedExtensions,
-															  requestedExtensions + extensionsCount); // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+														requestedExtensions + extensionsCount); // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
 		auto enabledExtensions = vk::util::gatherExtensions(requestedExtensionsVec
 #ifndef GEN_NDEBUG
 															,
