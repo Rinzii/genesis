@@ -26,22 +26,10 @@ namespace vk::util
 	VkBool32 debugUtilsMessengerCallback(VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity, VkDebugUtilsMessageTypeFlagsEXT messageTypes,
 										 const VkDebugUtilsMessengerCallbackDataEXT * pCallbackData, void * /* pUserData */)
 	{
-#ifndef GEN_NDEBUG
-		// In debug mode, certain Vulkan validation layer messages are ignored.
-		// Here, we filter out specific validation messages identified by their messageIdNumber.
-		if (pCallbackData->messageIdNumber == 648835635) // NOLINT UNASSIGNED-khronos-Validation-debug-build-warning-message
+		if (messageSeverity == VkDebugUtilsMessageSeverityFlagBitsEXT::VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT ||
+			messageSeverity == VkDebugUtilsMessageSeverityFlagBitsEXT::VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT)
 		{
-			return vk::False;
-		}
-		if (pCallbackData->messageIdNumber == 767975156) // NOLINT UNASSIGNED-BestPractices-vkCreateInstance-specialuse-extension
-		{
-			return vk::False;
-		}
-#endif
-
-		if (messageSeverity == VkDebugUtilsMessageSeverityFlagBitsEXT::VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT)
-		{
-			// Any actual errors from vulkan will be logged with an error severity
+			// Any actual errors and warnings from vulkan will be logged with an error severity
 			gen::logger::error("vulkan", std::format("{}: {}:\n "
 													 "\tmessageIDName   = <{}>\n"
 													 "\tmessageIDNumber = {}\n"

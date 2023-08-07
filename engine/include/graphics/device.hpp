@@ -30,8 +30,7 @@ namespace gen
 		~GraphicsDevice();
 
 	private:
-		void createInstance(std::string const & appName, std::string const & engineName, std::vector<std::string> const & layers,
-							std::vector<std::string> const & extensions, u32 const & apiVersion);
+		void createInstance(const std::string & appName, const std::string & engineName, const gen::u32 & apiVersion);
 
 		vk::UniqueInstance m_instance;
 	};
