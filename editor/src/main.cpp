@@ -6,12 +6,11 @@
 
 int main()
 {
-	auto logger = gen::logger::Instance{}; // Required to initialize the logger
-
-	gen::Application app;
-
 	try
 	{
+		auto logger = gen::logger::Instance{}; // Required to initialize the logger
+
+		gen::Application app;
 		app.run();
 	}
 	catch (std::exception const & e)
