@@ -9,7 +9,7 @@
 #include <vector>
 
 #if defined(_WIN32)
-	#include <Windows.h>
+	#include <system/win32/windowsHeader.hpp>
 #endif
 
 namespace gen::logger
