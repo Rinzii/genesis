@@ -37,13 +37,14 @@ namespace gen::logger
 		/// Supported format keys:
 		///  level: log Level
 		///  thread: current (logging) thread ID
+		///  category: log category
 		///  message: log message
 		///  timestamp: log timestamp
 		///  location: log source location
 		///
-		static constexpr std::string_view default_format_v{"[{level}][T{thread}] {message} [{timestamp}] [{location}]"};
+		static constexpr std::string_view default_format_v{"[{level}][T{thread}] [{category}] {message} [{timestamp}] [{location}]"};
 
-		static constexpr std::size_t format_size_v{64};
+		static constexpr std::size_t format_size_v{128};
 
 		static_assert(default_format_v.size() < format_size_v);
 

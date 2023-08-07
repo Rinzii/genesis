@@ -121,6 +121,12 @@ namespace gen::logger
 					return true;
 				}
 
+				if (key == "category")
+				{
+					out += context.category;
+					return true;
+				}
+
 				if (key == "message")
 				{
 					out.append(message);
