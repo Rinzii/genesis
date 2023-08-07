@@ -30,12 +30,7 @@ namespace gen
 
 		// Create window
 		GLFWwindow * window_ = glfwCreateWindow(m_width, m_height, m_title.c_str(), nullptr, nullptr);
-		m_window			 = std::shared_ptr<GLFWwindow>(window_,
-											   [](GLFWwindow * window)
-											   {
-												   glfwDestroyWindow(window);
-												   glfwTerminate();
-											   });
+		m_window = std::unique_ptr<GLFWwindow, Deleter>(window_);
 
 		// Check if window was created
 		if (!m_window)
@@ -50,7 +45,7 @@ namespace gen
 
 	Window::~Window()
 	{
-		// This is here for simple information and may be removed later if we don't need to destruct anything later.
+		glfwTerminate();
 		gen::logger::info("windowing", "Window instance destructed");
 	}
 
@@ -71,4 +66,8 @@ namespace gen
 		gen::logger::warn("windowing", std::format("GLFW Error: {} - {}", error, description));
 	}
 
+	void Window::Deleter::operator()(GLFWwindow * ptr) const
+	{
+		glfwDestroyWindow(ptr);
+	}
 } // namespace gen

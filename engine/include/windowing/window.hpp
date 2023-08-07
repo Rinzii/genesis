@@ -55,7 +55,11 @@ namespace gen
 		int m_height;
 		std::string m_title;
 
-		std::shared_ptr<GLFWwindow> m_window;
+		struct Deleter {
+			void operator()(GLFWwindow* ptr) const;
+		};
+
+		std::unique_ptr<GLFWwindow, Deleter> m_window;
 	};
 
 } // namespace gen
