@@ -20,12 +20,6 @@ namespace gen
 		GraphicsDevice(GraphicsDevice &&)				   = delete;
 		GraphicsDevice & operator=(GraphicsDevice &&)	   = delete;
 
-#if defined(GEN_NDEBUG)
-		static constexpr bool enableValidationLayers = false;
-#else
-		static constexpr bool enableValidationLayers = true;
-#endif
-
 		explicit GraphicsDevice(Window & window);
 		~GraphicsDevice();
 
