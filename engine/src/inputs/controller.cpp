@@ -96,8 +96,8 @@ namespace gen
 		glfwGetJoystickAxes(m_id, &m_axesCount);
 		glfwGetJoystickButtons(m_id, &m_buttonsCount);
 
-		m_axes.reserve(m_axesCount);
-		m_buttons.reserve(m_buttonsCount);
+		m_axes = std::vector<float>(m_axesCount, 0);
+		m_buttons = std::vector<unsigned char>(m_buttonsCount, '0');
 	}
 
 	void Controller::update()
