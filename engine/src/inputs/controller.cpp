@@ -123,7 +123,7 @@ namespace gen
 
 		for (int i = 0; i < m_axesCount; i++)
 		{
-			m_axes.push_back(axes[i]);
+			m_axes.push_back((axes[i] + 1) / 2);
 		}
 	}
 

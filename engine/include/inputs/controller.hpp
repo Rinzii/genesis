@@ -46,7 +46,7 @@ namespace gen
 		GEN_NODISCARD constexpr bool getRightJoystickButton() const { return m_buttons[GLFW_GAMEPAD_BUTTON_RIGHT_THUMB]; }
 
 		GEN_NODISCARD constexpr float getLeftTrigger() const { return m_axes[GLFW_GAMEPAD_AXIS_LEFT_TRIGGER]; }
-		GEN_NODISCARD constexpr float getRightTrigger() const { return m_axes[GLFW_GAMEPAD_AXIS_LEFT_TRIGGER]; }
+		GEN_NODISCARD constexpr float getRightTrigger() const { return m_axes[GLFW_GAMEPAD_AXIS_RIGHT_TRIGGER]; }
 
 		GEN_NODISCARD constexpr bool getLeftBumper() const { return m_buttons[GLFW_GAMEPAD_BUTTON_LEFT_BUMPER]; }
 		GEN_NODISCARD constexpr bool getRightBumper() const { return m_buttons[GLFW_GAMEPAD_BUTTON_RIGHT_BUMPER]; }
