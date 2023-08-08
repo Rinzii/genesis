@@ -28,9 +28,9 @@ namespace gen
 
 		void update();
 
-		constexpr void setActive(bool active) { m_active = active; }
+		constexpr void setActive(bool active) { m_active = active; } // TODO: change to a pointer to an entity
 
-		void setUserPointer(void* owner); // will be changed to a pointer to an entity later
+		void setUserPointer(void* owner); // TODO: change to a pointer to an entity
 
 		GEN_NODISCARD constexpr bool isActive() const { return m_active; }
 		GEN_NODISCARD constexpr void* getUserPointer() const { return m_userPointer; }
@@ -68,16 +68,19 @@ namespace gen
 
 	private:
 
-		int m_id;
+		void storeValue(const float* axes);
+		void storeValue(const unsigned char* buttons);
+
+		int m_id { 0 };
 
 		int m_axesCount { 0 };
 		int m_buttonsCount { 0 };
 
 		void* m_userPointer = nullptr;
 
-		const float* m_axes = nullptr;
-		const unsigned char* m_buttons = nullptr;
+		std::vector<float> m_axes;
+		std::vector<unsigned char> m_buttons;
 
-		bool m_active;
+		bool m_active = true;
 	};
 }

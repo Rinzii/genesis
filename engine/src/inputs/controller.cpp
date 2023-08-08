@@ -25,19 +25,28 @@ namespace gen
 			while (glfwJoystickPresent(alreadyConnectedGamePadCount) != 0)
 			{
 				if (glfwJoystickIsGamepad(alreadyConnectedGamePadCount))
+				{
 					g_connectedControllers.emplace_back(alreadyConnectedGamePadCount);
+				}
+					
 				alreadyConnectedGamePadCount++;
 
 				if (alreadyConnectedGamePadCount == GLFW_JOYSTICK_LAST)
+				{
 					break;
+				}
 			}
 		}
 
 		void updateControllers()
 		{
 			for (auto & connectedController : g_connectedControllers)
+			{
 				if (connectedController.isActive())
+				{
 					connectedController.update();
+				}
+			}
 		}
 
 		void gamePadCallback(int id, int event)
@@ -48,11 +57,13 @@ namespace gen
 				if (glfwJoystickIsGamepad(id))
 				{
 					for (auto & connectedController : g_connectedControllers)
+					{
 						if (connectedController.getID() == id)
 						{
 							connectedController.setActive(true);
 							connectedController.setUserPointer(connectedController.getUserPointer());
 						}
+					}
 
 					g_connectedControllers.emplace_back(id);
 				}
@@ -60,10 +71,12 @@ namespace gen
 
 			case GLFW_DISCONNECTED:
 				for (auto & connectedController : g_connectedControllers)
+				{
 					if (connectedController.getID() == id)
 					{
 						connectedController.setActive(false);
 					}
+				}
 				break;
 
 			default: 
@@ -74,26 +87,53 @@ namespace gen
 		Controller* getController(int i)
 		{
 			if (i < g_connectedControllers.size() && g_connectedControllers[i].isActive())
+			{
 				return &g_connectedControllers[i];
+			}
 
 			return nullptr;
 		}
 	}
 
 	Controller::Controller(const int id)
-		: m_id(id), m_active(true)
+		: m_id(id)
 	{
+		glfwGetJoystickAxes(m_id, &m_axesCount);
+		glfwGetJoystickButtons(m_id, &m_buttonsCount);
+
+		m_axes.reserve(m_axesCount);
+		m_buttons.reserve(m_buttonsCount);
 	}
 
 	void Controller::update()
 	{
-		m_axes = glfwGetJoystickAxes(m_id, &m_axesCount);
-		m_buttons = glfwGetJoystickButtons(m_id, &m_buttonsCount);
+		storeValue(glfwGetJoystickAxes(m_id, &m_axesCount));
+		storeValue(glfwGetJoystickButtons(m_id, &m_buttonsCount));
 	}
 
 	void Controller::setUserPointer(void * owner)
 	{
 		glfwSetJoystickUserPointer(m_id, owner);
 		m_userPointer = owner;
+	}
+
+	void Controller::storeValue(const float * axes)
+	{
+		m_axes.clear();
+
+		for (int i = 0; i < m_axesCount; i++)
+		{
+			m_axes.push_back(axes[i]);
+		}
+	}
+
+	void Controller::storeValue(const unsigned char * buttons)
+	{
+		m_buttons.clear();
+
+		for (int i = 0; i < m_buttonsCount; i++)
+		{
+			m_buttons.push_back(buttons[i]);
+		}
 	}
 }
