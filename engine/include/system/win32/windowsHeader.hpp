@@ -16,7 +16,7 @@
 #define STRICT
 #endif
 
-#include "system/win32/postWinapi.hpp"
 #include "system/win32/minWindows.hpp"
+#include "system/win32/postWinapi.hpp"
 
 #endif // GEN_PLATFORM_WINDOWS
