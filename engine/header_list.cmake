@@ -19,6 +19,10 @@ set(graphics_headers
 		include/graphics/pipeline.hpp
 		)
 
+set (inputs_headers
+		include/inputs/controller.hpp
+		)
+		
 set(io_headers
         include/io/fileAsync.hpp
         include/io/file.hpp
@@ -59,6 +63,7 @@ set(windowing_headers
 set(genesis_headers
         ${base_headers}
 		#${graphics_headers}
+		${inputs_headers}
         ${io_headers}
         ${system_headers}
         ${util_headers}
