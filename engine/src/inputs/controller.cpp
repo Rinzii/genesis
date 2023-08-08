@@ -2,11 +2,6 @@
 
 #include "inputs/controller.hpp"
 
-#include <vector>
-#include <map>
-#include <string>
-#include <iostream>
-
 namespace gen
 {
 	namespace controllerManager

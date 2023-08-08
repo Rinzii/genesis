@@ -1,6 +1,7 @@
 // Copyright (c) 2023-present Genesis Engine contributors (see LICENSE.txt)
 
 #pragma once
+#include <vector>
 #include <GLFW/glfw3.h>
 #include <mim/vec2.hpp>
 #include "base/config/compilerTraits.hpp"
