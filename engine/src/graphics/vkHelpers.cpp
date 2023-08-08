@@ -22,36 +22,7 @@ VULKAN_HPP_DEFAULT_DISPATCH_LOADER_DYNAMIC_STORAGE
 // Define the helper functions and classes within the 'vk::util' namespace.
 namespace vk::util
 {
-	// Callback function used for Vulkan debug messaging.
-	VkBool32 debugUtilsMessengerCallback(VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity, VkDebugUtilsMessageTypeFlagsEXT messageTypes,
-										 const VkDebugUtilsMessengerCallbackDataEXT * pCallbackData, void * /* pUserData */)
-	{
-		if (messageSeverity == VkDebugUtilsMessageSeverityFlagBitsEXT::VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT ||
-			messageSeverity == VkDebugUtilsMessageSeverityFlagBitsEXT::VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT)
-		{
-			// Any actual errors and warnings from vulkan will be logged with an error severity
-			gen::logger::error("vulkan", std::format("{}: {}:\n "
-													 "\tmessageIDName   = <{}>\n"
-													 "\tmessageIDNumber = {}\n"
-													 "\tmessage         = <{}>\n",
-													 vk::to_string(static_cast<vk::DebugUtilsMessageSeverityFlagBitsEXT>(messageSeverity)),
-													 vk::to_string(static_cast<vk::DebugUtilsMessageTypeFlagsEXT>(messageTypes)), pCallbackData->pMessageIdName,
-													 pCallbackData->messageIdNumber, pCallbackData->pMessage));
-		}
-		else
-		{
-			// Everything else will be treated as a warning.
-			gen::logger::warn("vulkan", std::format("{}: {}:\n "
-													"\tmessageIDName   = <{}>\n"
-													"\tmessageIDNumber = {}\n"
-													"\tmessage         = <{}>\n",
-													vk::to_string(static_cast<vk::DebugUtilsMessageSeverityFlagBitsEXT>(messageSeverity)),
-													vk::to_string(static_cast<vk::DebugUtilsMessageTypeFlagsEXT>(messageTypes)), pCallbackData->pMessageIdName,
-													pCallbackData->messageIdNumber, pCallbackData->pMessage));
-		}
 
-		return vk::False;
-	}
 
 	// Gather enabled extensions based on the requested extensions and available extension properties.
 	std::vector<char const *> gatherExtensions(std::vector<std::string> const & extensions
@@ -94,100 +65,16 @@ namespace vk::util
 		return enabledExtensions;
 	}
 
-	// Gather enabled layers based on the requested layers and available layer properties.
-	std::vector<char const *> gatherLayers(std::vector<std::string> const & layers
-#ifndef GEN_NDEBUG
-										   ,
-										   std::vector<vk::LayerProperties> const & layerProperties
-#endif
-	)
-	{
-		std::vector<char const *> enabledLayers;
-		enabledLayers.reserve(layers.size());
-		for (auto const & layer : layers)
-		{
-			// Check if the requested layer exists in the available layer properties.
-			assert(
-				std::any_of(layerProperties.begin(), layerProperties.end(), [layer](vk::LayerProperties const & lProp) { return layer == lProp.layerName; }));
-
-			enabledLayers.push_back(layer.data());
-		}
-#ifndef GEN_NDEBUG
-		// In debug mode, enable the "VK_LAYER_KHRONOS_validation" standard validation layer if not already enabled.
-		if (std::none_of(layers.begin(), layers.end(), [](std::string const & layer) { return layer == "VK_LAYER_KHRONOS_validation"; }) &&
-			std::any_of(layerProperties.begin(), layerProperties.end(),
-						[](vk::LayerProperties const & lProp) { return (std::strcmp("VK_LAYER_KHRONOS_validation", lProp.layerName) == 0); }))
-		{
-			enabledLayers.push_back("VK_LAYER_KHRONOS_validation");
-		}
-#endif
-		return enabledLayers;
-	}
-
 	// Create an instance create info chain with or without debug utils messenger in debug mode.
-#ifdef GEN_NDEBUG
-	vk::StructureChain<vk::InstanceCreateInfo>
-#else
-	vk::StructureChain<vk::InstanceCreateInfo, vk::DebugUtilsMessengerCreateInfoEXT>
-#endif
-	makeInstanceCreateInfoChain(vk::ApplicationInfo const & appInfo, std::vector<const char *> const & layers, std::vector<const char *> const & extensions)
+	vk::StructureChain<vk::InstanceCreateInfo> makeInstanceCreateInfoChain(vk::ApplicationInfo const & appInfo, std::vector<const char *> const & layers, std::vector<const char *> const & extensions)
 	{
 
-#ifdef GEN_NDEBUG
 		// When in non-debug mode, use the InstanceCreateInfo for instance creation.
 		vk::StructureChain<vk::InstanceCreateInfo> const instanceCreateInfo({{}, &appInfo, layers, extensions});
-#else
-		// In debug mode, also use the debugUtilsMessengerCallback in instance creation
-		vk::DebugUtilsMessageSeverityFlagsEXT const severityFlags(vk::DebugUtilsMessageSeverityFlagBitsEXT::eWarning |
-																  vk::DebugUtilsMessageSeverityFlagBitsEXT::eError);
 
-		vk::DebugUtilsMessageTypeFlagsEXT const messageTypeFlags(vk::DebugUtilsMessageTypeFlagBitsEXT::eGeneral |
-																 vk::DebugUtilsMessageTypeFlagBitsEXT::ePerformance |
-																 vk::DebugUtilsMessageTypeFlagBitsEXT::eValidation);
-
-		vk::StructureChain<vk::InstanceCreateInfo, vk::DebugUtilsMessengerCreateInfoEXT> instanceCreateInfo(
-			{{}, &appInfo, layers, extensions}, {{}, severityFlags, messageTypeFlags, &vk::util::debugUtilsMessengerCallback});
-#endif
 		return instanceCreateInfo;
 	}
 
-	// Create DebugUtilsMessengerCreateInfoEXT for Vulkan debug messaging.
-	vk::DebugUtilsMessengerCreateInfoEXT makeDebugUtilsMessengerCreateInfoEXT()
-	{
-		return {{},
-				vk::DebugUtilsMessageSeverityFlagBitsEXT::eWarning | vk::DebugUtilsMessageSeverityFlagBitsEXT::eError,
-				vk::DebugUtilsMessageTypeFlagBitsEXT::eGeneral | vk::DebugUtilsMessageTypeFlagBitsEXT::ePerformance |
-					vk::DebugUtilsMessageTypeFlagBitsEXT::eValidation,
-				&vk::util::debugUtilsMessengerCallback};
-	}
-
-	// Check if the requested validation layers are supported by the Vulkan instance.
-	bool checkValidationLayerSupport(const std::vector<std::string> & validationLayers)
-	{
-#ifndef GEN_NDEBUG
-		auto availableLayers = vk::enumerateInstanceLayerProperties();
-
-		for (auto const & layerName : validationLayers)
-		{
-			bool layerFound = false;
-
-			for (auto const & layerProperties : availableLayers)
-			{
-				if (layerName == layerProperties.layerName)
-				{
-					layerFound = true;
-					break;
-				}
-			}
-
-			if (!layerFound) { return false; }
-		}
-
-		return true;
-#else
-		return true;
-#endif
-	}
 
 	// Check if the required device extensions are supported by the given physical device.
 	bool checkDeviceExtensionSupport(const vk::PhysicalDevice device, const std::span<const char *> & deviceExtensions)

@@ -31,24 +31,13 @@ namespace gen
 	void GraphicsDevice::createInstance(const std::string & appName, const std::string & engineName, const gen::u32 & apiVersion)
 	{
 #if (VULKAN_HPP_DISPATCH_LOADER_DYNAMIC == 1)
-		static vk::DynamicLoader const vkdl;
-		auto vkGetInstanceProcAddr = vkdl.getProcAddress<PFN_vkGetInstanceProcAddr>("vkGetInstanceProcAddr");
+		static vk::DynamicLoader const dynLoader;
+		auto vkGetInstanceProcAddr = dynLoader.getProcAddress<PFN_vkGetInstanceProcAddr>("vkGetInstanceProcAddr");
 		VULKAN_HPP_DEFAULT_DISPATCHER.init(vkGetInstanceProcAddr);
 #endif
 
 		// TODO: Allow for the application to be able to specify its version itself. Instead of just using the engine version.
 		vk::ApplicationInfo const appInfo(appName.c_str(), gen::version_v.getVersion(), engineName.c_str(), gen::version_v.getVersion(), apiVersion);
-
-		auto enabledLayers = vk::util::gatherLayers({}
-#ifndef GEN_NDEBUG
-													,
-													vk::enumerateInstanceLayerProperties()
-#endif
-		);
-
-		gen::logger::debug("vulkan", std::format("Enabled layers: \n\t{}", std::accumulate(enabledLayers.begin(), enabledLayers.end(), std::string(),
-																						   [](const std::string & acc, const std::string & ext)
-																						   { return acc.empty() ? ext : acc + ", \n\t" + ext; })));
 
 		auto extensionsCount	   = 0U;
 		auto * requestedExtensions = glfwGetRequiredInstanceExtensions(&extensionsCount);
@@ -66,7 +55,7 @@ namespace gen
 																					 [](const std::string & acc, const std::string & ext)
 																					 { return acc.empty() ? ext : acc + ", \n\t" + ext; })));
 
-		m_instance = vk::createInstanceUnique(vk::util::makeInstanceCreateInfoChain(appInfo, enabledLayers, enabledExtensions).get<vk::InstanceCreateInfo>());
+		m_instance = vk::createInstanceUnique(vk::util::makeInstanceCreateInfoChain(appInfo, {}, enabledExtensions).get<vk::InstanceCreateInfo>());
 
 #if (VULKAN_HPP_DISPATCH_LOADER_DYNAMIC == 1)
 		// initialize function pointers for instance
