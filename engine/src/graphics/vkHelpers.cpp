@@ -77,7 +77,7 @@ namespace vk::util
 
 
 	// Check if the required device extensions are supported by the given physical device.
-	bool checkDeviceExtensionSupport(const vk::PhysicalDevice device, const std::span<const char *> & deviceExtensions)
+	bool checkDeviceExtensionSupport(const vk::PhysicalDevice device, const std::span<const char * const> deviceExtensions)
 	{
 		auto availableExtensions = device.enumerateDeviceExtensionProperties();
 
@@ -111,8 +111,9 @@ namespace vk::util
 		}
 
 		// Compile HLSL to SPIR-V using SPIRV-Cross
+		// NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
 		spirv_cross::CompilerHLSL compiler(reinterpret_cast<const uint32_t *>(hlslShader.data()),
-										   hlslShader.size() / sizeof(uint32_t)); // NOLINT(cppcoreguidelines-pro-type-reinterpret-cast)
+										   hlslShader.size() / sizeof(uint32_t));
 		compiler.set_entry_point("main", executionModel);
 
 		std::basic_string<char, std::char_traits<char>, std::allocator<char>> spirvData = compiler.compile();
@@ -134,17 +135,17 @@ namespace vk::util
 		return device.createShaderModuleUnique(vk::ShaderModuleCreateInfo(vk::ShaderModuleCreateFlags(), shaderSPV));
 	}
 
-	vk::UniqueSurfaceKHR createWindowSurface(vk::UniqueInstance const & instance, gen::Window const & window)
+	vk::UniqueSurfaceKHR createWindowSurface(vk::Instance const & instance, gen::Window const & window)
 	{
 		VkSurfaceKHR surface_{};
-		VkResult const err = glfwCreateWindowSurface(VkInstance(instance.get()), window.getHandle(), nullptr, &surface_);
+		VkResult const err = glfwCreateWindowSurface(VkInstance(instance), window.getHandle(), nullptr, &surface_);
 		if (err != VK_SUCCESS)
 		{
 			gen::logger::error("vulkan", "Failed to create window surface!");
 			throw std::runtime_error("Failed to create window!");
 		}
-		vk::ObjectDestroy<vk::Instance, VULKAN_HPP_DEFAULT_DISPATCHER_TYPE> const deleter_(instance.get());
-		return vk::UniqueSurfaceKHR(vk::SurfaceKHR(surface_), deleter_);
+		
+		return vk::UniqueSurfaceKHR(surface_, instance);
 	}
 
 } // namespace vk::util

@@ -4,13 +4,15 @@
 #include <logger/instance.hpp>
 #include <logger/log.hpp>
 
+static constexpr auto appName { "Genesis Engine Game" };
+
 int main()
 {
 	try
 	{
 		auto logger = gen::logger::Instance{}; // Required to initialize the logger
 
-		gen::Application app;
+		gen::Application app { appName };
 		app.run();
 	}
 	catch (std::exception const & e)

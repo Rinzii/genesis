@@ -8,6 +8,11 @@ namespace gen
 {
 	// possibly change this to instead use Update() and Draw() functions
 
+	Application::Application(const std::string & appName)
+		: m_window{ m_width, m_height, appName }, m_graphicsDevice{ appName }
+	{
+	}
+
 	void Application::run()
 	{
 		gameLoop();
@@ -22,5 +27,6 @@ namespace gen
 	void Application::shutdown()
 	{
 	}
+
 
 } // namespace gen

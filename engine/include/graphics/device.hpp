@@ -20,7 +20,7 @@ namespace gen
 		GraphicsDevice(GraphicsDevice &&)				   = delete;
 		GraphicsDevice & operator=(GraphicsDevice &&)	   = delete;
 
-		explicit GraphicsDevice(Window & window);
+		explicit GraphicsDevice( std::string const & appName );
 		~GraphicsDevice();
 
 	private:

@@ -12,8 +12,8 @@
 namespace gen
 {
 
-	Window::Window(int width, int height, std::string title)
-		: m_width{width}, m_height{height}, m_title{std::move(title)} // NOLINT(cppcoreguidelines-pro-type-member-init)
+	Window::Window(int width, int height, const std::string& title)
+		: m_extent{width, height} // NOLINT(cppcoreguidelines-pro-type-member-init)
 	{
 		if (!glfwInit()) // NOLINT(readability-implicit-bool-conversion)
 		{
@@ -26,7 +26,12 @@ namespace gen
 		glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE); // TODO: Later add support for resizing of windows.
 
 		// Create window
-		GLFWwindow * window_ = glfwCreateWindow(m_width, m_height, m_title.c_str(), nullptr, nullptr);
+		GLFWwindow * window_ = glfwCreateWindow(static_cast<int>(m_extent.x),
+												static_cast<int>(m_extent.y),
+												title.c_str(),
+												nullptr,
+												nullptr);
+
 		m_window = std::unique_ptr<GLFWwindow, Deleter>(window_);
 
 		// Check if window was created
@@ -49,7 +54,6 @@ namespace gen
 
 	Window::~Window()
 	{
-		glfwTerminate();
 		gen::logger::info("windowing", "Window instance destructed");
 	}
 
@@ -64,6 +68,11 @@ namespace gen
 	}
 
 	/// Setters
+
+	void Window::setTitle(const std::string& title)
+	{
+		glfwSetWindowTitle(m_window.get(), title.c_str());
+	}
 
 	void Window::setCursorMode(Window::CursorMode mode)
 	{
@@ -86,5 +95,6 @@ namespace gen
 	void Window::Deleter::operator()(GLFWwindow * ptr) const
 	{
 		glfwDestroyWindow(ptr);
+		glfwTerminate();
 	}
 } // namespace gen

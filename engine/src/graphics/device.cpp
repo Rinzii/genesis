@@ -15,11 +15,11 @@
 namespace gen
 {
 
-	GraphicsDevice::GraphicsDevice(gen::Window & window)
+	GraphicsDevice::GraphicsDevice(std::string const & appName)
 	{
 		// TODO: Allow for the vulkan api to be specified in a config file or through command line arguments.
 		// We could also dynamically check for the highest supported version of the vulkan api, but that feels outside the scope of this project.
-		createInstance(window.getTitle(), "Genesis Engine", VK_API_VERSION_1_3);
+		createInstance(appName, "Genesis Engine", VK_API_VERSION_1_3);
 	}
 
 	GraphicsDevice::~GraphicsDevice()

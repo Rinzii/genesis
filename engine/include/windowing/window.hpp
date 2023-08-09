@@ -4,6 +4,8 @@
 
 #include "core.hpp"
 
+#include <mim/vec2.hpp>
+
 #include <memory>
 #include <string>
 
@@ -11,7 +13,6 @@
 
 // Start Forward declarations
 struct GLFWwindow;
-
 // End Forward declarations
 
 namespace gen
@@ -20,6 +21,7 @@ namespace gen
 	class Window
 	{
 	public:
+
 		// Values mirrored from GLFW
 		// https://www.glfw.org/docs/3.3/glfw3_8h.html#a2315b99a329ce53e6a13a9d46fd5ca88
 		enum class CursorMode
@@ -29,7 +31,7 @@ namespace gen
 			Disabled = 0x00034003
 		};
 
-		Window(int width, int height, std::string title);
+		Window(int width, int height, const std::string& title);
 		~Window();
 
 		Window(const Window &)			   = delete;
@@ -44,9 +46,9 @@ namespace gen
 
 		// Getters
 
-		GEN_NODISCARD int getWidth() const { return m_width; }
-		GEN_NODISCARD int getHeight() const { return m_height; }
-		GEN_NODISCARD const std::string & getTitle() const { return m_title; }
+		GEN_NODISCARD mim::vec2u getExtent() const { return m_extent; }
+		GEN_NODISCARD int getWidth() const { return static_cast<int>(m_extent.x); }
+		GEN_NODISCARD int getHeight() const { return static_cast<int>(m_extent.y); }
 		GEN_NODISCARD CursorMode getCursorMode() const { return m_currentCursorMode; }
 		GEN_NODISCARD GLFWwindow * getHandle() const { return m_window.get(); }
 
@@ -54,9 +56,9 @@ namespace gen
 
 		// Setters
 
-		void setWidth(int width) { m_width = width; }
-		void setHeight(int height) { m_height = height; }
-		void setTitle(const std::string & title) { m_title = title; }
+		void setWidth(int width) { m_extent.x = width; }
+		void setHeight(int height) { m_extent.y = height; }
+		void setTitle(const std::string& title);
 		void setCursorMode(CursorMode mode);
 
 	private:
@@ -65,11 +67,9 @@ namespace gen
 		static void callback_error(int error, const char * description);
 		static void callback_cursor_position(GLFWwindow * window, double xPos, double yPos);
 
-		int m_width;
-		int m_height;
-		std::string m_title;
+		mim::vec2u m_extent;
 
-		Window::CursorMode m_currentCursorMode { Window::CursorMode::Normal };
+		CursorMode m_currentCursorMode { Window::CursorMode::Normal };
 
 
 		struct Deleter
