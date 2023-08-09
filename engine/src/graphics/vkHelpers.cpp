@@ -142,9 +142,9 @@ namespace vk::util
 		if (err != VK_SUCCESS)
 		{
 			gen::logger::error("vulkan", "Failed to create window surface!");
-			throw std::runtime_error("Failed to create window!");
+			throw std::runtime_error("Failed to create window surface!");
 		}
-		
+
 		return vk::UniqueSurfaceKHR(surface_, instance);
 	}
 
