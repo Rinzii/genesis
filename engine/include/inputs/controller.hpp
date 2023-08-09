@@ -8,19 +8,6 @@
 
 namespace gen
 {
-	class Controller;
-
-	namespace controllerManager
-	{
-		void init();
-
-		void updateControllers();
-
-		void gamePadCallback(int id, int event);
-
-		Controller* getController(int i); //for testing purposes
-	}
-
 	class Controller
 	{
 	public:

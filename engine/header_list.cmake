@@ -21,6 +21,8 @@ set(graphics_headers
 
 set (inputs_headers
 		include/inputs/controller.hpp
+		include/inputs/mouseAndKeyboard.hpp
+		include/inputs/inputs.hpp
 		)
 		
 set(io_headers

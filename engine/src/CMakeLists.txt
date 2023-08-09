@@ -8,4 +8,6 @@ target_sources(${PROJECT_NAME} PRIVATE
         application.cpp
 		time.cpp
 		inputs/controller.cpp
+		inputs/mouseAndKeyboard.cpp
+		inputs/inputs.cpp
         )
