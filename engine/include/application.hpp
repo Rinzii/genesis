@@ -32,7 +32,7 @@ namespace gen
 
 	private:
 		Window m_window { m_width, m_height, m_appName };
-		GraphicsDevice m_graphicsDevice { m_appName };
+		GraphicsDevice m_graphicsDevice { m_window, m_appName };
 	};
 
 } // namespace gen
