@@ -67,3 +67,4 @@ cmake-build-*/
 #project specific excludes
 !tools/**
 genesis.log
+/ext/src/glfw/include/GLFW/glfw3.h
