@@ -26,6 +26,7 @@ namespace gen
 	GraphicsDevice::~GraphicsDevice()
 	{
 
+		m_surface.release();
 		m_instance.release();
 	}
 
