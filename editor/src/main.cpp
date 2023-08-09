@@ -4,20 +4,21 @@
 #include <logger/instance.hpp>
 #include <logger/log.hpp>
 
-int main() {
-	// We don't want to initialize the logger in release mode.
-#ifndef GEN_NDEBUG
-	auto logger = gen::logger::Instance{}; // Required to initialize the logger
-#endif
 
-	gen::Application app;
+int main()
+{
+	try
+	{
+		auto logger = gen::logger::Instance{}; // Required to initialize the logger
 
-	try {
+		gen::Application app;
 		app.run();
-	} catch (std::exception const& e) {
+	}
+	catch (std::exception const & e)
+	{
 		gen::logger::error(e.what());
-        return 1;
+		return 1;
 	}
 
-    return 0;
+	return 0;
 }

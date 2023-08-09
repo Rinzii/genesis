@@ -60,7 +60,7 @@ namespace gen {
 
 	void GraphicsPipeline::createShaderModule(const std::vector<char> & code, vk::ShaderModule * shaderModule)
 	{
-		m_vertShaderModule = vk::util::createShaderModule(m_device.getDevice(), vk::ShaderStageFlagBits::eVertex, code.data());
+		//m_vertShaderModule = vk::util::createShaderModule(m_device.getDevice(), vk::ShaderStageFlagBits::eVertex, code.data());
 	}
 
 	PipelineConfigInfo GraphicsPipeline::defaultPipelineConfigInfo(u32 width, u32 height)

@@ -16,7 +16,6 @@ set(base_headers
         )
 
 set(graphics_headers
-        include/graphics/apiVersion.hpp
         include/graphics/device.hpp
 		include/graphics/pipeline.hpp
         include/graphics/vkHelpers.hpp

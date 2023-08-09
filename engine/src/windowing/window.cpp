@@ -2,41 +2,99 @@
 
 #include "windowing/window.hpp"
 
-#include "graphics/device.hpp"
+#include <format>
 #include "logger/log.hpp"
 
 #include <GLFW/glfw3.h>
 
-
 #include <utility>
 
-namespace gen {
+namespace gen
+{
 
-    Window::Window(int w, int h, std::string title) : m_width{w}, m_height{h}, m_title{std::move(title)} { // NOLINT(cppcoreguidelines-pro-type-member-init)
-        init();
-    }
+	Window::Window(int width, int height, const char* title)
+		: m_extent{width, height} // NOLINT(cppcoreguidelines-pro-type-member-init)
+	{
+		if (!glfwInit()) // NOLINT(readability-implicit-bool-conversion)
+		{
+			gen::logger::error("windowing", "Failed to initialize GLFW");
+			throw std::runtime_error("Failed to initialize GLFW");
+		}
 
-	Window::~Window() {
-        glfwDestroyWindow(m_window);
+		// Set window hints
+		glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
+		glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE); // TODO: Later add support for resizing of windows.
+
+		// Create window
+		GLFWwindow * window_ = glfwCreateWindow(static_cast<int>(m_extent.x),
+												static_cast<int>(m_extent.y),
+												title,
+												nullptr,
+												nullptr);
+
+		m_window = std::unique_ptr<GLFWwindow, Deleter>(window_);
+
+		// Check if window was created
+		if (!m_window)
+		{
+			gen::logger::error("windowing", "Failed to create GLFW window");
+			throw std::runtime_error("Failed to create GLFW window");
+		}
+
+		// Set modes
+		glfwSetInputMode(m_window.get(), GLFW_CURSOR, static_cast<int>(m_currentCursorMode));
+
+		// Set callbacks
+		glfwSetErrorCallback(callback_error);
+		glfwSetCursorPosCallback(m_window.get(), callback_cursor_position);
+
+		// Report successful window creation
+		gen::logger::info("windowing", "Window instance constructed");
+	}
+
+	Window::~Window()
+	{
+		gen::logger::info("windowing", "Window instance destructed");
+	}
+
+	bool Window::shouldClose() const
+	{
+		return glfwWindowShouldClose(m_window.get()) != 0;
+	}
+
+	void Window::pollEvents()
+	{
+		glfwPollEvents();
+	}
+
+	/// Setters
+
+	void Window::setTitle(const char* title)
+	{
+		glfwSetWindowTitle(m_window.get(), title);
+	}
+
+	void Window::setCursorMode(Window::CursorMode mode)
+	{
+		m_currentCursorMode = mode;
+		glfwSetInputMode(m_window.get(), GLFW_CURSOR, static_cast<int>(m_currentCursorMode));
+	}
+
+	/// Callbacks
+
+	void Window::callback_error(int error, const char * description)
+	{
+		gen::logger::warn("windowing", std::format("GLFW Error: {} - {}", error, description));
+	}
+
+	void Window::callback_cursor_position(GLFWwindow * window, double xPos, double yPos)
+	{
+	}
+
+
+	void Window::Deleter::operator()(GLFWwindow * ptr) const
+	{
+		glfwDestroyWindow(ptr);
 		glfwTerminate();
-    }
-
-	bool Window::shouldClose() const {
-        return glfwWindowShouldClose(m_window) != 0;
-    }
-
-	void Window::pollEvents() {
-        glfwPollEvents();
-    }
-
-	void Window::init() {
-        glfwInit();
-        glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
-        glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE); // TODO: Later add support for resizing of windows.
-
-        m_window = glfwCreateWindow(m_width, m_height, m_title.c_str(), nullptr, nullptr);
-
-    }
-
-
-} // namespace gwn
+	}
+} // namespace gen

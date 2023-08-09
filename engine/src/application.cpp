@@ -4,27 +4,24 @@
 
 #include "application.hpp"
 
-namespace gen {
+namespace gen
+{
+	// possibly change this to instead use Update() and Draw() functions
 
-	void Application::run() {
-		initialize();
+	void Application::run()
+	{
 		gameLoop();
 		shutdown();
-    }
-	void Application::initialize() {
-		initializeGraphics();
-	}
-	void Application::gameLoop() {
-		while (!m_window.shouldClose()) {
-            Window::pollEvents();
-        }
-
-	}
-	void Application::shutdown() {
 	}
 
-	void Application::initializeGraphics() {
-
+	void Application::gameLoop()
+	{
+		while (!m_window.shouldClose()) { Window::pollEvents(); }
 	}
 
-	} // namespace gen
+	void Application::shutdown()
+	{
+	}
+
+
+} // namespace gen
