@@ -12,7 +12,7 @@
 namespace gen
 {
 
-	Window::Window(int width, int height, const std::string& title)
+	Window::Window(int width, int height, const char* title)
 		: m_extent{width, height} // NOLINT(cppcoreguidelines-pro-type-member-init)
 	{
 		if (!glfwInit()) // NOLINT(readability-implicit-bool-conversion)
@@ -28,7 +28,7 @@ namespace gen
 		// Create window
 		GLFWwindow * window_ = glfwCreateWindow(static_cast<int>(m_extent.x),
 												static_cast<int>(m_extent.y),
-												title.c_str(),
+												title,
 												nullptr,
 												nullptr);
 
@@ -69,9 +69,9 @@ namespace gen
 
 	/// Setters
 
-	void Window::setTitle(const std::string& title)
+	void Window::setTitle(const char* title)
 	{
-		glfwSetWindowTitle(m_window.get(), title.c_str());
+		glfwSetWindowTitle(m_window.get(), title);
 	}
 
 	void Window::setCursorMode(Window::CursorMode mode)

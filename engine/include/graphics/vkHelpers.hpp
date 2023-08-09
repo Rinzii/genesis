@@ -27,14 +27,14 @@ namespace vk::util
 #endif
 	);
 
-	vk::StructureChain<vk::InstanceCreateInfo> makeInstanceCreateInfoChain(vk::ApplicationInfo const & appInfo, std::vector<const char *> const & layers, std::vector<const char *> const & extensions);
+	vk::StructureChain<vk::InstanceCreateInfo> makeInstanceCreateInfoChain(vk::ApplicationInfo appInfo, std::vector<const char *> const & layers, std::vector<const char *> const & extensions);
 
 	vk::DebugUtilsMessengerCreateInfoEXT makeDebugUtilsMessengerCreateInfoEXT();
 
 	bool checkDeviceExtensionSupport(vk::PhysicalDevice device, const std::vector<const char *> & deviceExtensions);
 
-	vk::UniqueShaderModule createShaderModule(vk::Device const & device, vk::ShaderStageFlagBits shaderStage, std::string const & shaderText);
+	vk::UniqueShaderModule createShaderModule(vk::Device device, vk::ShaderStageFlagBits shaderStage, std::string const & shaderText);
 
-	vk::UniqueSurfaceKHR createWindowSurface(vk::Instance const & instance, gen::Window const & window);
+	vk::UniqueSurfaceKHR createWindowSurface(vk::Instance instance, gen::Window const & window);
 
 } // namespace vk::util

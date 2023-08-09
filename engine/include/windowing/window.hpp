@@ -31,7 +31,7 @@ namespace gen
 			Disabled = 0x00034003
 		};
 
-		Window(int width, int height, const std::string& title);
+		Window(int width, int height, const char* title);
 		~Window();
 
 		Window(const Window &)			   = delete;
@@ -58,7 +58,7 @@ namespace gen
 
 		void setWidth(int width) { m_extent.x = width; }
 		void setHeight(int height) { m_extent.y = height; }
-		void setTitle(const std::string& title);
+		void setTitle(const char* title);
 		void setCursorMode(CursorMode mode);
 
 	private:

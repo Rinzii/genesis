@@ -66,7 +66,7 @@ namespace vk::util
 	}
 
 	// Create an instance create info chain with or without debug utils messenger in debug mode.
-	vk::StructureChain<vk::InstanceCreateInfo> makeInstanceCreateInfoChain(vk::ApplicationInfo const & appInfo, std::vector<const char *> const & layers, std::vector<const char *> const & extensions)
+	vk::StructureChain<vk::InstanceCreateInfo> makeInstanceCreateInfoChain(const vk::ApplicationInfo appInfo, std::vector<const char *> const & layers, std::vector<const char *> const & extensions)
 	{
 
 		// When in non-debug mode, use the InstanceCreateInfo for instance creation.
@@ -123,7 +123,7 @@ namespace vk::util
 	}
 
 	// Create a Vulkan shader module from HLSL shader code.
-	vk::UniqueShaderModule createShaderModule(vk::Device const & device, vk::ShaderStageFlagBits shaderStage, std::string const & shaderText)
+	vk::UniqueShaderModule createShaderModule(const vk::Device device, vk::ShaderStageFlagBits shaderStage, std::string const & shaderText)
 	{
 		std::vector<unsigned int> shaderSPV;
 		if (!HLSLtoSPV(shaderStage, shaderText, shaderSPV))
@@ -135,7 +135,7 @@ namespace vk::util
 		return device.createShaderModuleUnique(vk::ShaderModuleCreateInfo(vk::ShaderModuleCreateFlags(), shaderSPV));
 	}
 
-	vk::UniqueSurfaceKHR createWindowSurface(vk::Instance const & instance, gen::Window const & window)
+	vk::UniqueSurfaceKHR createWindowSurface(const vk::Instance instance, gen::Window const & window)
 	{
 		VkSurfaceKHR surface_{};
 		VkResult const err = glfwCreateWindowSurface(VkInstance(instance), window.getHandle(), nullptr, &surface_);
