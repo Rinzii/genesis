@@ -21,12 +21,12 @@ namespace gen
 		GraphicsDevice & operator=(GraphicsDevice &&)	   = delete;
 
 
-		explicit GraphicsDevice(Window const &window, std::string const & appName );
+		explicit GraphicsDevice(const Window & window, std::string const & appName );
 		~GraphicsDevice() = default;
 
 	private:
 		void createInstance(const std::string & appName, const std::string & engineName, const gen::u32 & apiVersion);
-		void createSurface(Window const &window);
+		void createSurface(const Window & window);
 		void createDevice();
 
 
