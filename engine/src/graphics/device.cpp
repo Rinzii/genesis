@@ -15,13 +15,13 @@
 
 namespace gen
 {
-
-	GraphicsDevice::GraphicsDevice(Window &window, std::string const & appName)
+	GraphicsDevice::GraphicsDevice(Window const &window, std::string const & appName)
 	{
 		// TODO: Allow for the vulkan api to be specified in a config file or through command line arguments.
 		// We could also dynamically check for the highest supported version of the vulkan api, but that feels outside the scope of this project.
 		createInstance(appName, "Genesis Engine", VK_API_VERSION_1_3);
 		createSurface(window);
+		createDevice();
 	}
 
 	void GraphicsDevice::createInstance(const std::string & appName, const std::string & engineName, const gen::u32 & apiVersion)
@@ -58,11 +58,13 @@ namespace gen
 		VULKAN_HPP_DEFAULT_DISPATCHER.init(*m_instance);
 #endif
 	}
-	void GraphicsDevice::createSurface(Window &window)
+  
+	void GraphicsDevice::createSurface(Window const &window)
 	{
 		m_surface = vk::util::createWindowSurface(m_instance.get(), window);
 		gen::logger::debug("vulkan", "Created surface");
 	}
+  
 	void GraphicsDevice::createDevice()
 	{
 		// get the first PhysicalDevice

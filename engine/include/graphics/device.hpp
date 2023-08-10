@@ -20,7 +20,8 @@ namespace gen
 		GraphicsDevice(GraphicsDevice &&)				   = delete;
 		GraphicsDevice & operator=(GraphicsDevice &&)	   = delete;
 
-		explicit GraphicsDevice(Window &window, std::string const & appName );
+
+		explicit GraphicsDevice(Window const &window, std::string const & appName );
 		~GraphicsDevice() = default;
 
 	private:
@@ -32,5 +33,6 @@ namespace gen
 		vk::UniqueInstance m_instance;
 		vk::UniqueSurfaceKHR m_surface;
 		vk::UniqueDevice m_device;
+
 	};
 } // namespace gen
