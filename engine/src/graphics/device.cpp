@@ -93,7 +93,6 @@ namespace gen
 #endif
 	}
 
-	/*
 	QueueFamilyIndices GraphicsDevice::findQueueFamilies(vk::PhysicalDevice device)
 	{
 		QueueFamilyIndices indices;
@@ -162,8 +161,6 @@ namespace gen
 
 		return indices.isComplete() && extensionsSupported && swapChainAdequate;
 	}
-	*/
-	/*
 
 	void GraphicsDevice::createSurface()
     {
@@ -196,9 +193,6 @@ namespace gen
         }
 	}
 
-*/
-
-	/*
 	void GraphicsDevice::createLogicalDevice()
 	{
 		QueueFamilyIndices indices = findQueueFamilies(m_physicalDevice);
@@ -360,5 +354,4 @@ namespace gen
 		gen::logger::error("vulkan", "failed to find suitable memory type!");
         throw std::runtime_error("failed to find suitable memory type!");
 	}
-*/
 }
