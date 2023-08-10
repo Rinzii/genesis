@@ -16,6 +16,7 @@ namespace gen
 	Window::Window(int width, int height, const char* title)
 		: m_extent{width, height} // NOLINT(cppcoreguidelines-pro-type-member-init)
 	{
+
 		if (!glfwInit()) // NOLINT(readability-implicit-bool-conversion)
 		{
 			gen::logger::error("windowing", "Failed to initialize GLFW");
@@ -52,12 +53,12 @@ namespace gen
 		glfwSetWindowCloseCallback(m_window.get(), callback_window_close);
 
 		// Report successful window creation
-		gen::logger::info("windowing", "Window instance constructed");
+		gen::logger::info("windowing", "Window constructed");
 	}
 
 	Window::~Window()
 	{
-		gen::logger::info("windowing", "Window instance destructed");
+		gen::logger::info("windowing", "Window destructed");
 	}
 
 	bool Window::shouldClose() const

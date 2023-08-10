@@ -6,11 +6,20 @@
 #include "windowing/window.hpp"
 
 #include <vector>
+#include <optional>
 
 #include <vulkan/vulkan.hpp>
 
 namespace gen
 {
+	struct QueueFamilyIndices {
+		std::optional<u32> graphicsFamily;
+
+		GEN_NODISCARD bool isComplete() const
+		{
+			return graphicsFamily.has_value();
+		}
+	};
 
 	class GraphicsDevice
 	{
@@ -22,7 +31,7 @@ namespace gen
 
 
 		explicit GraphicsDevice(const Window & window, std::string const & appName );
-		~GraphicsDevice() = default;
+		~GraphicsDevice();
 
 		// Getters
 		GEN_NODISCARD vk::Instance const & getInstance() const { return m_instance.get(); }
@@ -33,8 +42,12 @@ namespace gen
 	private:
 		void createInstance(const std::string & appName, const std::string & engineName, const gen::u32 & apiVersion);
 		void createSurface(const Window & window);
-		void createDevice();
+		void pickPhysicalDevice();
+		void createLogicalDevice();
 
+		// helpers
+
+		static QueueFamilyIndices findQueueFamilies(vk::PhysicalDevice device) ;
 
 		vk::UniqueInstance m_instance;
 		vk::UniqueSurfaceKHR m_surface;
