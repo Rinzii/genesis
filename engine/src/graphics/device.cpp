@@ -12,6 +12,7 @@
 #include <format>
 #include <numeric>
 #include <string>
+#include <sstream>
 
 namespace gen
 {
@@ -76,6 +77,22 @@ namespace gen
 		// get the QueueFamilyProperties of the first PhysicalDevice
 		std::vector<vk::QueueFamilyProperties> queueFamilyProperties = physicalDevice.getQueueFamilyProperties();
 
+		gen::logger::debug("vulkan", std::format("Found {} queue families", queueFamilyProperties.size()));
+
+		auto str = std::stringstream{"vulkan"};
+		for (int i = 0; i < queueFamilyProperties.size(); i++)
+		{
+			str << "\t" << "Queue Family [" << i << "] :\n"
+				<< "\t\t\tQueue Flags: " << to_string(queueFamilyProperties[i].queueFlags) << "\n"
+				<< "\t\t\tQueue Count: " << queueFamilyProperties[i].queueCount << "\n"
+				<< "\t\t\tTimestamp Valid Bits: " << queueFamilyProperties[i].timestampValidBits << "\n"
+				<< "\t\t\tMin Image Transfer Granularity: " << queueFamilyProperties[i].minImageTransferGranularity.width << ", "
+				<< queueFamilyProperties[i].minImageTransferGranularity.height << ", "
+				<< queueFamilyProperties[i].minImageTransferGranularity.depth
+				<< "\n";
+		}
+		gen::logger::debug("vulkan", std::format("Found Queue Family Properties: \n{}", str.str()));
+
 		// get the first index into queueFamiliyProperties which supports graphics
 		std::size_t const graphicsQueueFamilyIndex =
 			std::distance( queueFamilyProperties.begin(),
@@ -87,7 +104,8 @@ namespace gen
 									   }));
 		assert( graphicsQueueFamilyIndex < queueFamilyProperties.size() );
 
-		gen::logger::debug("vulkan", std::format("Found {} queue families", queueFamilyProperties.size()));
+		gen::logger::debug("vulkan", std::format("Selected graphics queue family: {}", graphicsQueueFamilyIndex));
+
 
 		// now create our unique device
 		float const queuePriority = 0.0F;
