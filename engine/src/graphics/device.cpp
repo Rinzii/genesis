@@ -44,7 +44,7 @@ namespace gen
 #endif
 
 		// TODO: Allow for the application to be able to specify its version itself. Instead of just using the engine version.
-		vk::ApplicationInfo const appInfo(appName.c_str(), gen::version_v.getVersion(), engineName.c_str(), gen::version_v.getVersion(), apiVersion);
+		vk::ApplicationInfo appInfo(appName.c_str(), gen::version_v.getVersion(), engineName.c_str(), gen::version_v.getVersion(), apiVersion);
 
 		auto extensionsCount	   = 0U;
 		auto * requestedExtensions = glfwGetRequiredInstanceExtensions(&extensionsCount);

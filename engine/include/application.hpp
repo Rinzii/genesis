@@ -7,7 +7,6 @@
 #include "util/version.hpp"
 
 #include "graphics/device.hpp"
-#include "graphics/pipeline.hpp"
 #include "windowing/window.hpp"
 
 namespace gen
