@@ -6,7 +6,6 @@
 #include "windowing/window.hpp"
 
 #include <vector>
-#include <optional>
 
 #include <vulkan/vulkan.hpp>
 
@@ -31,6 +30,5 @@ namespace gen
 
 		vk::UniqueInstance m_instance;
 		vk::UniqueSurfaceKHR m_surface;
-		vk::UniqueDevice m_device;
 	};
 } // namespace gen
