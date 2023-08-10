@@ -23,5 +23,10 @@ namespace gen
 	{
 	}
 
+	Application::Application(const char * appName, const int initailWidth, const int initialHeight)
+	    : m_window{ initailWidth, initialHeight, appName }, m_graphicsDevice{ m_window, appName }
+	{
+	}
+
 
 } // namespace gen

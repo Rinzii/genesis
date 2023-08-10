@@ -16,6 +16,7 @@ namespace gen
 	class Application
 	{
 	public:
+		explicit Application(const char* appName, const int initailWidth, const int initialHeight);
 
 		void run();
 
@@ -23,16 +24,8 @@ namespace gen
 		void gameLoop();
 		void shutdown();
 
-
-	public:
-		static constexpr auto m_appName { "Genesis Engine Game" };
-		static constexpr u32 m_width  { 800 };
-		static constexpr u32 m_height { 600 };
-
-
-	private:
-		Window m_window { m_width, m_height, m_appName };
-		GraphicsDevice m_graphicsDevice { m_window, m_appName };
+		Window m_window;
+		GraphicsDevice m_graphicsDevice;
 	};
 
 } // namespace gen
