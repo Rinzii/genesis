@@ -54,14 +54,6 @@ namespace vk::util
 			enabledExtensions.push_back(ext.data());
 		}
 
-#ifndef GEN_NDEBUG
-		if (std::none_of(extensions.begin(), extensions.end(), [](std::string const & extension) { return extension == VK_EXT_DEBUG_UTILS_EXTENSION_NAME; }) &&
-			std::any_of(extensionProperties.begin(), extensionProperties.end(),
-						[](vk::ExtensionProperties const & eProp) { return (std::strcmp(VK_EXT_DEBUG_UTILS_EXTENSION_NAME, eProp.extensionName) == 0); }))
-		{
-			enabledExtensions.push_back(VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
-		}
-#endif
 		return enabledExtensions;
 	}
 
