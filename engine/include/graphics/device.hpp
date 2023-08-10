@@ -26,9 +26,11 @@ namespace gen
 	private:
 		void createInstance(const std::string & appName, const std::string & engineName, const gen::u32 & apiVersion);
 		void createSurface(Window const &window);
+		void createDevice();
 
 
 		vk::UniqueInstance m_instance;
 		vk::UniqueSurfaceKHR m_surface;
+		vk::UniqueDevice m_device;
 	};
 } // namespace gen
