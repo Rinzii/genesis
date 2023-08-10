@@ -5,7 +5,6 @@ AccessModifierOffset: -4
 AlignConsecutiveAssignments: Consecutive
 AlignConsecutiveMacros: Consecutive
 AlignEscapedNewlines: Right
-AlignTrailingComments: Always
 AllowShortEnumsOnASingleLine: true
 AllowShortCaseLabelsOnASingleLine: true
 AllowShortFunctionsOnASingleLine: InlineOnly
@@ -32,7 +31,6 @@ BraceWrapping:
     SplitEmptyFunction: true
     SplitEmptyRecord: true
     SplitEmptyNamespace: true
-BreakAfterAttributes: Never
 BreakBeforeBraces: Allman
 ColumnLimit: 160
 CompactNamespaces: false

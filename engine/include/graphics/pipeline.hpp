@@ -5,16 +5,18 @@
 #include <string>
 #include <vector>
 
-namespace gen {
+namespace gen
+{
 
-    class Pipeline {
-    public:
-        Pipeline(const std::string& vertFilePath, const std::string& fragFilePath);
+	class Pipeline
+	{
+	public:
+		Pipeline(const std::string & vertFilePath, const std::string & fragFilePath);
 
-    private:
-        static std::vector<char> readFile(const std::string& filePath);
+	private:
+		static std::vector<char> readFile(const std::string & filePath);
 
-        void createGraphicsPipeline(const std::string& vertFilePath, const std::string &fragFilePath);
-    };
+		void createGraphicsPipeline(const std::string & vertFilePath, const std::string & fragFilePath);
+	};
 
 } // namespace gen

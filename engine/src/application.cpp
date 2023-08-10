@@ -4,13 +4,12 @@
 
 #include "application.hpp"
 
-namespace gen {
+namespace gen
+{
 
-	void Application::run() {
-		while (!m_window.shouldClose()) {
-			gen::Window::pollEvents();
-		}
+	void Application::run()
+	{
+		while (!m_window.shouldClose()) { gen::Window::pollEvents(); }
 	}
 
 } // namespace gen
-
