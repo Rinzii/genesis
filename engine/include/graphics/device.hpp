@@ -20,12 +20,12 @@ namespace gen
 		GraphicsDevice(GraphicsDevice &&)				   = delete;
 		GraphicsDevice & operator=(GraphicsDevice &&)	   = delete;
 
-		explicit GraphicsDevice(Window &window, std::string const & appName );
+		explicit GraphicsDevice(Window const &window, std::string const & appName );
 		~GraphicsDevice() = default;
 
 	private:
 		void createInstance(const std::string & appName, const std::string & engineName, const gen::u32 & apiVersion);
-		void createSurface(Window &window);
+		void createSurface(Window const &window);
 
 
 		vk::UniqueInstance m_instance;
