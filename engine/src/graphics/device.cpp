@@ -71,6 +71,7 @@ namespace gen
 		// get the first PhysicalDevice
 		// TODO: Allow for the application to be able to specify which valid physical device to use.
 		auto availablePhysicalDevice = m_instance->enumeratePhysicalDevices();
+		assert(availablePhysicalDevice.empty() == false); // No valid physical device found. Thia should never happen unless something went horribly wrong.
 		m_physicalDevice             = availablePhysicalDevice.front();
 
 		auto aDev = std::stringstream{"vulkan"};
@@ -86,6 +87,7 @@ namespace gen
 				 << "\n";
 		}
 		gen::logger::debug("vulkan", std::format("Found Physical Devices: \n{}\n", aDev.str()));
+
 
 
 		u32 propertyCount{};

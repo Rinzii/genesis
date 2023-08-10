@@ -7,6 +7,7 @@
 
 #include <GLFW/glfw3.h>
 
+#include <cassert>
 #include <utility>
 
 namespace gen
@@ -47,6 +48,8 @@ namespace gen
 		// Set callbacks
 		glfwSetErrorCallback(callback_error);
 		glfwSetCursorPosCallback(m_window.get(), callback_cursor_position);
+		glfwSetWindowFocusCallback(m_window.get(), callback_window_focus);
+		glfwSetWindowCloseCallback(m_window.get(), callback_window_close);
 
 		// Report successful window creation
 		gen::logger::info("windowing", "Window instance constructed");
@@ -67,14 +70,62 @@ namespace gen
 		glfwPollEvents();
 	}
 
+	/// Getters
+
+	mim::vec2i Window::getExtent()
+	{
+		// Query glfw for the window size just in case it has changed
+		glfwGetWindowSize(m_window.get(), &m_extent.x, &m_extent.y);
+		return m_extent;
+	}
+
+	int Window::getWidth()
+	{
+		// Query glfw for the window size just in case it has changed
+		glfwGetWindowSize(m_window.get(), &m_extent.x, &m_extent.y);
+		return m_extent.x;
+	}
+
+	int Window::getHeight()
+	{
+		// Query glfw for the window size just in case it has changed
+		glfwGetWindowSize(m_window.get(), &m_extent.x, &m_extent.y);
+		return m_extent.y;
+	}
+
+	Window::CursorMode Window::getCursorMode() const
+	{
+		return m_currentCursorMode;
+	}
+
+	GLFWwindow * Window::getHandle() const
+	{
+		return m_window.get();
+	}
+
+
 	/// Setters
 
-	void Window::setTitle(const char* title)
+	void Window::setWidth(const int width)
+	{
+		assert(width > 0);
+		m_extent.x = width;
+		glfwSetWindowSize(m_window.get(), m_extent.x, m_extent.y);
+	}
+
+	void Window::setHeight(const int height)
+	{
+		assert(height > 0);
+		m_extent.y = height;
+		glfwSetWindowSize(m_window.get(), m_extent.x, m_extent.y);
+	}
+
+	void Window::setTitle(const char* const title)
 	{
 		glfwSetWindowTitle(m_window.get(), title);
 	}
 
-	void Window::setCursorMode(Window::CursorMode mode)
+	void Window::setCursorMode(const Window::CursorMode mode)
 	{
 		m_currentCursorMode = mode;
 		glfwSetInputMode(m_window.get(), GLFW_CURSOR, static_cast<int>(m_currentCursorMode));
@@ -84,10 +135,18 @@ namespace gen
 
 	void Window::callback_error(int error, const char * description)
 	{
-		gen::logger::warn("windowing", std::format("GLFW Error: {} - {}", error, description));
+		gen::logger::error("windowing", std::format("GLFW Error: {} - {}", error, description));
 	}
 
 	void Window::callback_cursor_position(GLFWwindow * window, double xPos, double yPos)
+	{
+	}
+
+	void Window::callback_window_focus(GLFWwindow * window, int focused)
+    {
+    }
+
+	void Window::callback_window_close(GLFWwindow * window)
 	{
 	}
 
