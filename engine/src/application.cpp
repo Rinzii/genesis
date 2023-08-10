@@ -23,8 +23,8 @@ namespace gen
 	{
 	}
 
-	Application::Application(const char * appName, const int initailWidth, const int initialHeight)
-	    : m_window{ initailWidth, initialHeight, appName }, m_graphicsDevice{ m_window, appName }
+	Application::Application(const char * appName, mim::vec2i const& initialSize)
+	    : m_window{ initialSize, appName }, m_graphicsDevice{ m_window, appName }
 	{
 	}
 

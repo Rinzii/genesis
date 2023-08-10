@@ -58,7 +58,7 @@ namespace vk::util
 	}
 
 	// Create an instance create info chain with or without debug utils messenger in debug mode.
-	vk::StructureChain<vk::InstanceCreateInfo> makeInstanceCreateInfoChain(const vk::ApplicationInfo appInfo, std::vector<const char *> const & layers, std::vector<const char *> const & extensions)
+	vk::StructureChain<vk::InstanceCreateInfo> makeInstanceCreateInfoChain(const vk::ApplicationInfo & appInfo, std::vector<const char *> const & layers, std::vector<const char *> const & extensions)
 	{
 
 		// When in non-debug mode, use the InstanceCreateInfo for instance creation.

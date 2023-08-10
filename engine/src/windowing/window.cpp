@@ -13,8 +13,8 @@
 namespace gen
 {
 
-	Window::Window(int width, int height, const char* title)
-		: m_extent{width, height} // NOLINT(cppcoreguidelines-pro-type-member-init)
+	Window::Window(const mim::vec2i& extent, const char* title)
+		: m_extent{extent} // NOLINT(cppcoreguidelines-pro-type-member-init)
 	{
 
 		if (!glfwInit()) // NOLINT(readability-implicit-bool-conversion)

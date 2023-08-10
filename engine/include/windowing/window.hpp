@@ -31,7 +31,7 @@ namespace gen
 			Disabled = 0x00034003
 		};
 
-		Window(int width, int height, const char* title);
+		Window(const mim::vec2i& extent, const char* title);
 		~Window();
 
 		Window(const Window &)			   = delete;

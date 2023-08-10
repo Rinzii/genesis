@@ -4,9 +4,9 @@
 #include <logger/instance.hpp>
 #include <logger/log.hpp>
 
-static constexpr int width { 800 };
-static constexpr int height { 600 };
+// TODO: Replace this with a config file. At least for the startup window size.
 static constexpr const char* appName { "Genesis Game" };
+static constexpr mim::vec2i startingWindowSize { 800, 600 };
 
 int main()
 {
@@ -14,7 +14,7 @@ int main()
 	{
 		auto logger = gen::logger::Instance{}; // Required to initialize the logger
 
-		gen::Application app{ appName, width, height };
+		gen::Application app{ appName, startingWindowSize };
 		app.run();
 	}
 	catch (std::exception const & e)

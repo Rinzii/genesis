@@ -2,7 +2,6 @@
 
 #pragma once
 
-#include <limits>
 #include <map>
 #include <memory> // std::unique_ptr
 #include <set>
@@ -27,7 +26,7 @@ namespace vk::util
 #endif
 	);
 
-	vk::StructureChain<vk::InstanceCreateInfo> makeInstanceCreateInfoChain(vk::ApplicationInfo appInfo, std::vector<const char *> const & layers, std::vector<const char *> const & extensions);
+	vk::StructureChain<vk::InstanceCreateInfo> makeInstanceCreateInfoChain(vk::ApplicationInfo & appInfo, std::vector<const char *> const & layers, std::vector<const char *> const & extensions);
 
 	vk::DebugUtilsMessengerCreateInfoEXT makeDebugUtilsMessengerCreateInfoEXT();
 
