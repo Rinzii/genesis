@@ -69,29 +69,46 @@ namespace gen
 	void GraphicsDevice::createDevice()
 	{
 		// get the first PhysicalDevice
-		vk::PhysicalDevice const physicalDevice = m_instance->enumeratePhysicalDevices().front();
+		// TODO: Allow for the application to be able to specify which valid physical device to use.
+		auto availablePhysicalDevice = m_instance->enumeratePhysicalDevices();
+		m_physicalDevice             = availablePhysicalDevice.front();
+
+		auto aDev = std::stringstream{"vulkan"};
+		for (int i = 0; i < availablePhysicalDevice.size(); i++)
+		{
+			aDev << "\tDevice [" << i << "] : " << "\n"
+				 << "\t\tName: " << availablePhysicalDevice[i].getProperties().deviceName << "\n"
+				 << "\t\tType: " << to_string(availablePhysicalDevice[i].getProperties().deviceType) << "\n"
+				 << "\t\tAPI Version: " << availablePhysicalDevice[i].getProperties().apiVersion << "\n"
+				 << "\t\tDriver Version: " << availablePhysicalDevice[i].getProperties().driverVersion << "\n"
+				 << "\t\tVendor ID: " << availablePhysicalDevice[i].getProperties().vendorID << "\n"
+				 << "\t\tDevice ID: " << availablePhysicalDevice[i].getProperties().deviceID
+				 << "\n";
+		}
+		gen::logger::debug("vulkan", std::format("Found Physical Devices: \n{}\n", aDev.str()));
+
 
 		u32 propertyCount{};
-		physicalDevice.getQueueFamilyProperties(&propertyCount, nullptr);
+		m_physicalDevice.getQueueFamilyProperties(&propertyCount, nullptr);
 
 		// get the QueueFamilyProperties of the first PhysicalDevice
-		std::vector<vk::QueueFamilyProperties> queueFamilyProperties = physicalDevice.getQueueFamilyProperties();
+		std::vector<vk::QueueFamilyProperties> queueFamilyProperties = m_physicalDevice.getQueueFamilyProperties();
 
 		gen::logger::debug("vulkan", std::format("Found {} queue families", queueFamilyProperties.size()));
 
-		auto str = std::stringstream{"vulkan"};
+		auto qProp = std::stringstream{"vulkan"};
 		for (int i = 0; i < queueFamilyProperties.size(); i++)
 		{
-			str << "\t" << "Queue Family [" << i << "] :\n"
+			qProp << "\t" << "Queue Family [" << i << "] :\n"
 				<< "\t\t\tQueue Flags: " << to_string(queueFamilyProperties[i].queueFlags) << "\n"
 				<< "\t\t\tQueue Count: " << queueFamilyProperties[i].queueCount << "\n"
 				<< "\t\t\tTimestamp Valid Bits: " << queueFamilyProperties[i].timestampValidBits << "\n"
-				<< "\t\t\tMin Image Transfer Granularity: " << queueFamilyProperties[i].minImageTransferGranularity.width << ", "
-				<< queueFamilyProperties[i].minImageTransferGranularity.height << ", "
+				<< "\t\t\tMin Image Transfer Granularity: width " << queueFamilyProperties[i].minImageTransferGranularity.width << ", height "
+				<< queueFamilyProperties[i].minImageTransferGranularity.height << " , depth "
 				<< queueFamilyProperties[i].minImageTransferGranularity.depth
 				<< "\n";
 		}
-		gen::logger::debug("vulkan", std::format("Found Queue Family Properties: \n{}", str.str()));
+		gen::logger::debug("vulkan", std::format("Found Queue Family Properties: \n{}\n", qProp.str()));
 
 		// get the first index into queueFamiliyProperties which supports graphics
 		std::size_t const graphicsQueueFamilyIndex =
@@ -111,9 +128,10 @@ namespace gen
 		float const queuePriority = 0.0F;
 		vk::DeviceQueueCreateInfo deviceQueueCreateInfo( vk::DeviceQueueCreateFlags(), static_cast<u32>( graphicsQueueFamilyIndex ), 1, &queuePriority );
 
-		m_device = physicalDevice.createDeviceUnique( vk::DeviceCreateInfo( vk::DeviceCreateFlags(), deviceQueueCreateInfo ) );
+		m_device = m_physicalDevice.createDeviceUnique( vk::DeviceCreateInfo( vk::DeviceCreateFlags(), deviceQueueCreateInfo ) );
 
 		gen::logger::debug("vulkan", "Created device");
 	}
+
 
 } // namespace gen

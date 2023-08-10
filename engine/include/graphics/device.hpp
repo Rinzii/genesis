@@ -32,6 +32,7 @@ namespace gen
 
 		vk::UniqueInstance m_instance;
 		vk::UniqueSurfaceKHR m_surface;
+		vk::PhysicalDevice m_physicalDevice;
 		vk::UniqueDevice m_device;
 
 	};
