@@ -14,12 +14,12 @@ namespace gen
 		double GetTimeScale();
 
 		std::string GetCurrentTime();
-	}
+	} // namespace Time
 
 	namespace FPS
 	{
 		void SetFPSUpdateDelay(double updateDelay);
 		void UpdateFPS();
 		unsigned GetFPS();
-	}
-}
+	} // namespace FPS
+} // namespace gen

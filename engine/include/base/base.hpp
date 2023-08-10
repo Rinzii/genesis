@@ -10,7 +10,6 @@
 #include "base/config/architecture.hpp"
 #include "base/config/compiler.hpp"
 #include "base/config/compilerTraits.hpp"
-#include "base/config/platform.hpp"
 #include "base/config/defines.hpp"
+#include "base/config/platform.hpp"
 #include "base/config/settings.hpp"
-

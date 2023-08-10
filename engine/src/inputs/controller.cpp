@@ -8,7 +8,7 @@ namespace gen
 	{
 		namespace
 		{
-			std::vector<Controller> g_connectedControllers; //Max 16 (because of GLFW)
+			std::vector<Controller> g_connectedControllers; // Max 16 (because of GLFW)
 		}
 
 		void init()
@@ -19,17 +19,11 @@ namespace gen
 
 			while (glfwJoystickPresent(alreadyConnectedGamePadCount) != 0)
 			{
-				if (glfwJoystickIsGamepad(alreadyConnectedGamePadCount))
-				{
-					g_connectedControllers.emplace_back(alreadyConnectedGamePadCount);
-				}
-					
+				if (glfwJoystickIsGamepad(alreadyConnectedGamePadCount)) { g_connectedControllers.emplace_back(alreadyConnectedGamePadCount); }
+
 				alreadyConnectedGamePadCount++;
 
-				if (alreadyConnectedGamePadCount == GLFW_JOYSTICK_LAST)
-				{
-					break;
-				}
+				if (alreadyConnectedGamePadCount == GLFW_JOYSTICK_LAST) { break; }
 			}
 		}
 
@@ -37,10 +31,7 @@ namespace gen
 		{
 			for (auto & connectedController : g_connectedControllers)
 			{
-				if (connectedController.isActive())
-				{
-					connectedController.update();
-				}
+				if (connectedController.isActive()) { connectedController.update(); }
 			}
 		}
 
@@ -67,36 +58,28 @@ namespace gen
 			case GLFW_DISCONNECTED:
 				for (auto & connectedController : g_connectedControllers)
 				{
-					if (connectedController.getID() == id)
-					{
-						connectedController.setActive(false);
-					}
+					if (connectedController.getID() == id) { connectedController.setActive(false); }
 				}
 				break;
 
-			default: 
-				return;
+			default: return;
 			}
 		}
 
-		Controller* getController(int i)
+		Controller * getController(int i)
 		{
-			if (i < g_connectedControllers.size() && g_connectedControllers[i].isActive())
-			{
-				return &g_connectedControllers[i];
-			}
+			if (i < g_connectedControllers.size() && g_connectedControllers[i].isActive()) { return &g_connectedControllers[i]; }
 
 			return nullptr;
 		}
-	}
+	} // namespace controllerManager
 
-	Controller::Controller(const int id)
-		: m_id(id)
+	Controller::Controller(const int id) : m_id(id)
 	{
 		glfwGetJoystickAxes(m_id, &m_axesCount);
 		glfwGetJoystickButtons(m_id, &m_buttonsCount);
 
-		m_axes = std::vector<float>(m_axesCount, 0);
+		m_axes	  = std::vector<float>(m_axesCount, 0);
 		m_buttons = std::vector<unsigned char>(m_buttonsCount, '0');
 	}
 
@@ -116,19 +99,13 @@ namespace gen
 	{
 		m_axes.clear();
 
-		for (int i = 0; i < m_axesCount; i++)
-		{
-			m_axes.push_back((axes[i] + 1) / 2);
-		}
+		for (int i = 0; i < m_axesCount; i++) { m_axes.push_back((axes[i] + 1) / 2); }
 	}
 
 	void Controller::storeValue(const unsigned char * buttons)
 	{
 		m_buttons.clear();
 
-		for (int i = 0; i < m_buttonsCount; i++)
-		{
-			m_buttons.push_back(buttons[i]);
-		}
+		for (int i = 0; i < m_buttonsCount; i++) { m_buttons.push_back(buttons[i]); }
 	}
-}
+} // namespace gen

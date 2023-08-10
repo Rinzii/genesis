@@ -47,7 +47,17 @@ if(GENESIS_BUILD_EDITOR)
   add_subdirectory(editor)
 endif()
 
-
 if (GENESIS_BUILD_TOOLS)
   add_subdirectory(tools/code-formatter)
+
+  add_custom_target(autoformat ALL
+    code-formatter -q engine
+    COMMAND code-formatter -q editor/src
+    WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
+    USES_TERMINAL
+    COMMENT "Formatting sources"
+  )
+
+  add_dependencies(genesis autoformat)
+  add_dependencies(genesis-editor autoformat)
 endif()

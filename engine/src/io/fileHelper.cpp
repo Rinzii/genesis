@@ -2,4 +2,6 @@
 
 #include "io/fileHelper.hpp"
 
-namespace gen {} // namespace gen
+namespace gen
+{
+} // namespace gen

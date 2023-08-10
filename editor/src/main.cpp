@@ -4,16 +4,20 @@
 #include <logger/instance.hpp>
 #include <logger/log.hpp>
 
-int main() {
+int main()
+{
 	auto logger = gen::logger::Instance{};
 
 	gen::Application app;
 
 	gen::logger::info("Hello, world!");
 
-	try {
+	try
+	{
 		app.run();
-	} catch (std::exception const& e) {
+	}
+	catch (std::exception const & e)
+	{
 		gen::logger::error(e.what());
 		return EXIT_FAILURE;
 	}
