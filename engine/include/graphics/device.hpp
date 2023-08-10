@@ -26,7 +26,7 @@ namespace gen
 
 	private:
 		void createInstance(const std::string & appName, const std::string & engineName, const gen::u32 & apiVersion);
-		void createSurface(Window &window);
+		void createSurface(Window const &window);
 		void createDevice();
 
 
