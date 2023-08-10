@@ -11,6 +11,7 @@
 
 #include <format>
 #include <numeric>
+#include <string>
 
 namespace gen
 {
@@ -21,12 +22,7 @@ namespace gen
 		// We could also dynamically check for the highest supported version of the vulkan api, but that feels outside the scope of this project.
 		createInstance(appName, "Genesis Engine", VK_API_VERSION_1_3);
 		createSurface(window);
-	}
-
-	GraphicsDevice::~GraphicsDevice()
-	{
-
-		m_instance.release();
+		createDevice();
 	}
 
 	void GraphicsDevice::createInstance(const std::string & appName, const std::string & engineName, const gen::u32 & apiVersion)
@@ -68,5 +64,43 @@ namespace gen
 		m_surface = vk::util::createWindowSurface(m_instance.get(), window);
 		gen::logger::debug("vulkan", "Created surface");
 	}
+
+	void GraphicsDevice::createDevice()
+	{
+		vk::PhysicalDevice const physicalDevice = m_instance->enumeratePhysicalDevices().front();
+
+		u32 propertyCount{};
+		physicalDevice.getQueueFamilyProperties(&propertyCount, nullptr);
+
+		// get the QueueFamilyProperties of the first PhysicalDevice
+		std::vector<vk::QueueFamilyProperties> queueFamilyProperties = physicalDevice.getQueueFamilyProperties();
+
+		// get the first index into queueFamiliyProperties which supports graphics
+		std::size_t const graphicsQueueFamilyIndex =
+			std::distance( queueFamilyProperties.begin(),
+						  std::find_if( queueFamilyProperties.begin(),
+									   queueFamilyProperties.end(),
+									   []( vk::QueueFamilyProperties const & qfp )
+									   {
+										   return qfp.queueFlags & vk::QueueFlagBits::eGraphics;
+									   }));
+		assert( graphicsQueueFamilyIndex < queueFamilyProperties.size() );
+
+		gen::logger::debug("vulkan", std::format("Found {} queue families", queueFamilyProperties.size()));
+        for (std::size_t i = 0; i < queueFamilyProperties.size(); ++i)
+        {
+            gen::logger::debug("vulkan", std::format("Queue family {} supports {} queues", i, queueFamilyProperties[i].queueCount));
+        }
+
+
+		// now create our unique device
+		float const queuePriority = 0.0F;
+		vk::DeviceQueueCreateInfo deviceQueueCreateInfo( vk::DeviceQueueCreateFlags(), static_cast<uint32_t>( graphicsQueueFamilyIndex ), 1, &queuePriority );
+
+		m_device = physicalDevice.createDeviceUnique( vk::DeviceCreateInfo( vk::DeviceCreateFlags(), deviceQueueCreateInfo ) );
+
+	}
+
+
 
 } // namespace gen

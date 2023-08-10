@@ -6,6 +6,7 @@
 #include "windowing/window.hpp"
 
 #include <vector>
+#include <optional>
 
 #include <vulkan/vulkan.hpp>
 
@@ -21,13 +22,16 @@ namespace gen
 		GraphicsDevice & operator=(GraphicsDevice &&)	   = delete;
 
 		explicit GraphicsDevice(Window &window, std::string const & appName );
-		~GraphicsDevice();
+		~GraphicsDevice() = default;
 
 	private:
 		void createInstance(const std::string & appName, const std::string & engineName, const gen::u32 & apiVersion);
 		void createSurface(Window &window);
+		void createDevice();
+
 
 		vk::UniqueInstance m_instance;
 		vk::UniqueSurfaceKHR m_surface;
+		vk::UniqueDevice m_device;
 	};
 } // namespace gen
