@@ -53,6 +53,7 @@ namespace gen
 		vk::UniqueSurfaceKHR m_surface;
 		vk::PhysicalDevice m_physicalDevice;
 		vk::UniqueDevice m_device;
+		vk::Queue m_graphicsQueue;
 
 	};
 } // namespace gen
