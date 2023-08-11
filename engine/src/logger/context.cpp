@@ -14,12 +14,11 @@ namespace gen::logger
 		return ThreadId{s_thisThreadId};
 	}
 
-	Context Context::make(std::string_view category, Level level, SrcLoc const & location)
+	Context Context::make(std::string_view category, Level level)
 	{
 		return Context{
 			.category  = category,
 			.timestamp = Clock::now(),
-			.location  = location,
 			.thread	   = getThreadId(),
 			.level	   = level,
 		};
