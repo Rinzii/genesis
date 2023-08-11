@@ -2,6 +2,7 @@
 #add_subdirectory()
 
 target_sources(${PROJECT_NAME} PRIVATE
+        graphicsExceptions.cpp
         device.cpp
         vkHelpers.cpp
         )
