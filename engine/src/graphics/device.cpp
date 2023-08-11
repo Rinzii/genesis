@@ -2,6 +2,7 @@
 
 #include "graphics/device.hpp"
 #include "graphics/vkHelpers.hpp"
+#include "graphics/graphicsExceptions.hpp"
 #include "logger/log.hpp"
 
 #ifndef GLFW_INCLUDE_NONE
@@ -75,6 +76,7 @@ namespace gen
 		m_surface = vk::util::createWindowSurface(m_instance.get(), window);
 		gen::logger::debug("vulkan", "Created surface");
 	}
+
 	void GraphicsDevice::pickPhysicalDevice()
 	{
 		// TODO: Add a weighting system to pick the best physical device.
@@ -82,11 +84,28 @@ namespace gen
 		auto availablePhysicalDevices = m_instance->enumeratePhysicalDevices();
 		if (availablePhysicalDevices.empty())
         {
-			gen::logger::error("vulkan", "Failed to find GPUs with Vulkan support!");
-            throw std::runtime_error("Failed to find GPUs with Vulkan support!");
+			throw gen::vulkan_error("Failed to find GPUs with Vulkan support!");
         }
 
-		m_physicalDevice = availablePhysicalDevices.front();
+		// Search for a discrete gpu in our list.
+		for (const auto & device : availablePhysicalDevices)
+		{
+			auto properties = device.getProperties();
+
+			if (properties.deviceType == vk::PhysicalDeviceType::eDiscreteGpu)
+			{
+				m_physicalDevice = device;
+				break;
+			}
+		}
+
+		// If we didn't find a discrete gpu, we'll just use the first device in the list.
+		if (!m_physicalDevice)
+		{
+			m_physicalDevice = availablePhysicalDevices.front();
+
+		}
+
 
         auto aDev = std::stringstream{"vulkan"};
         for (std::size_t i = 0; i < availablePhysicalDevices.size(); i++)

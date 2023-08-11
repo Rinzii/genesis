@@ -2,20 +2,20 @@
 
 #pragma once
 
+#include <stdexcept>
+#include <string>
 
-class VulkanException : public std::exception {
-public:
+namespace gen
+{
+	struct vulkan_error : public std::runtime_error
+	{
 
-	/**
-	 * Vulkan specific exception that also outputs the exception message to the genesis logger.
-	 * @param message exception message
-	 */
-	explicit VulkanException(const char* message);
+		explicit vulkan_error(const std::string& message);
 
-	[[nodiscard]] const char* what() const noexcept override;
 
-private:
-	std::string m_message;
-};
+	};
+}
+
+
 
 

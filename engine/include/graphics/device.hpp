@@ -39,11 +39,16 @@ namespace gen
 		explicit GraphicsDevice(const Window & window, std::string const & appName );
 		~GraphicsDevice();
 
-		// Getters
+		/// Getters
+
 		GEN_NODISCARD vk::Instance const & getInstance() const { return m_instance.get(); }
 		GEN_NODISCARD vk::SurfaceKHR const & getSurface() const { return m_surface.get(); }
 		GEN_NODISCARD vk::PhysicalDevice const & getPhysicalDevice() const { return m_physicalDevice; }
 		GEN_NODISCARD vk::Device const & getDevice() const { return m_device.get(); }
+
+		/// Setters
+
+
 
 	private:
 		void createInstance(const std::string & appName, const std::string & engineName, const gen::u32 & apiVersion);
@@ -55,11 +60,14 @@ namespace gen
 
 		static QueueFamilyIndices findQueueFamilies(vk::PhysicalDevice device, vk::SurfaceKHR surface);
 
+
 		vk::UniqueInstance m_instance;
 		vk::UniqueSurfaceKHR m_surface;
 		vk::PhysicalDevice m_physicalDevice;
 		vk::UniqueDevice m_device;
 		vk::Queue m_graphicsQueue;
+
+
 
 	};
 } // namespace gen

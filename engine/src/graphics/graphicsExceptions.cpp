@@ -4,14 +4,14 @@
 
 #include "logger/log.hpp"
 
-VulkanException::VulkanException(const char * message)
-	: m_message(message)
+namespace gen
 {
-	gen::logger::error("vulkan", message);
-}
+	vulkan_error::vulkan_error(const std::string& message)
+	    : std::runtime_error{ message }
+	{
+		gen::logger::error("vulkan", message);
+	}
 
-const char * VulkanException::what() const noexcept
-{
-	return m_message.c_str();
-}
+} // namespace gen
+
 
