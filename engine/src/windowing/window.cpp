@@ -1,14 +1,15 @@
 // Copyright (c) 2023-present Genesis Engine contributors (see LICENSE.txt)
 
+// internal
 #include "windowing/window.hpp"
-
-#include <format>
 #include "logger/log.hpp"
 
+// external
 #include <GLFW/glfw3.h>
 
+// std
+#include <format>
 #include <cassert>
-#include <utility>
 
 namespace gen
 {

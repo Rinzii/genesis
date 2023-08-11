@@ -2,13 +2,16 @@
 
 #pragma once
 
+// internal
 #include "core.hpp"
 #include "windowing/window.hpp"
 
+// external
+#include <vulkan/vulkan.hpp>
+
+// std
 #include <vector>
 #include <optional>
-
-#include <vulkan/vulkan.hpp>
 
 namespace gen
 {
