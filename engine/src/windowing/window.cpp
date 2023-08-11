@@ -25,7 +25,7 @@ namespace gen
 
 		// Set window hints
 		glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
-		glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE); // TODO: Later add support for resizing of windows.
+		glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE); // TODO: Later add support for resizing of windows.
 
 		// Create window
 		GLFWwindow * window_ = glfwCreateWindow(static_cast<int>(m_extent.x), static_cast<int>(m_extent.y), title, nullptr, nullptr);
@@ -42,8 +42,12 @@ namespace gen
 		// Set modes
 		glfwSetInputMode(m_window.get(), GLFW_CURSOR, static_cast<int>(m_currentCursorMode));
 
+		// Set user pointer
+		glfwSetWindowUserPointer(m_window.get(), this);
+
 		// Set callbacks
 		glfwSetErrorCallback(callback_error);
+		glfwSetWindowSizeCallback(m_window.get(), callback_window_size);
 
 		// Report successful window creation
 		m_logger.info("Window constructed");
@@ -69,21 +73,18 @@ namespace gen
 	mim::vec2i Window::getExtent()
 	{
 		// Query glfw for the window size just in case it has changed
-		glfwGetWindowSize(m_window.get(), &m_extent.x, &m_extent.y);
 		return m_extent;
 	}
 
-	int Window::getWidth()
+	int Window::getWidth() const
 	{
 		// Query glfw for the window size just in case it has changed
-		glfwGetWindowSize(m_window.get(), &m_extent.x, &m_extent.y);
 		return m_extent.x;
 	}
 
-	int Window::getHeight()
+	int Window::getHeight() const
 	{
 		// Query glfw for the window size just in case it has changed
-		glfwGetWindowSize(m_window.get(), &m_extent.x, &m_extent.y);
 		return m_extent.y;
 	}
 
@@ -130,6 +131,14 @@ namespace gen
 	{
 		Logger const log{"windowing"};
 		log.error("GLFW Error: {} - {}", error, description);
+	}
+
+	void Window::callback_window_size(GLFWwindow * window, int width, int height)
+	{
+		auto * const self = static_cast<Window *>(glfwGetWindowUserPointer(window));
+		self->m_extent.x  = width;
+		self->m_extent.y  = height;
+		self->m_logger.info("Window resized to {}x{}", width, height);
 	}
 
 	void Window::Deleter::operator()(GLFWwindow * ptr) const
