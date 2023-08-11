@@ -95,6 +95,7 @@ namespace gen
 			if (properties.deviceType == vk::PhysicalDeviceType::eDiscreteGpu)
 			{
 				m_gpu.physicalDevice = device;
+				m_gpu.properties	 = properties;
 				break;
 			}
 		}
@@ -103,6 +104,7 @@ namespace gen
 		if (!m_gpu.physicalDevice)
 		{
 			m_gpu.physicalDevice = availablePhysicalDevices.front();
+			m_gpu.properties	 = availablePhysicalDevices.front().getProperties();
 
 		}
 
