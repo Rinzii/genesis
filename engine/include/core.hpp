@@ -9,6 +9,3 @@
 #include "base/base.hpp"
 #include "system/types.hpp"
 #include "genesis_version.hpp"
-
-
-

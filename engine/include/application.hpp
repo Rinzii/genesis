@@ -7,6 +7,7 @@
 #include "util/version.hpp"
 
 #include "graphics/device.hpp"
+#include <logger/log.hpp>
 #include "windowing/window.hpp"
 
 namespace gen
@@ -25,6 +26,8 @@ namespace gen
 
 		Window m_window;
 		GraphicsDevice m_graphicsDevice;
+	};
+		Logger m_logger{"Application"};
 	};
 
 } // namespace gen

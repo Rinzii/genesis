@@ -3,25 +3,12 @@
 
 namespace gen
 {
-	// TODO: Look into reducing the log output volume to only errors for release builds.
-    void logger::error(std::string_view category, std::string_view message, SrcLoc const& location)
+	void logger::print(logger::Level level, std::string_view category, std::string_view message)
 	{
-        Instance::print(message, Context::make(category, Level::eError, location));
-    }
+		Instance::print(message, Context::make(category, level));
+	}
 
-    void logger::warn(std::string_view category, std::string_view message, SrcLoc const& location)
+	Logger::Logger(std::string_view const category) : m_category(category.empty() ? "unknown" : category)
 	{
-        Instance::print(message, Context::make(category, Level::eWarn, location));
-    }
-
-    void logger::info(std::string_view category, std::string_view message, SrcLoc const& location)
-	{
-        Instance::print(message, Context::make(category, Level::eInfo, location));
-    }
-
-    void logger::debug(std::string_view category, std::string_view message, SrcLoc const& location)
-	{
-        Instance::print(message, Context::make(category, Level::eDebug, location));
-    }
-
+	}
 } // namespace gen

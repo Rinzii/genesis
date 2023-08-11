@@ -36,17 +36,6 @@ namespace gen::logger
 			out.append(buffer.data());
 		}
 
-		void append_location(std::string & out, std::source_location const & location, Location const mode)
-		{
-			auto const path = [&]
-			{
-				auto ret = fs::path{location.file_name()};
-				if (mode == Location::eFilename) { ret = ret.filename(); }
-				return ret.generic_string();
-			}();
-			out.append(path);
-		}
-
 		struct Formatter
 		{
 			static constexpr auto open_v{'{'};
@@ -60,7 +49,6 @@ namespace gen::logger
 				// default format string size is 57, which will cause std::string to heap allocate.
 				// thus we use a fixed capacity stack string instead.
 				FixedString<Config::format_size_v> format{};
-				Location location{};
 				Timestamp timestamp{};
 			};
 
@@ -136,12 +124,6 @@ namespace gen::logger
 				if (key == "timestamp")
 				{
 					append_timestamp(out, context.timestamp, data.timestamp);
-					return true;
-				}
-
-				if (key == "location")
-				{
-					append_location(out, context.location, data.location);
 					return true;
 				}
 
@@ -257,7 +239,7 @@ namespace gen::logger
 				return all_v;
 			}();
 
-			auto const data = Formatter::Data{.format = config.format, .location = config.location, .timestamp = config.timestamp};
+			auto const data = Formatter::Data{.format = config.format, .timestamp = config.timestamp};
 			// cache this for later use
 			auto const sinks_empty = sinks.empty();
 			// config access complete, release lock

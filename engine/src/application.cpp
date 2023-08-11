@@ -3,6 +3,7 @@
 // TODO: Replace this with a proper implementation
 
 #include "application.hpp"
+#include <numbers>
 
 namespace gen
 {

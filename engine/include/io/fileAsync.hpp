@@ -4,9 +4,7 @@
 
 #include "core.hpp"
 
-
-namespace gen {
-
-
+namespace gen
+{
 
 } // namespace gen

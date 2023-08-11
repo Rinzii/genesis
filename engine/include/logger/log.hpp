@@ -1,20 +1,59 @@
 #pragma once
+#include <logger/level.hpp>
 #include <logger/target.hpp>
-#include <source_location>
+#include <format>
 #include <string_view>
 
-namespace gen::logger {
-using SrcLoc = std::source_location;
+namespace gen
+{
+	namespace logger
+	{
+		void print(Level level, std::string_view category, std::string_view message);
+	} // namespace logger
 
-void error(std::string_view category, std::string_view message, SrcLoc const& location = SrcLoc::current());
-void warn(std::string_view category, std::string_view message, SrcLoc const& location = SrcLoc::current());
-void info(std::string_view category, std::string_view message, SrcLoc const& location = SrcLoc::current());
-void debug(std::string_view category, std::string_view message, SrcLoc const& location = SrcLoc::current());
-inline void log(std::string_view category, std::string_view message, SrcLoc const& location = SrcLoc::current()) { info(category, message, location); }
+	class Logger
+	{
+	public:
+		using Level = logger::Level;
 
-inline void error(std::string_view message, SrcLoc const& location = SrcLoc::current()) { error("general", message, location); }
-inline void warn(std::string_view message, SrcLoc const& location = SrcLoc::current()) { warn("general", message, location); }
-inline void info(std::string_view message, SrcLoc const& location = SrcLoc::current()) { info("general", message, location); }
-inline void debug(std::string_view message, SrcLoc const& location = SrcLoc::current()) { debug("general", message, location); }
-inline void log(std::string_view message, SrcLoc const& location = SrcLoc::current()) { log("general", message, location); }
-} // namespace gen::logger
+		explicit Logger(std::string_view category);
+
+		template <typename... Args>
+		void error(std::format_string<Args...> fmt, Args &&... args) const
+		{
+			logger::print(Level::eError, m_category, std::format(fmt, std::forward<Args>(args)...));
+		}
+
+		template <typename... Args>
+		void warn(std::format_string<Args...> fmt, Args &&... args) const
+		{
+			logger::print(Level::eWarn, m_category, std::format(fmt, std::forward<Args>(args)...));
+		}
+
+		template <typename... Args>
+		void info(std::format_string<Args...> fmt, Args &&... args) const
+		{
+			logger::print(Level::eInfo, m_category, std::format(fmt, std::forward<Args>(args)...));
+		}
+
+		template <typename... Args>
+		void log(std::format_string<Args...> fmt, Args &&... args) const
+		{
+			info(fmt, std::forward<Args>(args)...);
+		}
+
+		template <typename... Args>
+		void debug(std::format_string<Args...> fmt, Args &&... args) const
+		{
+			logger::print(Level::eDebug, m_category, std::format(fmt, std::forward<Args>(args)...));
+		}
+
+	private:
+		std::string_view m_category{};
+	};
+
+	namespace logger
+	{
+		inline Logger const general{"general"};
+	}
+} // namespace gen
