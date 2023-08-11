@@ -91,7 +91,7 @@ namespace vk::util
 	bool HLSLtoSPV(const vk::ShaderStageFlagBits shaderType, std::string const & hlslShader, std::vector<unsigned int> & spvShader)
 	{
 		// Map Vulkan shader stage to SPIRV-Cross shader stage
-		spv::ExecutionModel executionModel{};
+		spv::ExecutionModel executionModel; // NOLINT(cppcoreguidelines-init-variables)
 		switch (shaderType)
 		{
 		case vk::ShaderStageFlagBits::eVertex: executionModel = spv::ExecutionModelVertex; break;
