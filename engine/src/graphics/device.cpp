@@ -33,6 +33,7 @@ namespace gen
 
 	GraphicsDevice::~GraphicsDevice()
 	{
+		m_device->waitIdle();4
 		m_logger.info("GraphicsDevice destructed");
 	}
 
