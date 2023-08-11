@@ -2,7 +2,12 @@ project(genesis-ext)
 
 find_package(Threads)
 
-file(ARCHIVE_EXTRACT INPUT "${CMAKE_CURRENT_SOURCE_DIR}/src.zip" DESTINATION "${CMAKE_CURRENT_SOURCE_DIR}")
+if (EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/src")
+    message(STATUS "SRC directory already extracted! Skipping...")
+else ()
+    message(STATUS "Extracting SRC directory!")
+    file(ARCHIVE_EXTRACT INPUT "${CMAKE_CURRENT_SOURCE_DIR}/src.zip" DESTINATION "${CMAKE_CURRENT_SOURCE_DIR}")
+endif ()
 
 add_subdirectory(src/vk_dynamic)
 add_library(vk-dynamic::vk-dynamic ALIAS vk-dynamic)
