@@ -1,23 +1,23 @@
 // Copyright (c) 2023-present Genesis Engine contributors (see LICENSE.txt)
 
 #include "graphics/device.hpp"
-#include "graphics/vkHelpers.hpp"
 #include "graphics/graphicsExceptions.hpp"
+#include "graphics/vkHelpers.hpp"
 #include "logger/log.hpp"
 
 #ifndef GLFW_INCLUDE_NONE
-	#  define GLFW_INCLUDE_NONE
+	#define GLFW_INCLUDE_NONE
 #endif
 #include <GLFW/glfw3.h>
 
 #include <format>
 #include <numeric>
-#include <string>
 #include <sstream>
+#include <string>
 
 namespace gen
 {
-	static const std::vector<const char*> deviceExtensions = {VK_KHR_SWAPCHAIN_EXTENSION_NAME};
+	static const std::vector<const char *> deviceExtensions = {VK_KHR_SWAPCHAIN_EXTENSION_NAME};
 
 	GraphicsDevice::GraphicsDevice(const Window & window, std::string const & appName)
 	{
@@ -50,7 +50,7 @@ namespace gen
 		auto extensionsCount	   = 0U;
 		auto * requestedExtensions = glfwGetRequiredInstanceExtensions(&extensionsCount);
 		std::vector<std::string> const requestedExtensionsVec(requestedExtensions,
-														requestedExtensions + extensionsCount); // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+															  requestedExtensions + extensionsCount); // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
 		auto enabledExtensions = vk::util::gatherExtensions(requestedExtensionsVec
 #ifndef GEN_NDEBUG
 															,
@@ -70,7 +70,7 @@ namespace gen
 		VULKAN_HPP_DEFAULT_DISPATCHER.init(*m_instance);
 #endif
 	}
-  
+
 	void GraphicsDevice::createSurface(const Window & window)
 	{
 		m_surface = vk::util::createWindowSurface(m_instance.get(), window);
@@ -82,10 +82,7 @@ namespace gen
 		// TODO: Add a weighting system to pick the best physical device.
 		// TODO: Add a way to specify the physical device to use if not using the default.
 		auto availablePhysicalDevices = m_instance->enumeratePhysicalDevices();
-		if (availablePhysicalDevices.empty())
-        {
-			throw gen::vulkan_error("Failed to find GPUs with Vulkan support!");
-        }
+		if (availablePhysicalDevices.empty()) { throw gen::vulkan_error("Failed to find GPUs with Vulkan support!"); }
 
 		// Search for a discrete gpu in our list.
 		for (const auto & device : availablePhysicalDevices)
@@ -105,46 +102,43 @@ namespace gen
 		{
 			m_gpu.physicalDevice = availablePhysicalDevices.front();
 			m_gpu.properties	 = availablePhysicalDevices.front().getProperties();
-
 		}
 
-
-        auto aDev = std::stringstream{"vulkan"};
-        for (std::size_t i = 0; i < availablePhysicalDevices.size(); i++)
-        {
-            aDev << "\tDevice [" << i << "] : " << "\n"
-                 << "\t\tName: " << availablePhysicalDevices[i].getProperties().deviceName << "\n"
-                 << "\t\tType: " << to_string(availablePhysicalDevices[i].getProperties().deviceType) << "\n"
-                 << "\t\tAPI Version: " << availablePhysicalDevices[i].getProperties().apiVersion << "\n"
-                 << "\t\tDriver Version: " << availablePhysicalDevices[i].getProperties().driverVersion << "\n"
-                 << "\t\tVendor ID: " << availablePhysicalDevices[i].getProperties().vendorID << "\n"
-                 << "\t\tDevice ID: " << availablePhysicalDevices[i].getProperties().deviceID
-                 << "\n";
-        }
-        gen::logger::debug("vulkan", std::format("Found Physical Devices: \n{}\n", aDev.str()));
+		auto aDev = std::stringstream{"vulkan"};
+		for (std::size_t i = 0; i < availablePhysicalDevices.size(); i++)
+		{
+			aDev << "\tDevice [" << i << "] : "
+				 << "\n"
+				 << "\t\tName: " << availablePhysicalDevices[i].getProperties().deviceName << "\n"
+				 << "\t\tType: " << to_string(availablePhysicalDevices[i].getProperties().deviceType) << "\n"
+				 << "\t\tAPI Version: " << availablePhysicalDevices[i].getProperties().apiVersion << "\n"
+				 << "\t\tDriver Version: " << availablePhysicalDevices[i].getProperties().driverVersion << "\n"
+				 << "\t\tVendor ID: " << availablePhysicalDevices[i].getProperties().vendorID << "\n"
+				 << "\t\tDevice ID: " << availablePhysicalDevices[i].getProperties().deviceID << "\n";
+		}
+		gen::logger::debug("vulkan", std::format("Found Physical Devices: \n{}\n", aDev.str()));
 	}
 
 	void GraphicsDevice::createLogicalDevice()
-    {
+	{
 		m_gpu.queueFamily = findQueueFamilies(m_gpu.physicalDevice, m_surface.get());
 
-        std::vector<vk::DeviceQueueCreateInfo> queueCreateInfos;
-        std::set<u32> const uniqueQueueFamilies = {m_gpu.queueFamily};
+		std::vector<vk::DeviceQueueCreateInfo> queueCreateInfos;
+		std::set<u32> const uniqueQueueFamilies = {m_gpu.queueFamily};
 
-        float const queuePriority = 1.0F;
-        for (u32 const queueFamily : uniqueQueueFamilies)
-        {
-            vk::DeviceQueueCreateInfo const queueCreateInfo({}, queueFamily, 1, &queuePriority);
-            queueCreateInfos.push_back(queueCreateInfo);
-        }
+		float const queuePriority = 1.0F;
+		for (u32 const queueFamily : uniqueQueueFamilies)
+		{
+			vk::DeviceQueueCreateInfo const queueCreateInfo({}, queueFamily, 1, &queuePriority);
+			queueCreateInfos.push_back(queueCreateInfo);
+		}
 
+		vk::DeviceCreateInfo const createInfo({}, static_cast<u32>(queueCreateInfos.size()), queueCreateInfos.data());
 
-        vk::DeviceCreateInfo const createInfo({}, static_cast<u32>(queueCreateInfos.size()), queueCreateInfos.data());
+		m_device = m_gpu.physicalDevice.createDeviceUnique(createInfo);
 
-        m_device = m_gpu.physicalDevice.createDeviceUnique(createInfo);
-
-        m_graphicsQueue = m_device->getQueue(m_gpu.queueFamily, 0);
-    }
+		m_graphicsQueue = m_device->getQueue(m_gpu.queueFamily, 0);
+	}
 
 	u32 GraphicsDevice::findQueueFamilies(vk::PhysicalDevice device, vk::SurfaceKHR surface)
 	{
@@ -156,19 +150,18 @@ namespace gen
 		auto qProp = std::stringstream{"vulkan"};
 		for (std::size_t i = 0; i < queueFamilies.size(); i++)
 		{
-			qProp << "\t" << "Queue Family [" << i << "] :\n"
+			qProp << "\t"
+				  << "Queue Family [" << i << "] :\n"
 				  << "\t\t\tQueue Flags: " << to_string(queueFamilies[i].queueFlags) << "\n"
 				  << "\t\t\tQueue Count: " << queueFamilies[i].queueCount << "\n"
 				  << "\t\t\tTimestamp Valid Bits: " << queueFamilies[i].timestampValidBits << "\n"
 				  << "\t\t\tMin Image Transfer Granularity: width " << queueFamilies[i].minImageTransferGranularity.width << ", height "
-				  << queueFamilies[i].minImageTransferGranularity.height << " , depth "
-				  << queueFamilies[i].minImageTransferGranularity.depth
-				  << "\n";
+				  << queueFamilies[i].minImageTransferGranularity.height << " , depth " << queueFamilies[i].minImageTransferGranularity.depth << "\n";
 		}
 		gen::logger::debug("vulkan", std::format("Found Queue Family Properties: \n{}\n", qProp.str()));
 
-		int index { 0 };
-		for (const auto &queueFamily : queueFamilies)
+		int index{0};
+		for (const auto & queueFamily : queueFamilies)
 		{
 			bool const hasGraphicsFlag = (queueFamily.queueFlags & vk::QueueFlagBits::eGraphics) != vk::QueueFlagBits(0);
 			bool const hasTransferFlag = (queueFamily.queueFlags & vk::QueueFlagBits::eTransfer) != vk::QueueFlagBits(0);
@@ -187,6 +180,5 @@ namespace gen
 
 		return indices;
 	}
-
 
 } // namespace gen
