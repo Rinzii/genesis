@@ -1,18 +1,23 @@
 include(CMakeDependentOption)
 
 option(GENESIS_PCH "Use pre-compiled headers for the Genesis Engine" ON)
-option(ENABLE_SIMD "Enable SIMD for Genesis" OFF)
+option(GENESIS_ENABLE_SIMD "Enable SIMD for Genesis" OFF)
 
 
-add_library(genesis)
+add_library(genesis src/graphics/graphicsExceptions.cpp include/graphics/graphicsExceptions.hpp)
 add_library(genesis::lib ALIAS genesis)
 
 target_compile_definitions(genesis
         PUBLIC
-        $<$<CONFIG:Debug>:GENESIS_DEBUG>
+        $<$<CONFIG:Debug>:GEN_DEBUG>
+        $<$<CONFIG:RelWithDebInfo>:GEN_DEBUG>
+        $<$<CONFIG:Release>:GEN_NDEBUG>
         )
 
-if (ENABLE_SIMD)
+if (GENESIS_ENABLE_SIMD)
+  # This create an internal definition that allows our project to check if it can use simd.
+  # If the code decides it can then GEN_SIMD will be defined along with a bunch of other SIMD related defines.
+  # This definition is only used once to to allow GEN_SIMD to figure out if it can be enabled and nowhere else.
   add_compile_definitions(INTERNAL_GEN_SIMD_ENABLE)
 endif()
 
@@ -103,19 +108,19 @@ if (GENESIS_BUILD_SHADERS)
 
     if (${SHADER_EXTENSION} STREQUAL ".hlsl")
       if (${SHADER_NAME} MATCHES ".*VS\\.hlsl$") # Vertex Shader
-        set(SHADER_TYPE "vs")
+        set(SHADER_TYPE "vs") # Vertex Shader
       elseif (${SHADER_NAME} MATCHES ".*PS\\.hlsl$") # Pixel Shader
-        set(SHADER_TYPE "ps")
+        set(SHADER_TYPE "ps") # Pixel (Fragment) Shader
       elseif (${SHADER_NAME} MATCHES ".*CS\\.hlsl$") # Compute Shader
-        set(SHADER_TYPE "cs")
+        set(SHADER_TYPE "cs") # Compute Shader
       elseif (${SHADER_NAME} MATCHES ".*GS\\.hlsl$") # Geometry Shader
-        set(SHADER_TYPE "gs")
+        set(SHADER_TYPE "gs") # Geometry Shader
       elseif (${SHADER_NAME} MATCHES ".*DS\\.hlsl$") # Domain Shader
-        set(SHADER_TYPE "ds")
+        set(SHADER_TYPE "ds") # Domain Shader
       elseif (${SHADER_NAME} MATCHES ".*HS\\.hlsl$") # Hull Shader
-        set(SHADER_TYPE "hs")
+        set(SHADER_TYPE "hs") # Hull Shader
       elseif (${SHADER_NAME} MATCHES ".*LIB\\.hlsl$") # Library Shader - may not work with spirv
-        if (${TARGET_SHADER_MODEL} VERSION_LESS "6_3") # TODO: Not sure if this works.
+        if (${TARGET_SHADER_MODEL} VERSION_LESS "6_3") # Library shaders require shader model 6_3 or higher
           message(FATAL_ERROR "Shader model 6_0 or higher is required for file: ${SHADER_SOURCE_FILE}")
         endif ()
         message(WARNING "WARNING: Library shaders may not work with spirv")
@@ -152,7 +157,7 @@ if (GENESIS_BUILD_SHADERS)
     # Add a custom command for each shader file.
     add_custom_command(
             TARGET CmakeCompileShaders
-            COMMAND ${DXC_EXECUTABLE_PATH} -spirv -T ${SHADER_TYPE}_${TARGET_SHADER_MODEL} -E Main ${ABSOLUTE_SHADER_SOURCE_FILE} -Fo ${OUTPUT_SHADER_FILE}.spv
+            COMMAND ${DXC_EXECUTABLE_PATH} -spirv -T ${SHADER_TYPE}_${TARGET_SHADER_MODEL} -E main ${ABSOLUTE_SHADER_SOURCE_FILE} -Fo ${OUTPUT_SHADER_FILE}.spv
             DEPENDS ${SHADER_SOURCE_FILE}
             COMMENT "Compiling ${SHADER_SOURCE_FILE} to SPIR-V"
             VERBATIM
@@ -171,6 +176,8 @@ target_link_libraries(genesis
         PUBLIC
         mim::mim
         imgui::imgui
+        glfw::glfw
+        vk-dynamic::vk-dynamic
 
         PRIVATE
         genesis::ext

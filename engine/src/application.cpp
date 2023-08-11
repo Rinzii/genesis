@@ -1,4 +1,4 @@
-// Copyright Ian Pike. All Rights Reserved.
+// Copyright (c) 2023-present Genesis Engine contributors (see LICENSE.txt)
 
 // TODO: Replace this with a proper implementation
 
@@ -7,12 +7,25 @@
 
 namespace gen
 {
+	// possibly change this to instead use Update() and Draw() functions
 
 	void Application::run()
 	{
-		m_logger.debug("Testing logger: {:.2f} {}", std::numbers::pi_v<float>, "hello world");
+		gameLoop();
+		shutdown();
+	}
 
-		while (!m_window.shouldClose()) { gen::Window::pollEvents(); }
+	void Application::gameLoop()
+	{
+		while (!m_window.shouldClose()) { Window::pollEvents(); }
+	}
+
+	void Application::shutdown()
+	{
+	}
+
+	Application::Application(const char * appName, mim::vec2i const & initialSize) : m_window{initialSize, appName}, m_graphicsDevice{m_window, appName}
+	{
 	}
 
 } // namespace gen

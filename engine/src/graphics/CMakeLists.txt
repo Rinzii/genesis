@@ -2,5 +2,7 @@
 #add_subdirectory()
 
 target_sources(${PROJECT_NAME} PRIVATE
-        pipeline.cpp
+        graphicsExceptions.cpp
+        device.cpp
+        vkHelpers.cpp
         )

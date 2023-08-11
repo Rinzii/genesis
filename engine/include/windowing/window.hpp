@@ -3,13 +3,18 @@
 #pragma once
 
 #include "core.hpp"
+#include "logger/log.hpp"
 
+#include <mim/vec2.hpp>
+
+#include <memory>
 #include <string>
 
 // TODO: Replace this with a proper implementation
 
-// Forward declare GLFWwindow
+// Start Forward declarations
 struct GLFWwindow;
+// End Forward declarations
 
 namespace gen
 {
@@ -17,36 +22,60 @@ namespace gen
 	class Window
 	{
 	public:
-		Window(int w, int h, std::string title);
+		// Values mirrored from GLFW
+		// https://www.glfw.org/docs/3.3/glfw3_8h.html#a2315b99a329ce53e6a13a9d46fd5ca88
+		enum class CursorMode : int
+		{
+			Normal	 = 0x00034001,
+			Hidden	 = 0x00034002,
+			Disabled = 0x00034003
+		};
+
+		Window(mim::vec2i extent, const char * title);
 		~Window();
 
 		Window(const Window &)			   = delete;
 		Window & operator=(const Window &) = delete;
+		Window(Window &&)				   = default;
+		Window & operator=(Window &&)	   = default;
 
-	public:
+		// Member functions
+
 		GEN_NODISCARD bool shouldClose() const;
 		static void pollEvents();
 
-	public:
-		GEN_NODISCARD inline int GetWidth() const { return m_width; }
-		GEN_NODISCARD inline int GetHeight() const { return m_height; }
-		GEN_NODISCARD inline const std::string & GetTitle() const { return m_title; }
+		// Getters
 
-		// TODO: Currently these functions will break the window.
+		GEN_NODISCARD mim::vec2i getExtent();
+		GEN_NODISCARD int getWidth();
+		GEN_NODISCARD int getHeight();
+		GEN_NODISCARD CursorMode getCursorMode() const;
+		GEN_NODISCARD GLFWwindow * getHandle() const;
 
-		void inline SetWidth(int width) { m_width = width; }
-		void inline SetHeight(int height) { m_height = height; }
-		void inline SetTitle(const std::string & title) { m_title = title; }
+		// TODO: Currently these functions will break the window. Have not yet implemented window resizing.
+
+		// Setters
+
+		void setWidth(int width);
+		void setHeight(int height);
+		void setTitle(const char * title);
+		void setCursorMode(CursorMode mode);
 
 	private:
-		void initWindow();
+		// Callbacks
+		static void callback_error(int error, const char * description);
 
-	private:
-		int m_width;
-		int m_height;
-		std::string m_title;
+		mim::vec2i m_extent;
 
-		GLFWwindow * m_window;
+		CursorMode m_currentCursorMode{Window::CursorMode::Normal};
+
+		struct Deleter
+		{
+			void operator()(GLFWwindow * ptr) const;
+		};
+
+		std::unique_ptr<GLFWwindow, Deleter> m_window;
+		Logger m_logger{"windowing"};
 	};
 
 } // namespace gen
