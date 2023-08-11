@@ -94,15 +94,15 @@ namespace gen
 
 			if (properties.deviceType == vk::PhysicalDeviceType::eDiscreteGpu)
 			{
-				m_physicalDevice = device;
+				m_gpu.physicalDevice = device;
 				break;
 			}
 		}
 
 		// If we didn't find a discrete gpu, we'll just use the first device in the list.
-		if (!m_physicalDevice)
+		if (!m_gpu.physicalDevice)
 		{
-			m_physicalDevice = availablePhysicalDevices.front();
+			m_gpu.physicalDevice = availablePhysicalDevices.front();
 
 		}
 
@@ -124,10 +124,10 @@ namespace gen
 
 	void GraphicsDevice::createLogicalDevice()
     {
-        QueueFamilyIndices indices = findQueueFamilies(m_physicalDevice, m_surface.get());
+		m_gpu.queueFamily = findQueueFamilies(m_gpu.physicalDevice, m_surface.get());
 
         std::vector<vk::DeviceQueueCreateInfo> queueCreateInfos;
-        std::set<uint32_t> const uniqueQueueFamilies = {indices.graphicsFamily.value()};
+        std::set<u32> const uniqueQueueFamilies = {m_gpu.queueFamily};
 
         float const queuePriority = 1.0F;
         for (u32 const queueFamily : uniqueQueueFamilies)
@@ -139,14 +139,15 @@ namespace gen
 
         vk::DeviceCreateInfo const createInfo({}, static_cast<u32>(queueCreateInfos.size()), queueCreateInfos.data());
 
-        m_device = m_physicalDevice.createDeviceUnique(createInfo);
+        m_device = m_gpu.physicalDevice.createDeviceUnique(createInfo);
 
-        m_graphicsQueue = m_device->getQueue(indices.graphicsFamily.value(), 0);
+        m_graphicsQueue = m_device->getQueue(m_gpu.queueFamily, 0);
     }
 
-	QueueFamilyIndices GraphicsDevice::findQueueFamilies(vk::PhysicalDevice device, vk::SurfaceKHR surface)
+	u32 GraphicsDevice::findQueueFamilies(vk::PhysicalDevice device, vk::SurfaceKHR surface)
 	{
-		QueueFamilyIndices indices;
+
+		u32 indices{};
 
 		auto queueFamilies = device.getQueueFamilyProperties();
 
@@ -173,17 +174,12 @@ namespace gen
 			if (hasGraphicsFlag && hasTransferFlag &&
 				device.getSurfaceSupportKHR(static_cast<u32>(index), surface)) // NOLINT(readability-implicit-bool-conversion)
 			{
-				indices.graphicsFamily = index;
-				indices.transferFamily = index;
-				indices.presentFamily = index;
+				indices = static_cast<u32>(index);
 				break;
 			}
 
 			index++;
 		}
-
-
-		assert(indices.isComplete());
 
 		gen::logger::debug("vulkan", std::format("Selected graphics queue family: {}", index));
 

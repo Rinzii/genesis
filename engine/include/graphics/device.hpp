@@ -15,6 +15,14 @@
 
 namespace gen
 {
+	struct Gpu
+	{
+		vk::PhysicalDevice physicalDevice{};
+		vk::PhysicalDeviceProperties properties{};
+		u32 queueFamily{};
+	};
+
+
 	struct QueueFamilyIndices
 	{
 		std::optional<u32> graphicsFamily;
@@ -43,7 +51,7 @@ namespace gen
 
 		GEN_NODISCARD vk::Instance const & getInstance() const { return m_instance.get(); }
 		GEN_NODISCARD vk::SurfaceKHR const & getSurface() const { return m_surface.get(); }
-		GEN_NODISCARD vk::PhysicalDevice const & getPhysicalDevice() const { return m_physicalDevice; }
+		GEN_NODISCARD vk::PhysicalDevice const & getPhysicalDevice() const { return m_gpu.physicalDevice; }
 		GEN_NODISCARD vk::Device const & getDevice() const { return m_device.get(); }
 
 		/// Setters
@@ -58,14 +66,15 @@ namespace gen
 
 		// helpers
 
-		static QueueFamilyIndices findQueueFamilies(vk::PhysicalDevice device, vk::SurfaceKHR surface);
+		static u32 findQueueFamilies(vk::PhysicalDevice device, vk::SurfaceKHR surface);
 
 
 		vk::UniqueInstance m_instance;
 		vk::UniqueSurfaceKHR m_surface;
-		vk::PhysicalDevice m_physicalDevice;
+		Gpu m_gpu;
 		vk::UniqueDevice m_device;
 		vk::Queue m_graphicsQueue;
+
 
 
 
