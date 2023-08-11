@@ -14,7 +14,7 @@
 namespace gen
 {
 
-	Window::Window(const mim::vec2i& extent, const char* title)
+	Window::Window(const mim::vec2i extent, const char* title) // NOLINT(performance-unnecessary-value-param)
 		: m_extent{extent} // NOLINT(cppcoreguidelines-pro-type-member-init)
 	{
 
