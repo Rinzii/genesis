@@ -65,9 +65,6 @@ namespace gen
 
 		// Callbacks
 		static void callback_error(int error, const char * description);
-		static void callback_cursor_position(GLFWwindow * window, double xPos, double yPos);
-		static void callback_window_focus(GLFWwindow * window, int focused);
-		static void callback_window_close(GLFWwindow * window);
 
 		mim::vec2i m_extent;
 

@@ -49,9 +49,6 @@ namespace gen
 
 		// Set callbacks
 		glfwSetErrorCallback(callback_error);
-		glfwSetCursorPosCallback(m_window.get(), callback_cursor_position);
-		glfwSetWindowFocusCallback(m_window.get(), callback_window_focus);
-		glfwSetWindowCloseCallback(m_window.get(), callback_window_close);
 
 		// Report successful window creation
 		gen::logger::info("windowing", "Window constructed");
@@ -140,17 +137,6 @@ namespace gen
 		gen::logger::error("windowing", std::format("GLFW Error: {} - {}", error, description));
 	}
 
-	void Window::callback_cursor_position(GLFWwindow * window, double xPos, double yPos)
-	{
-	}
-
-	void Window::callback_window_focus(GLFWwindow * window, int focused)
-    {
-    }
-
-	void Window::callback_window_close(GLFWwindow * window)
-	{
-	}
 
 
 	void Window::Deleter::operator()(GLFWwindow * ptr) const
