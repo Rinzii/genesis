@@ -23,18 +23,6 @@ namespace gen
 	};
 
 
-	struct QueueFamilyIndices
-	{
-		std::optional<u32> graphicsFamily;
-		std::optional<u32> transferFamily;
-		std::optional<u32> presentFamily;
-
-		GEN_NODISCARD bool isComplete() const
-		{
-			return graphicsFamily.has_value() && transferFamily.has_value() && presentFamily.has_value();
-		}
-	};
-
 	class GraphicsDevice
 	{
 	public:
