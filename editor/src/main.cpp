@@ -10,7 +10,7 @@ int main()
 
 	gen::Application app;
 
-	gen::logger::info("Hello, world!");
+	gen::logger::general.info("Hello, world!");
 
 	try
 	{
@@ -18,7 +18,7 @@ int main()
 	}
 	catch (std::exception const & e)
 	{
-		gen::logger::error(e.what());
+		gen::logger::general.error("{}", e.what());
 		return EXIT_FAILURE;
 	}
 

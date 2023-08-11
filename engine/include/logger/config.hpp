@@ -17,15 +17,6 @@ namespace gen::logger
 		eUtc
 	};
 
-	///
-	/// \brief Source location mode.
-	///
-	enum class Location
-	{
-		eFilename,
-		eFullPath
-	};
-
 	struct Config
 	{
 		///
@@ -40,9 +31,8 @@ namespace gen::logger
 		///  category: log category
 		///  message: log message
 		///  timestamp: log timestamp
-		///  location: log source location
 		///
-		static constexpr std::string_view default_format_v{"[{level}][T{thread}] [{category}] {message} [{timestamp}] [{location}]"};
+		static constexpr std::string_view default_format_v{"[{level}][T{thread}] [{category}] {message} [{timestamp}]"};
 
 		static constexpr std::size_t format_size_v{128};
 
@@ -68,9 +58,5 @@ namespace gen::logger
 		/// \brief Timestamp mode.
 		///
 		Timestamp timestamp{Timestamp::eLocal};
-		///
-		/// \brief Source location mode.
-		///
-		Location location{Location::eFilename};
 	};
 } // namespace gen::logger
