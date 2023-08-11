@@ -44,7 +44,7 @@ namespace gen
 #endif
 
 		// TODO: Allow for the application to be able to specify its version itself. Instead of just using the engine version.
-		vk::ApplicationInfo appInfo(appName.c_str(), gen::version_v.getVersion(), engineName.c_str(), gen::version_v.getVersion(), apiVersion);
+		vk::ApplicationInfo const appInfo(appName.c_str(), gen::version_v.getVersion(), engineName.c_str(), gen::version_v.getVersion(), apiVersion);
 
 		auto extensionsCount	   = 0U;
 		auto * requestedExtensions = glfwGetRequiredInstanceExtensions(&extensionsCount);
@@ -89,7 +89,7 @@ namespace gen
 		m_physicalDevice = availablePhysicalDevices.front();
 
         auto aDev = std::stringstream{"vulkan"};
-        for (int i = 0; i < availablePhysicalDevices.size(); i++)
+        for (std::size_t i = 0; i < availablePhysicalDevices.size(); i++)
         {
             aDev << "\tDevice [" << i << "] : " << "\n"
                  << "\t\tName: " << availablePhysicalDevices[i].getProperties().deviceName << "\n"
@@ -105,7 +105,7 @@ namespace gen
 
 	void GraphicsDevice::createLogicalDevice()
     {
-        QueueFamilyIndices indices = findQueueFamilies(m_physicalDevice);
+        QueueFamilyIndices indices = findQueueFamilies(m_physicalDevice, m_surface.get());
 
         std::vector<vk::DeviceQueueCreateInfo> queueCreateInfos;
         std::set<uint32_t> const uniqueQueueFamilies = {indices.graphicsFamily.value()};
@@ -117,23 +117,22 @@ namespace gen
             queueCreateInfos.push_back(queueCreateInfo);
         }
 
-        vk::PhysicalDeviceFeatures const deviceFeatures{}; // This is a placeholder for later.
 
-        vk::DeviceCreateInfo const createInfo({}, queueCreateInfos.size(), queueCreateInfos.data());
+        vk::DeviceCreateInfo const createInfo({}, static_cast<u32>(queueCreateInfos.size()), queueCreateInfos.data());
 
         m_device = m_physicalDevice.createDeviceUnique(createInfo);
 
         m_graphicsQueue = m_device->getQueue(indices.graphicsFamily.value(), 0);
     }
 
-	QueueFamilyIndices GraphicsDevice::findQueueFamilies(vk::PhysicalDevice device)
+	QueueFamilyIndices GraphicsDevice::findQueueFamilies(vk::PhysicalDevice device, vk::SurfaceKHR surface)
 	{
 		QueueFamilyIndices indices;
 
 		auto queueFamilies = device.getQueueFamilyProperties();
 
 		auto qProp = std::stringstream{"vulkan"};
-		for (int i = 0; i < queueFamilies.size(); i++)
+		for (std::size_t i = 0; i < queueFamilies.size(); i++)
 		{
 			qProp << "\t" << "Queue Family [" << i << "] :\n"
 				  << "\t\t\tQueue Flags: " << to_string(queueFamilies[i].queueFlags) << "\n"
@@ -147,11 +146,21 @@ namespace gen
 		gen::logger::debug("vulkan", std::format("Found Queue Family Properties: \n{}\n", qProp.str()));
 
 		int index = 0;
-		for (const auto & queueFamily : queueFamilies)
+		for (const auto &queueFamily : queueFamilies)
 		{
 			if (queueFamily.queueFlags & vk::QueueFlagBits::eGraphics)
 			{
 				indices.graphicsFamily = index;
+			}
+
+			if (queueFamily.queueFlags & vk::QueueFlagBits::eTransfer)
+			{
+				indices.transferFamily = index;
+			}
+
+			if (device.getSurfaceSupportKHR(static_cast<u32>(index), surface)) // NOLINT(readability-implicit-bool-conversion)
+			{
+				indices.presentFamily = index;
 			}
 
 			if (indices.isComplete())
@@ -161,6 +170,8 @@ namespace gen
 
 			index++;
 		}
+
+		assert(indices.isComplete());
 
 		gen::logger::debug("vulkan", std::format("Selected graphics queue family: {}", index));
 

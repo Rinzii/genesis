@@ -15,12 +15,15 @@
 
 namespace gen
 {
-	struct QueueFamilyIndices {
+	struct QueueFamilyIndices
+	{
 		std::optional<u32> graphicsFamily;
+		std::optional<u32> transferFamily;
+		std::optional<u32> presentFamily;
 
 		GEN_NODISCARD bool isComplete() const
 		{
-			return graphicsFamily.has_value();
+			return graphicsFamily.has_value() && transferFamily.has_value() && presentFamily.has_value();
 		}
 	};
 
@@ -50,7 +53,7 @@ namespace gen
 
 		// helpers
 
-		static QueueFamilyIndices findQueueFamilies(vk::PhysicalDevice device) ;
+		static QueueFamilyIndices findQueueFamilies(vk::PhysicalDevice device, vk::SurfaceKHR surface);
 
 		vk::UniqueInstance m_instance;
 		vk::UniqueSurfaceKHR m_surface;
