@@ -42,8 +42,8 @@ namespace gen
 		GEN_NODISCARD vk::PhysicalDevice const & getPhysicalDevice() const { return m_gpu.physicalDevice; }
 		GEN_NODISCARD vk::Device const & getDevice() const { return m_device.get(); }
 
-		/// Setters
 
+		/// Setters
 
 
 	private:
@@ -52,7 +52,8 @@ namespace gen
 		void pickPhysicalDevice();
 		void createLogicalDevice();
 
-		// helpers
+
+		/// Helpers
 
 		static u32 findQueueFamilies(vk::PhysicalDevice device, vk::SurfaceKHR surface);
 
