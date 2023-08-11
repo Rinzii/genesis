@@ -46,6 +46,7 @@ namespace gen
 		void createSurface(const Window & window);
 		void pickPhysicalDevice();
 		void createLogicalDevice();
+		void createSwapChain(const Window & window);
 
 		/// Helpers
 
@@ -56,6 +57,8 @@ namespace gen
 		Gpu m_gpu;
 		vk::UniqueDevice m_device;
 		vk::Queue m_graphicsQueue;
+		vk::SwapchainCreateInfoKHR m_swapChainInfo;
+		vk::UniqueSwapchainKHR m_swapChain;
 
 		Logger m_logger{"graphics"};
 	};

@@ -119,7 +119,6 @@ namespace gen
 		glfwSetWindowTitle(m_window.get(), title);
 	}
 
-
 	void Window::setCursorMode(const Window::CursorMode mode)
 	{
 		m_currentCursorMode = mode;
