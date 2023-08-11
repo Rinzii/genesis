@@ -28,12 +28,12 @@ namespace gen
 		pickPhysicalDevice();
 		createLogicalDevice();
 
-		gen::logger::info("vulkan", "GraphicsDevice constructed");
+		m_logger.info("GraphicsDevice constructed");
 	}
 
 	GraphicsDevice::~GraphicsDevice()
 	{
-		gen::logger::info("vulkan", "GraphicsDevice destructed");
+		m_logger.info("GraphicsDevice destructed");
 	}
 
 	void GraphicsDevice::createInstance(const std::string & appName, const std::string & engineName, const gen::u32 & apiVersion)
@@ -58,10 +58,9 @@ namespace gen
 #endif
 		);
 
-		gen::logger::debug("vulkan",
-						   std::format("Enabled extensions: \n\t{}", std::accumulate(enabledExtensions.begin(), enabledExtensions.end(), std::string(),
-																					 [](const std::string & acc, const std::string & ext)
-																					 { return acc.empty() ? ext : acc + ", \n\t" + ext; })));
+		m_logger.debug("Enabled extensions: \n\t{}",
+					   std::accumulate(enabledExtensions.begin(), enabledExtensions.end(), std::string(),
+									   [](const std::string & acc, const std::string & ext) { return acc.empty() ? ext : acc + ", \n\t" + ext; }));
 
 		m_instance = vk::createInstanceUnique(vk::util::makeInstanceCreateInfoChain(appInfo, {}, enabledExtensions).get<vk::InstanceCreateInfo>());
 
@@ -74,7 +73,7 @@ namespace gen
 	void GraphicsDevice::createSurface(const Window & window)
 	{
 		m_surface = vk::util::createWindowSurface(m_instance.get(), window);
-		gen::logger::debug("vulkan", "Created surface");
+		m_logger.debug("vulkan", "Created surface");
 	}
 
 	void GraphicsDevice::pickPhysicalDevice()
@@ -116,7 +115,7 @@ namespace gen
 				 << "\t\tVendor ID: " << availablePhysicalDevices[i].getProperties().vendorID << "\n"
 				 << "\t\tDevice ID: " << availablePhysicalDevices[i].getProperties().deviceID << "\n";
 		}
-		gen::logger::debug("vulkan", std::format("Found Physical Devices: \n{}\n", aDev.str()));
+		m_logger.debug("Found Physical Devices: \n{}\n", aDev.str());
 	}
 
 	void GraphicsDevice::createLogicalDevice()
@@ -158,7 +157,7 @@ namespace gen
 				  << "\t\t\tMin Image Transfer Granularity: width " << queueFamilies[i].minImageTransferGranularity.width << ", height "
 				  << queueFamilies[i].minImageTransferGranularity.height << " , depth " << queueFamilies[i].minImageTransferGranularity.depth << "\n";
 		}
-		gen::logger::debug("vulkan", std::format("Found Queue Family Properties: \n{}\n", qProp.str()));
+		m_logger.debug("Found Queue Family Properties: \n{}\n", qProp.str());
 
 		int index{0};
 		for (const auto & queueFamily : queueFamilies)
@@ -176,7 +175,7 @@ namespace gen
 			index++;
 		}
 
-		gen::logger::debug("vulkan", std::format("Selected graphics queue family: {}", index));
+		m_logger.debug("Selected graphics queue family: {}", index);
 
 		return indices;
 	}

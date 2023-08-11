@@ -3,6 +3,7 @@
 #pragma once
 
 #include "core.hpp"
+#include "logger/log.hpp"
 
 #include <mim/vec2.hpp>
 
@@ -21,17 +22,16 @@ namespace gen
 	class Window
 	{
 	public:
-
 		// Values mirrored from GLFW
 		// https://www.glfw.org/docs/3.3/glfw3_8h.html#a2315b99a329ce53e6a13a9d46fd5ca88
 		enum class CursorMode : int
 		{
-			Normal = 0x00034001,
-			Hidden = 0x00034002,
+			Normal	 = 0x00034001,
+			Hidden	 = 0x00034002,
 			Disabled = 0x00034003
 		};
 
-		Window(mim::vec2i extent, const char* title);
+		Window(mim::vec2i extent, const char * title);
 		~Window();
 
 		Window(const Window &)			   = delete;
@@ -58,26 +58,24 @@ namespace gen
 
 		void setWidth(int width);
 		void setHeight(int height);
-		void setTitle(const char* title);
+		void setTitle(const char * title);
 		void setCursorMode(CursorMode mode);
 
 	private:
-
 		// Callbacks
 		static void callback_error(int error, const char * description);
 
 		mim::vec2i m_extent;
 
-		CursorMode m_currentCursorMode { Window::CursorMode::Normal };
-
+		CursorMode m_currentCursorMode{Window::CursorMode::Normal};
 
 		struct Deleter
 		{
-			void operator()(GLFWwindow* ptr) const;
+			void operator()(GLFWwindow * ptr) const;
 		};
 
 		std::unique_ptr<GLFWwindow, Deleter> m_window;
-
+		Logger m_logger{"windowing"};
 	};
 
 } // namespace gen

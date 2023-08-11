@@ -12,7 +12,6 @@
 // std
 #include <vector>
 
-
 namespace gen
 {
 	struct Gpu
@@ -22,7 +21,6 @@ namespace gen
 		u32 queueFamily{};
 	};
 
-
 	class GraphicsDevice
 	{
 	public:
@@ -31,8 +29,7 @@ namespace gen
 		GraphicsDevice(GraphicsDevice &&)				   = delete;
 		GraphicsDevice & operator=(GraphicsDevice &&)	   = delete;
 
-
-		explicit GraphicsDevice(const Window & window, std::string const & appName );
+		explicit GraphicsDevice(const Window & window, std::string const & appName);
 		~GraphicsDevice();
 
 		/// Getters
@@ -42,9 +39,7 @@ namespace gen
 		GEN_NODISCARD vk::PhysicalDevice const & getPhysicalDevice() const { return m_gpu.physicalDevice; }
 		GEN_NODISCARD vk::Device const & getDevice() const { return m_device.get(); }
 
-
 		/// Setters
-
 
 	private:
 		void createInstance(const std::string & appName, const std::string & engineName, const gen::u32 & apiVersion);
@@ -52,11 +47,9 @@ namespace gen
 		void pickPhysicalDevice();
 		void createLogicalDevice();
 
-
 		/// Helpers
 
-		static u32 findQueueFamilies(vk::PhysicalDevice device, vk::SurfaceKHR surface);
-
+		u32 findQueueFamilies(vk::PhysicalDevice device, vk::SurfaceKHR surface);
 
 		vk::UniqueInstance m_instance;
 		vk::UniqueSurfaceKHR m_surface;
@@ -64,8 +57,6 @@ namespace gen
 		vk::UniqueDevice m_device;
 		vk::Queue m_graphicsQueue;
 
-
-
-
+		Logger m_logger{"graphics"};
 	};
 } // namespace gen

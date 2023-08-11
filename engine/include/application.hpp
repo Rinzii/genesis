@@ -6,17 +6,16 @@
 
 #include "util/version.hpp"
 
-#include "graphics/device.hpp"
 #include <logger/log.hpp>
+#include "graphics/device.hpp"
 #include "windowing/window.hpp"
 
 namespace gen
 {
-
 	class Application
 	{
 	public:
-		explicit Application(const char* appName, mim::vec2i const& initialSize);
+		explicit Application(const char * appName, mim::vec2i const & initialSize);
 
 		void run();
 
@@ -26,8 +25,8 @@ namespace gen
 
 		Window m_window;
 		GraphicsDevice m_graphicsDevice;
-	};
-		Logger m_logger{"Application"};
+
+		Logger m_logger{"application"};
 	};
 
 } // namespace gen

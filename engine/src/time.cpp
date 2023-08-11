@@ -61,7 +61,7 @@ namespace gen
 			if (g_updateTimer >= g_updateDelay)
 			{
 				g_updateTimer = 0;
-				g_fps		  = 1 / (Time::GetDeltaTime() / Time::GetTimeScale());
+				g_fps		  = static_cast<unsigned int>(1 / (Time::GetDeltaTime() / Time::GetTimeScale()));
 			}
 		}
 

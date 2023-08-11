@@ -10,12 +10,6 @@ namespace gen
 	struct vulkan_error : public std::runtime_error
 	{
 
-		explicit vulkan_error(const std::string& message);
-
-
+		explicit vulkan_error(const std::string & message);
 	};
-}
-
-
-
-
+} // namespace gen

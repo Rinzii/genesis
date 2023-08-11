@@ -2,25 +2,24 @@
 
 // internal
 #include "windowing/window.hpp"
-#include "logger/log.hpp"
 
 // external
 #include <GLFW/glfw3.h>
 
 // std
-#include <format>
 #include <cassert>
+#include <format>
 
 namespace gen
 {
 
-	Window::Window(const mim::vec2i extent, const char* title) // NOLINT(performance-unnecessary-value-param)
-		: m_extent{extent} // NOLINT(cppcoreguidelines-pro-type-member-init)
+	Window::Window(const mim::vec2i extent, const char * title) // NOLINT(performance-unnecessary-value-param)
+		: m_extent{extent}										// NOLINT(cppcoreguidelines-pro-type-member-init)
 	{
 
 		if (!glfwInit()) // NOLINT(readability-implicit-bool-conversion)
 		{
-			gen::logger::error("windowing", "Failed to initialize GLFW");
+			m_logger.error("Failed to initialize GLFW");
 			throw std::runtime_error("Failed to initialize GLFW");
 		}
 
@@ -29,18 +28,14 @@ namespace gen
 		glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE); // TODO: Later add support for resizing of windows.
 
 		// Create window
-		GLFWwindow * window_ = glfwCreateWindow(static_cast<int>(m_extent.x),
-												static_cast<int>(m_extent.y),
-												title,
-												nullptr,
-												nullptr);
+		GLFWwindow * window_ = glfwCreateWindow(static_cast<int>(m_extent.x), static_cast<int>(m_extent.y), title, nullptr, nullptr);
 
 		m_window = std::unique_ptr<GLFWwindow, Deleter>(window_);
 
 		// Check if window was created
 		if (!m_window)
 		{
-			gen::logger::error("windowing", "Failed to create GLFW window");
+			m_logger.error("Failed to create GLFW window");
 			throw std::runtime_error("Failed to create GLFW window");
 		}
 
@@ -51,12 +46,12 @@ namespace gen
 		glfwSetErrorCallback(callback_error);
 
 		// Report successful window creation
-		gen::logger::info("windowing", "Window constructed");
+		m_logger.info("Window constructed");
 	}
 
 	Window::~Window()
 	{
-		gen::logger::info("windowing", "Window destructed");
+		m_logger.info("Window destructed");
 	}
 
 	bool Window::shouldClose() const
@@ -102,7 +97,6 @@ namespace gen
 		return m_window.get();
 	}
 
-
 	/// Setters
 
 	void Window::setWidth(const int width)
@@ -119,7 +113,7 @@ namespace gen
 		glfwSetWindowSize(m_window.get(), m_extent.x, m_extent.y);
 	}
 
-	void Window::setTitle(const char* const title)
+	void Window::setTitle(const char * const title)
 	{
 		glfwSetWindowTitle(m_window.get(), title);
 	}
@@ -134,10 +128,9 @@ namespace gen
 
 	void Window::callback_error(int error, const char * description)
 	{
-		gen::logger::error("windowing", std::format("GLFW Error: {} - {}", error, description));
+		Logger const log{"windowing"};
+		log.error("GLFW Error: {} - {}", error, description);
 	}
-
-
 
 	void Window::Deleter::operator()(GLFWwindow * ptr) const
 	{

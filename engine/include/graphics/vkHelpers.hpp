@@ -8,12 +8,11 @@
 
 #include <vulkan/vulkan.hpp>
 #ifndef GLFW_INCLUDE_NONE
-	#  define GLFW_INCLUDE_NONE
+	#define GLFW_INCLUDE_NONE
 #endif
 #include <GLFW/glfw3.h>
 
 #include "core.hpp"
-#include "logger/log.hpp"
 #include "windowing/window.hpp"
 
 namespace vk::util
@@ -26,7 +25,8 @@ namespace vk::util
 #endif
 	);
 
-	vk::StructureChain<vk::InstanceCreateInfo> makeInstanceCreateInfoChain(const vk::ApplicationInfo & appInfo, std::vector<const char *> const & layers, std::vector<const char *> const & extensions);
+	vk::StructureChain<vk::InstanceCreateInfo> makeInstanceCreateInfoChain(const vk::ApplicationInfo & appInfo, std::vector<const char *> const & layers,
+																		   std::vector<const char *> const & extensions);
 
 	vk::DebugUtilsMessengerCreateInfoEXT makeDebugUtilsMessengerCreateInfoEXT();
 

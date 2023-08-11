@@ -7,6 +7,9 @@
 #include <span>
 #include <unordered_set>
 
+#include "graphics/graphicsExceptions.hpp"
+#include "logger/log.hpp"
+
 #if defined(VULKAN_HPP_NO_TO_STRING)
 	#include <vulkan/vulkan_to_string.hpp>
 #endif
@@ -23,6 +26,7 @@ VULKAN_HPP_DEFAULT_DISPATCH_LOADER_DYNAMIC_STORAGE
 namespace vk::util
 {
 
+	gen::Logger const logger{"graphics"};
 
 	// Gather enabled extensions based on the requested extensions and available extension properties.
 	std::vector<char const *> gatherExtensions(std::vector<std::string> const & extensions
@@ -41,10 +45,9 @@ namespace vk::util
 		for (auto const & eProp : extensionProperties) { availableExtensions.push_back(eProp.extensionName); }
 #endif
 
-		gen::logger::debug("vulkan",
-						   std::format("Available extensions: \n\t{}", std::accumulate(availableExtensions.begin(), availableExtensions.end(), std::string(),
-																					   [](const std::string & acc, const std::string & ext)
-																					   { return acc.empty() ? ext : acc + ", \n\t" + ext; })));
+		logger.debug("Available extensions: \n\t{}",
+					 std::accumulate(availableExtensions.begin(), availableExtensions.end(), std::string(),
+									 [](const std::string & acc, const std::string & ext) { return acc.empty() ? ext : acc + ", \n\t" + ext; }));
 
 		for (auto const & ext : extensions)
 		{
@@ -58,7 +61,8 @@ namespace vk::util
 	}
 
 	// Create an instance create info chain with or without debug utils messenger in debug mode.
-	vk::StructureChain<vk::InstanceCreateInfo> makeInstanceCreateInfoChain(const vk::ApplicationInfo & appInfo, std::vector<const char *> const & layers, std::vector<const char *> const & extensions)
+	vk::StructureChain<vk::InstanceCreateInfo> makeInstanceCreateInfoChain(const vk::ApplicationInfo & appInfo, std::vector<const char *> const & layers,
+																		   std::vector<const char *> const & extensions)
 	{
 
 		// When in non-debug mode, use the InstanceCreateInfo for instance creation.
@@ -66,7 +70,6 @@ namespace vk::util
 
 		return instanceCreateInfo;
 	}
-
 
 	// Check if the required device extensions are supported by the given physical device.
 	bool checkDeviceExtensionSupport(const vk::PhysicalDevice device, const std::span<const char * const> deviceExtensions)
@@ -99,13 +102,12 @@ namespace vk::util
 		case vk::ShaderStageFlagBits::eCompute: executionModel = spv::ExecutionModelGLCompute; break;
 		case vk::ShaderStageFlagBits::eGeometry: executionModel = spv::ExecutionModelGeometry; break;
 		// TODO: Add more shader stages as needed
-		default: gen::logger::warn("vulkan", "HLSLtoSPV: Unsupported shader type"); return false;
+		default: logger.warn("HLSLtoSPV: Unsupported shader type"); return false;
 		}
 
 		// Compile HLSL to SPIR-V using SPIRV-Cross
 		// NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
-		spirv_cross::CompilerHLSL compiler(reinterpret_cast<const uint32_t *>(hlslShader.data()),
-										   hlslShader.size() / sizeof(uint32_t));
+		spirv_cross::CompilerHLSL compiler(reinterpret_cast<const uint32_t *>(hlslShader.data()), hlslShader.size() / sizeof(uint32_t));
 		compiler.set_entry_point("main", executionModel);
 
 		std::basic_string<char, std::char_traits<char>, std::allocator<char>> spirvData = compiler.compile();
@@ -120,7 +122,7 @@ namespace vk::util
 		std::vector<unsigned int> shaderSPV;
 		if (!HLSLtoSPV(shaderStage, shaderText, shaderSPV))
 		{ // TODO: Decide if we want to not throw an exception if compilation fails
-			gen::logger::error("vulkan", "Failed to compile shader");
+			logger.error("Failed to compile shader");
 			throw std::runtime_error("Failed to compile shader");
 		}
 
@@ -131,11 +133,7 @@ namespace vk::util
 	{
 		VkSurfaceKHR surface_{};
 		VkResult const err = glfwCreateWindowSurface(VkInstance(instance), window.getHandle(), nullptr, &surface_);
-		if (err != VK_SUCCESS)
-		{
-			gen::logger::error("vulkan", "Failed to create window surface!");
-			throw std::runtime_error("Failed to create window surface!");
-		}
+		if (err != VK_SUCCESS) { throw gen::vulkan_error(std::format("Failed to create window surface: {}", vk::to_string(vk::Result(err)))); }
 
 		return vk::UniqueSurfaceKHR(surface_, instance);
 	}
