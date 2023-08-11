@@ -164,31 +164,24 @@ namespace gen
 		}
 		gen::logger::debug("vulkan", std::format("Found Queue Family Properties: \n{}\n", qProp.str()));
 
-		int index = 0;
+		int index { 0 };
 		for (const auto &queueFamily : queueFamilies)
 		{
-			if (queueFamily.queueFlags & vk::QueueFlagBits::eGraphics)
+			bool const hasGraphicsFlag = (queueFamily.queueFlags & vk::QueueFlagBits::eGraphics) != vk::QueueFlagBits(0);
+			bool const hasTransferFlag = (queueFamily.queueFlags & vk::QueueFlagBits::eTransfer) != vk::QueueFlagBits(0);
+
+			if (hasGraphicsFlag && hasTransferFlag &&
+				device.getSurfaceSupportKHR(static_cast<u32>(index), surface)) // NOLINT(readability-implicit-bool-conversion)
 			{
 				indices.graphicsFamily = index;
-			}
-
-			if (queueFamily.queueFlags & vk::QueueFlagBits::eTransfer)
-			{
 				indices.transferFamily = index;
-			}
-
-			if (device.getSurfaceSupportKHR(static_cast<u32>(index), surface)) // NOLINT(readability-implicit-bool-conversion)
-			{
 				indices.presentFamily = index;
-			}
-
-			if (indices.isComplete())
-			{
 				break;
 			}
 
 			index++;
 		}
+
 
 		assert(indices.isComplete());
 
