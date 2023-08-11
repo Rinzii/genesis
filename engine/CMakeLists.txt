@@ -4,7 +4,7 @@ option(GENESIS_PCH "Use pre-compiled headers for the Genesis Engine" ON)
 option(GENESIS_ENABLE_SIMD "Enable SIMD for Genesis" OFF)
 
 
-add_library(genesis)
+add_library(genesis src/graphics/graphicsExceptions.cpp include/graphics/graphicsExceptions.hpp)
 add_library(genesis::lib ALIAS genesis)
 
 target_compile_definitions(genesis

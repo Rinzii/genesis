@@ -1,20 +1,23 @@
 // Copyright (c) 2023-present Genesis Engine contributors (see LICENSE.txt)
 
+// internal
 #include "windowing/window.hpp"
-
-#include <format>
 #include "logger/log.hpp"
 
+// external
 #include <GLFW/glfw3.h>
 
-#include <utility>
+// std
+#include <format>
+#include <cassert>
 
 namespace gen
 {
 
-	Window::Window(int width, int height, const char* title)
-		: m_extent{width, height} // NOLINT(cppcoreguidelines-pro-type-member-init)
+	Window::Window(const mim::vec2i extent, const char* title) // NOLINT(performance-unnecessary-value-param)
+		: m_extent{extent} // NOLINT(cppcoreguidelines-pro-type-member-init)
 	{
+
 		if (!glfwInit()) // NOLINT(readability-implicit-bool-conversion)
 		{
 			gen::logger::error("windowing", "Failed to initialize GLFW");
@@ -46,15 +49,14 @@ namespace gen
 
 		// Set callbacks
 		glfwSetErrorCallback(callback_error);
-		glfwSetCursorPosCallback(m_window.get(), callback_cursor_position);
 
 		// Report successful window creation
-		gen::logger::info("windowing", "Window instance constructed");
+		gen::logger::info("windowing", "Window constructed");
 	}
 
 	Window::~Window()
 	{
-		gen::logger::info("windowing", "Window instance destructed");
+		gen::logger::info("windowing", "Window destructed");
 	}
 
 	bool Window::shouldClose() const
@@ -67,14 +69,62 @@ namespace gen
 		glfwPollEvents();
 	}
 
+	/// Getters
+
+	mim::vec2i Window::getExtent()
+	{
+		// Query glfw for the window size just in case it has changed
+		glfwGetWindowSize(m_window.get(), &m_extent.x, &m_extent.y);
+		return m_extent;
+	}
+
+	int Window::getWidth()
+	{
+		// Query glfw for the window size just in case it has changed
+		glfwGetWindowSize(m_window.get(), &m_extent.x, &m_extent.y);
+		return m_extent.x;
+	}
+
+	int Window::getHeight()
+	{
+		// Query glfw for the window size just in case it has changed
+		glfwGetWindowSize(m_window.get(), &m_extent.x, &m_extent.y);
+		return m_extent.y;
+	}
+
+	Window::CursorMode Window::getCursorMode() const
+	{
+		return m_currentCursorMode;
+	}
+
+	GLFWwindow * Window::getHandle() const
+	{
+		return m_window.get();
+	}
+
+
 	/// Setters
 
-	void Window::setTitle(const char* title)
+	void Window::setWidth(const int width)
+	{
+		assert(width > 0);
+		m_extent.x = width;
+		glfwSetWindowSize(m_window.get(), m_extent.x, m_extent.y);
+	}
+
+	void Window::setHeight(const int height)
+	{
+		assert(height > 0);
+		m_extent.y = height;
+		glfwSetWindowSize(m_window.get(), m_extent.x, m_extent.y);
+	}
+
+	void Window::setTitle(const char* const title)
 	{
 		glfwSetWindowTitle(m_window.get(), title);
 	}
 
-	void Window::setCursorMode(Window::CursorMode mode)
+	void Window::setCursorMode(const Window::CursorMode mode)
 	{
 		m_currentCursorMode = mode;
 		glfwSetInputMode(m_window.get(), GLFW_CURSOR, static_cast<int>(m_currentCursorMode));
@@ -84,12 +134,9 @@ namespace gen
 
 	void Window::callback_error(int error, const char * description)
 	{
-		gen::logger::warn("windowing", std::format("GLFW Error: {} - {}", error, description));
+		gen::logger::error("windowing", std::format("GLFW Error: {} - {}", error, description));
 	}
 
-	void Window::callback_cursor_position(GLFWwindow * window, double xPos, double yPos)
-	{
-	}
 
 
 	void Window::Deleter::operator()(GLFWwindow * ptr) const
