@@ -1,5 +1,9 @@
+// Copyright (c) 2023-present Genesis Engine contributors (see LICENSE.txt)
+
 #include "inputs/inputs.hpp"
 #include "application.hpp"
+
+#include <GLFW/glfw3.h>
 
 namespace gen
 {
@@ -9,6 +13,7 @@ namespace gen
 		{
 			//variables
 			std::vector<Controller> g_connectedControllers; //Max 16 (because of GLFW)
+			PCPeripherals g_peripherals;
 
 			//"private" functions
 			void addPreviouslyConnectedControllers()
@@ -65,17 +70,12 @@ namespace gen
 					return;
 				}
 			}
-
-			void keyCallBack(GLFWwindow* window, int key, int scanCode, int action, int mods)
-			{
-				
-			}
 		}
 
 		void init(Window& window)
 		{
 			glfwSetJoystickCallback(gamePadCallback);
-			glfwSetKeyCallback(&window.GetGLFWWindow(), keyCallBack);
+			glfwSetKeyCallback(&window.GetGLFWWindow(), Keyboard::keyCallback);
 
 			addPreviouslyConnectedControllers();
 		}

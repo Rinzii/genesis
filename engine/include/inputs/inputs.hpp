@@ -1,6 +1,8 @@
+// Copyright (c) 2023-present Genesis Engine contributors (see LICENSE.txt)
+
 #pragma once
 #include "controller.hpp"
-#include "mouseAndKeyboard.hpp"
+#include "pcPeripherals.hpp"
 #include "windowing/window.hpp"
 
 namespace gen
