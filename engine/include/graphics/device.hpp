@@ -21,6 +21,14 @@ namespace gen
 		u32 queueFamily{};
 	};
 
+	struct SwapChainSupportDetails
+	{
+		vk::SurfaceCapabilitiesKHR capabilities{};
+		std::vector<vk::SurfaceFormatKHR> formats{};
+		std::vector<vk::PresentModeKHR> availablePresentModes{};
+		vk::PresentModeKHR selectedPresentMode{};
+	};
+
 	class GraphicsDevice
 	{
 	public:
@@ -51,6 +59,9 @@ namespace gen
 		/// Helpers
 
 		u32 findQueueFamilies(vk::PhysicalDevice device, vk::SurfaceKHR surface);
+		SwapChainSupportDetails querySwapChainSupport(vk::PhysicalDevice device, vk::SurfaceKHR surface);
+		static vk::SurfaceFormatKHR chooseSwapSurfaceFormat(const std::vector<vk::SurfaceFormatKHR> & availableFormats);
+		static vk::PresentModeKHR chooseSwapPresentMode(const std::vector<vk::PresentModeKHR> & availablePresentModes, vk::PresentModeKHR preferredMode);
 
 		vk::UniqueInstance m_instance;
 		vk::UniqueSurfaceKHR m_surface;

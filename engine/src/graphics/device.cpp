@@ -17,6 +17,8 @@
 namespace gen
 {
 	static const std::vector<const char *> deviceExtensions = {VK_KHR_SWAPCHAIN_EXTENSION_NAME};
+	constexpr auto desiredSrgbFormats_v						= std::array{vk::Format::eB8G8R8A8Srgb, vk::Format::eR8G8B8A8Srgb};
+	constexpr vk::PresentModeKHR desiredPresentMode_v		= {vk::PresentModeKHR::eMailbox};
 
 	GraphicsDevice::GraphicsDevice(const Window & window, std::string const & appName)
 	{
@@ -74,7 +76,7 @@ namespace gen
 	void GraphicsDevice::createSurface(const Window & window)
 	{
 		m_surface = vk::util::createWindowSurface(m_instance.get(), window);
-		m_logger.debug("vulkan", "Created surface");
+		m_logger.debug("Created surface");
 	}
 
 	void GraphicsDevice::pickPhysicalDevice()
@@ -157,54 +159,38 @@ namespace gen
 
 	void GraphicsDevice::createSwapChain(const Window & window)
 	{
-		std::vector<vk::SurfaceFormatKHR> const formats = m_gpu.physicalDevice.getSurfaceFormatsKHR(m_surface.get());
-		assert(!formats.empty());
+		SwapChainSupportDetails const swapChainSupport = querySwapChainSupport(m_gpu.physicalDevice, m_surface.get());
+		assert(!swapChainSupport.formats.empty());
 
-		// If the format of the first element in the 'formats' array is undefined,
-		// use the RGBA 8-bit per channel normalized format (eB8G8R8A8Unorm) as the default.
-		// Otherwise, use the format that is already specified in the first element.
-		vk::Format const format = (formats[0].format == vk::Format::eUndefined) ? vk::Format::eB8G8R8A8Unorm : formats[0].format;
-
-		vk::SurfaceCapabilitiesKHR const surfaceCapabilities = m_gpu.physicalDevice.getSurfaceCapabilitiesKHR(m_surface.get());
+		vk::SurfaceFormatKHR const surfaceFormat = chooseSwapSurfaceFormat(swapChainSupport.formats);
 
 		vk::Extent2D swapchainExtent{};
-		if (surfaceCapabilities.currentExtent.width == std::numeric_limits<u32>::max())
+		int width{}, height{}; // NOLINT
+		glfwGetFramebufferSize(window.getHandle(), &width, &height);
+
+		if (swapChainSupport.capabilities.currentExtent.width == std::numeric_limits<u32>::max())
 		{
 			// If the surface size is undefined, the size is set to the size of the images requested.
 			swapchainExtent.width =
-				std::clamp(static_cast<u32>(window.getWidth()), surfaceCapabilities.minImageExtent.width, surfaceCapabilities.maxImageExtent.width);
+				std::clamp(static_cast<u32>(width), swapChainSupport.capabilities.minImageExtent.width, swapChainSupport.capabilities.maxImageExtent.width);
 			swapchainExtent.height =
-				std::clamp(static_cast<u32>(window.getHeight()), surfaceCapabilities.minImageExtent.height, surfaceCapabilities.maxImageExtent.height);
+				std::clamp(static_cast<u32>(height), swapChainSupport.capabilities.minImageExtent.height, swapChainSupport.capabilities.maxImageExtent.height);
 		}
 		else
 		{
 			// If the surface size is defined, the swap chain size must match
-			swapchainExtent = surfaceCapabilities.currentExtent;
+			swapchainExtent = swapChainSupport.capabilities.currentExtent;
 		}
 
-		// The FIFO present mode is guaranteed by the spec to be supported
-		// TODO: Add the ability to identify all supported modes and select the best one.
-		vk::PresentModeKHR const swapchainPresentMode = vk::PresentModeKHR::eFifo;
+		m_swapChainInfo = vk::SwapchainCreateInfoKHR(
+			vk::SwapchainCreateFlagsKHR(), m_surface.get(),
+			std::clamp(3U, swapChainSupport.capabilities.minImageCount, swapChainSupport.capabilities.maxImageCount), surfaceFormat.format,
+			vk::ColorSpaceKHR::eSrgbNonlinear, swapchainExtent, 1, vk::ImageUsageFlagBits::eColorAttachment, vk::SharingMode::eExclusive, {},
+			vk::SurfaceTransformFlagBitsKHR::eIdentity, vk::CompositeAlphaFlagBitsKHR::eOpaque, swapChainSupport.selectedPresentMode,
+			true, // NOLINT(readability-implicit-bool-conversion)
+			nullptr);
 
-		vk::SurfaceTransformFlagBitsKHR const preTransform = (surfaceCapabilities.supportedTransforms & vk::SurfaceTransformFlagBitsKHR::eIdentity)
-																 ? vk::SurfaceTransformFlagBitsKHR::eIdentity
-																 : surfaceCapabilities.currentTransform;
-
-		vk::CompositeAlphaFlagBitsKHR const compositeAlpha =
-			(surfaceCapabilities.supportedCompositeAlpha & vk::CompositeAlphaFlagBitsKHR::ePreMultiplied)	 ? vk::CompositeAlphaFlagBitsKHR::ePreMultiplied
-			: (surfaceCapabilities.supportedCompositeAlpha & vk::CompositeAlphaFlagBitsKHR::ePostMultiplied) ? vk::CompositeAlphaFlagBitsKHR::ePostMultiplied
-			: (surfaceCapabilities.supportedCompositeAlpha & vk::CompositeAlphaFlagBitsKHR::eInherit)		 ? vk::CompositeAlphaFlagBitsKHR::eInherit
-																											 : vk::CompositeAlphaFlagBitsKHR::eOpaque;
-
-		vk::SwapchainCreateInfoKHR const swapChainCreateInfo(vk::SwapchainCreateFlagsKHR(), m_surface.get(),
-															 std::clamp(3U, surfaceCapabilities.minImageCount, surfaceCapabilities.maxImageCount), format,
-															 vk::ColorSpaceKHR::eSrgbNonlinear, swapchainExtent, 1, vk::ImageUsageFlagBits::eColorAttachment,
-															 vk::SharingMode::eExclusive, {}, preTransform, compositeAlpha, swapchainPresentMode,
-															 true, // NOLINT(readability-implicit-bool-conversion)
-															 nullptr);
-
-		m_swapChainInfo = swapChainCreateInfo;
-		m_swapChain		= m_device->createSwapchainKHRUnique(m_swapChainInfo);
+		m_swapChain = m_device->createSwapchainKHRUnique(m_swapChainInfo);
 	}
 
 	u32 GraphicsDevice::findQueueFamilies(vk::PhysicalDevice device, vk::SurfaceKHR surface)
@@ -246,6 +232,39 @@ namespace gen
 		m_logger.debug("Selected graphics queue family: {}", index);
 
 		return indices;
+	}
+
+	SwapChainSupportDetails GraphicsDevice::querySwapChainSupport(vk::PhysicalDevice device, vk::SurfaceKHR surface)
+	{
+		SwapChainSupportDetails details;
+		details.capabilities		  = device.getSurfaceCapabilitiesKHR(surface);
+		details.formats				  = device.getSurfaceFormatsKHR(surface);
+		details.availablePresentModes = device.getSurfacePresentModesKHR(surface);
+		details.selectedPresentMode	  = chooseSwapPresentMode(details.availablePresentModes, desiredPresentMode_v);
+		return details;
+	}
+
+	vk::SurfaceFormatKHR GraphicsDevice::chooseSwapSurfaceFormat(const std::vector<vk::SurfaceFormatKHR> & availableFormats)
+	{
+		for (const auto & availableFormat : availableFormats)
+		{
+			if (availableFormat.colorSpace != vk::ColorSpaceKHR::eSrgbNonlinear) { continue; }
+
+			if (std::ranges::find(desiredSrgbFormats_v, availableFormat.format) != desiredSrgbFormats_v.end()) { return availableFormat; }
+		}
+
+		// Currently we only support sRGB formats, so if we can't find one, we'll just throw an error.
+		throw gen::vulkan_error("Failed to find suitable surface format that supports SRGB!");
+	}
+
+	vk::PresentModeKHR GraphicsDevice::chooseSwapPresentMode(const std::vector<vk::PresentModeKHR> & availablePresentModes, vk::PresentModeKHR preferredMode)
+	{
+		for (const auto & availablePresentMode : availablePresentModes)
+		{
+			if (availablePresentMode == preferredMode) { return availablePresentMode; }
+		}
+
+		return vk::PresentModeKHR::eFifo;
 	}
 
 } // namespace gen

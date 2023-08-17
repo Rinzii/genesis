@@ -88,36 +88,6 @@ namespace gen
 		return m_extent.y;
 	}
 
-	mim::vec2i Window::getFramebufferExtent()
-    {
-        mim::vec2i extent{};
-        glfwGetFramebufferSize(
-            m_window.get(),
-            &extent.x,
-            &extent.y);
-        return extent;
-    }
-
-	int Window::getFramebufferWidth()
-	{
-		mim::vec2i extent{};
-		glfwGetFramebufferSize(
-            m_window.get(),
-            &extent.x,
-            &extent.y);
-		return extent.x;
-	}
-
-	int Window::getFramebufferHeight()
-	{
-		mim::vec2i extent{};
-		glfwGetFramebufferSize(
-			m_window.get(),
-			&extent.x,
-			&extent.y);
-		return extent.y;
-	}
-
 	Window::CursorMode Window::getCursorMode() const
 	{
 		return m_currentCursorMode;
