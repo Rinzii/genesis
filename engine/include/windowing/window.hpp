@@ -49,6 +49,9 @@ namespace gen
 		GEN_NODISCARD mim::vec2i getExtent();
 		GEN_NODISCARD int getWidth() const;
 		GEN_NODISCARD int getHeight() const;
+		GEN_NODISCARD mim::vec2i getFramebufferExtent();
+		GEN_NODISCARD int getFramebufferWidth();
+		GEN_NODISCARD int getFramebufferHeight();
 		GEN_NODISCARD CursorMode getCursorMode() const;
 		GEN_NODISCARD GLFWwindow * getHandle() const;
 
