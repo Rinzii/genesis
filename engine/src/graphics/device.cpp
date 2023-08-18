@@ -194,6 +194,7 @@ namespace gen
 		}
 
 		auto maxImageCount = m_swapChainSupport.capabilities.maxImageCount;
+    
 		if (maxImageCount == 0) { maxImageCount = std::numeric_limits<u32>::max(); }
 
 		m_swapChainInfo = vk::SwapchainCreateInfoKHR(
