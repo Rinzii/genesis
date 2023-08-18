@@ -52,18 +52,24 @@ namespace gen
 
 		auto extensionsCount	   = 0U;
 		auto * requestedExtensions = glfwGetRequiredInstanceExtensions(&extensionsCount);
-		std::vector<std::string> const requestedExtensionsVec(requestedExtensions,
-															  requestedExtensions + extensionsCount); // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
-		auto enabledExtensions = vk::util::gatherExtensions(requestedExtensionsVec
+		std::vector<std::string> const requestedExtensionsVec(
+			requestedExtensions,
+			requestedExtensions + extensionsCount); // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+		auto enabledExtensions = vk::util::gatherExtensions(
+			requestedExtensionsVec
 #ifndef GEN_NDEBUG
-															,
-															vk::enumerateInstanceExtensionProperties()
+			,
+			vk::enumerateInstanceExtensionProperties()
 #endif
 		);
 
-		m_logger.debug("Enabled extensions: \n\t{}",
-					   std::accumulate(enabledExtensions.begin(), enabledExtensions.end(), std::string(),
-									   [](const std::string & acc, const std::string & ext) { return acc.empty() ? ext : acc + ", \n\t" + ext; }));
+		m_logger.debug(
+			"Enabled extensions: \n\t{}",
+			std::accumulate(
+				enabledExtensions.begin(),
+				enabledExtensions.end(),
+				std::string(),
+				[](const std::string & acc, const std::string & ext) { return acc.empty() ? ext : acc + ", \n\t" + ext; }));
 
 		m_instance = vk::createInstanceUnique(vk::util::makeInstanceCreateInfoChain(appInfo, {}, enabledExtensions).get<vk::InstanceCreateInfo>());
 
@@ -135,11 +141,15 @@ namespace gen
 			queueCreateInfos.push_back(queueCreateInfo);
 		}
 
-		vk::DeviceCreateInfo const createInfo({}, static_cast<u32>(queueCreateInfos.size()), queueCreateInfos.data(),
-											  0,	   // ignored by spec
-											  nullptr, // ignored by spec
-											  static_cast<u32>(deviceExtensions.size()), deviceExtensions.data(),
-											  nullptr // to be used later
+		vk::DeviceCreateInfo const createInfo(
+			{},
+			static_cast<u32>(queueCreateInfos.size()),
+			queueCreateInfos.data(),
+			0,		 // ignored by spec
+			nullptr, // ignored by spec
+			static_cast<u32>(deviceExtensions.size()),
+			deviceExtensions.data(),
+			nullptr // to be used later
 		);
 
 		m_device = m_gpu.physicalDevice.createDeviceUnique(createInfo);
@@ -182,11 +192,23 @@ namespace gen
 			swapchainExtent = swapChainSupport.capabilities.currentExtent;
 		}
 
+		auto maxImageCount = swapChainSupport.capabilities.maxImageCount;
+		if (maxImageCount == 0) { maxImageCount = std::numeric_limits<u32>::max(); }
+
 		m_swapChainInfo = vk::SwapchainCreateInfoKHR(
-			vk::SwapchainCreateFlagsKHR(), m_surface.get(),
-			std::clamp(3U, swapChainSupport.capabilities.minImageCount, swapChainSupport.capabilities.maxImageCount), surfaceFormat.format,
-			vk::ColorSpaceKHR::eSrgbNonlinear, swapchainExtent, 1, vk::ImageUsageFlagBits::eColorAttachment, vk::SharingMode::eExclusive, {},
-			vk::SurfaceTransformFlagBitsKHR::eIdentity, vk::CompositeAlphaFlagBitsKHR::eOpaque, swapChainSupport.selectedPresentMode,
+			vk::SwapchainCreateFlagsKHR(),
+			m_surface.get(),
+			std::clamp(3U, swapChainSupport.capabilities.minImageCount, maxImageCount),
+			surfaceFormat.format,
+			surfaceFormat.colorSpace,
+			swapchainExtent,
+			1,
+			vk::ImageUsageFlagBits::eColorAttachment,
+			vk::SharingMode::eExclusive,
+			{},
+			vk::SurfaceTransformFlagBitsKHR::eIdentity,
+			vk::CompositeAlphaFlagBitsKHR::eOpaque,
+			swapChainSupport.selectedPresentMode,
 			true, // NOLINT(readability-implicit-bool-conversion)
 			nullptr);
 
@@ -259,11 +281,17 @@ namespace gen
 
 	vk::PresentModeKHR GraphicsDevice::chooseSwapPresentMode(const std::vector<vk::PresentModeKHR> & availablePresentModes, vk::PresentModeKHR preferredMode)
 	{
+		bool doWeHaveRelaxedFifo{false};
 		for (const auto & availablePresentMode : availablePresentModes)
 		{
 			if (availablePresentMode == preferredMode) { return availablePresentMode; }
+			if (availablePresentMode == vk::PresentModeKHR::eFifoRelaxed) { doWeHaveRelaxedFifo = true; }
 		}
 
+		// If we are unable to find the preferred mode, but we have relaxed fifo, we'll just use that.
+		if (doWeHaveRelaxedFifo) { return vk::PresentModeKHR::eFifoRelaxed; }
+
+		// If we can't find the preferred mode, and we don't have relaxed fifo, the standard ensures that we will always have fifo.
 		return vk::PresentModeKHR::eFifo;
 	}
 

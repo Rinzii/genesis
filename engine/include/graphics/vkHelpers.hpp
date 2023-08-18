@@ -18,15 +18,16 @@
 namespace vk::util
 {
 
-	std::vector<char const *> gatherExtensions(std::vector<std::string> const & extensions
+	std::vector<char const *> gatherExtensions(
+		std::vector<std::string> const & extensions
 #ifndef GEN_NDEBUG
-											   ,
-											   std::vector<vk::ExtensionProperties> const & extensionProperties
+		,
+		std::vector<vk::ExtensionProperties> const & extensionProperties
 #endif
 	);
 
-	vk::StructureChain<vk::InstanceCreateInfo> makeInstanceCreateInfoChain(const vk::ApplicationInfo & appInfo, std::vector<const char *> const & layers,
-																		   std::vector<const char *> const & extensions);
+	vk::StructureChain<vk::InstanceCreateInfo> makeInstanceCreateInfoChain(
+		const vk::ApplicationInfo & appInfo, std::vector<const char *> const & layers, std::vector<const char *> const & extensions);
 
 	vk::DebugUtilsMessengerCreateInfoEXT makeDebugUtilsMessengerCreateInfoEXT();
 

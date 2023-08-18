@@ -136,8 +136,7 @@ namespace gen
 	void Window::callback_window_size(GLFWwindow * window, int width, int height)
 	{
 		auto * const self = static_cast<Window *>(glfwGetWindowUserPointer(window));
-		self->m_extent.x  = width;
-		self->m_extent.y  = height;
+		self->m_extent	  = {width, height};
 		self->m_logger.info("Window resized to {}x{}", width, height);
 	}
 
