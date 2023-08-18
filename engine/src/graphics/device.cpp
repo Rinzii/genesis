@@ -10,7 +10,6 @@
 #endif
 #include <GLFW/glfw3.h>
 
-#include <format>
 #include <numeric>
 #include <sstream>
 #include <string>
@@ -18,6 +17,8 @@
 namespace gen
 {
 	static const std::vector<const char *> deviceExtensions = {VK_KHR_SWAPCHAIN_EXTENSION_NAME};
+	constexpr auto desiredSrgbFormats_v						= std::array{vk::Format::eB8G8R8A8Srgb, vk::Format::eR8G8B8A8Srgb};
+	constexpr vk::PresentModeKHR desiredPresentMode_v		= {vk::PresentModeKHR::eMailbox};
 
 	GraphicsDevice::GraphicsDevice(const Window & window, std::string const & appName)
 	{
@@ -27,12 +28,14 @@ namespace gen
 		createSurface(window);
 		pickPhysicalDevice();
 		createLogicalDevice();
+		createSwapChain(window);
 
 		m_logger.info("GraphicsDevice constructed");
 	}
 
 	GraphicsDevice::~GraphicsDevice()
 	{
+		m_device->waitIdle();
 		m_logger.info("GraphicsDevice destructed");
 	}
 
@@ -49,18 +52,24 @@ namespace gen
 
 		auto extensionsCount	   = 0U;
 		auto * requestedExtensions = glfwGetRequiredInstanceExtensions(&extensionsCount);
-		std::vector<std::string> const requestedExtensionsVec(requestedExtensions,
-															  requestedExtensions + extensionsCount); // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
-		auto enabledExtensions = vk::util::gatherExtensions(requestedExtensionsVec
+		std::vector<std::string> const requestedExtensionsVec(
+			requestedExtensions,
+			requestedExtensions + extensionsCount); // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+		auto enabledExtensions = vk::util::gatherExtensions(
+			requestedExtensionsVec
 #ifndef GEN_NDEBUG
-															,
-															vk::enumerateInstanceExtensionProperties()
+			,
+			vk::enumerateInstanceExtensionProperties()
 #endif
 		);
 
-		m_logger.debug("Enabled extensions: \n\t{}",
-					   std::accumulate(enabledExtensions.begin(), enabledExtensions.end(), std::string(),
-									   [](const std::string & acc, const std::string & ext) { return acc.empty() ? ext : acc + ", \n\t" + ext; }));
+		m_logger.debug(
+			"Enabled extensions: \n\t{}",
+			std::accumulate(
+				enabledExtensions.begin(),
+				enabledExtensions.end(),
+				std::string(),
+				[](const std::string & acc, const std::string & ext) { return acc.empty() ? ext : acc + ", \n\t" + ext; }));
 
 		m_instance = vk::createInstanceUnique(vk::util::makeInstanceCreateInfoChain(appInfo, {}, enabledExtensions).get<vk::InstanceCreateInfo>());
 
@@ -73,7 +82,7 @@ namespace gen
 	void GraphicsDevice::createSurface(const Window & window)
 	{
 		m_surface = vk::util::createWindowSurface(m_instance.get(), window);
-		m_logger.debug("vulkan", "Created surface");
+		m_logger.debug("Created surface");
 	}
 
 	void GraphicsDevice::pickPhysicalDevice()
@@ -132,11 +141,78 @@ namespace gen
 			queueCreateInfos.push_back(queueCreateInfo);
 		}
 
-		vk::DeviceCreateInfo const createInfo({}, static_cast<u32>(queueCreateInfos.size()), queueCreateInfos.data());
+		vk::DeviceCreateInfo const createInfo(
+			{},
+			static_cast<u32>(queueCreateInfos.size()),
+			queueCreateInfos.data(),
+			0,		 // ignored by spec
+			nullptr, // ignored by spec
+			static_cast<u32>(deviceExtensions.size()),
+			deviceExtensions.data(),
+			nullptr // to be used later
+		);
 
 		m_device = m_gpu.physicalDevice.createDeviceUnique(createInfo);
 
+		// display all device extensions using m_device
+		auto availableExtensions = m_gpu.physicalDevice.enumerateDeviceExtensionProperties();
+		auto aExt				 = std::stringstream{"vulkan"};
+		for (std::size_t i = 0; i < availableExtensions.size(); i++)
+		{
+			aExt << "\tExtension [" << i << "]"
+				 << " | Name: " << availableExtensions[i].extensionName << " | Spec Ver: " << availableExtensions[i].specVersion << "\n";
+		}
+		m_logger.debug("Found Device Extensions: \n{}\n", aExt.str());
+
 		m_graphicsQueue = m_device->getQueue(m_gpu.queueFamily, 0);
+	}
+
+	void GraphicsDevice::createSwapChain(const Window & window)
+	{
+		SwapChainSupportDetails const swapChainSupport = querySwapChainSupport(m_gpu.physicalDevice, m_surface.get());
+		assert(!swapChainSupport.formats.empty());
+
+		vk::SurfaceFormatKHR const surfaceFormat = chooseSwapSurfaceFormat(swapChainSupport.formats);
+
+		vk::Extent2D swapchainExtent{};
+		int width{}, height{}; // NOLINT
+		glfwGetFramebufferSize(window.getHandle(), &width, &height);
+
+		if (swapChainSupport.capabilities.currentExtent.width == std::numeric_limits<u32>::max())
+		{
+			// If the surface size is undefined, the size is set to the size of the images requested.
+			swapchainExtent.width =
+				std::clamp(static_cast<u32>(width), swapChainSupport.capabilities.minImageExtent.width, swapChainSupport.capabilities.maxImageExtent.width);
+			swapchainExtent.height =
+				std::clamp(static_cast<u32>(height), swapChainSupport.capabilities.minImageExtent.height, swapChainSupport.capabilities.maxImageExtent.height);
+		}
+		else
+		{
+			// If the surface size is defined, the swap chain size must match
+			swapchainExtent = swapChainSupport.capabilities.currentExtent;
+		}
+
+		auto maxImageCount = swapChainSupport.capabilities.maxImageCount;
+		if (maxImageCount == 0) { maxImageCount = std::numeric_limits<u32>::max(); }
+
+		m_swapChainInfo = vk::SwapchainCreateInfoKHR(
+			vk::SwapchainCreateFlagsKHR(),
+			m_surface.get(),
+			std::clamp(3U, swapChainSupport.capabilities.minImageCount, maxImageCount),
+			surfaceFormat.format,
+			surfaceFormat.colorSpace,
+			swapchainExtent,
+			1,
+			vk::ImageUsageFlagBits::eColorAttachment,
+			vk::SharingMode::eExclusive,
+			{},
+			vk::SurfaceTransformFlagBitsKHR::eIdentity,
+			vk::CompositeAlphaFlagBitsKHR::eOpaque,
+			swapChainSupport.selectedPresentMode,
+			true, // NOLINT(readability-implicit-bool-conversion)
+			nullptr);
+
+		m_swapChain = m_device->createSwapchainKHRUnique(m_swapChainInfo);
 	}
 
 	u32 GraphicsDevice::findQueueFamilies(vk::PhysicalDevice device, vk::SurfaceKHR surface)
@@ -178,6 +254,45 @@ namespace gen
 		m_logger.debug("Selected graphics queue family: {}", index);
 
 		return indices;
+	}
+
+	SwapChainSupportDetails GraphicsDevice::querySwapChainSupport(vk::PhysicalDevice device, vk::SurfaceKHR surface)
+	{
+		SwapChainSupportDetails details;
+		details.capabilities		  = device.getSurfaceCapabilitiesKHR(surface);
+		details.formats				  = device.getSurfaceFormatsKHR(surface);
+		details.availablePresentModes = device.getSurfacePresentModesKHR(surface);
+		details.selectedPresentMode	  = chooseSwapPresentMode(details.availablePresentModes, desiredPresentMode_v);
+		return details;
+	}
+
+	vk::SurfaceFormatKHR GraphicsDevice::chooseSwapSurfaceFormat(const std::vector<vk::SurfaceFormatKHR> & availableFormats)
+	{
+		for (const auto & availableFormat : availableFormats)
+		{
+			if (availableFormat.colorSpace != vk::ColorSpaceKHR::eSrgbNonlinear) { continue; }
+
+			if (std::ranges::find(desiredSrgbFormats_v, availableFormat.format) != desiredSrgbFormats_v.end()) { return availableFormat; }
+		}
+
+		// Currently we only support sRGB formats, so if we can't find one, we'll just throw an error.
+		throw gen::vulkan_error("Failed to find suitable surface format that supports SRGB!");
+	}
+
+	vk::PresentModeKHR GraphicsDevice::chooseSwapPresentMode(const std::vector<vk::PresentModeKHR> & availablePresentModes, vk::PresentModeKHR preferredMode)
+	{
+		bool doWeHaveRelaxedFifo{false};
+		for (const auto & availablePresentMode : availablePresentModes)
+		{
+			if (availablePresentMode == preferredMode) { return availablePresentMode; }
+			if (availablePresentMode == vk::PresentModeKHR::eFifoRelaxed) { doWeHaveRelaxedFifo = true; }
+		}
+
+		// If we are unable to find the preferred mode, but we have relaxed fifo, we'll just use that.
+		if (doWeHaveRelaxedFifo) { return vk::PresentModeKHR::eFifoRelaxed; }
+
+		// If we can't find the preferred mode, and we don't have relaxed fifo, the standard ensures that we will always have fifo.
+		return vk::PresentModeKHR::eFifo;
 	}
 
 } // namespace gen

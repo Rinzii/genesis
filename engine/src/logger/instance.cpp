@@ -1,3 +1,5 @@
+// Copyright (c) 2023-present Genesis Engine contributors (see LICENSE.txt)
+
 #include <logger/instance.hpp>
 #include <algorithm>
 #include <condition_variable>

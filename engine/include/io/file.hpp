@@ -1,3 +1,5 @@
+// Copyright (c) 2023-present Genesis Engine contributors (see LICENSE.txt)
+
 /**
  * @file file.hpp
  * @brief Defines the Thread-safe Synchronous File class.

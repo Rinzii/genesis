@@ -63,6 +63,7 @@
       "name": "vs22-nopch",
       "description": "Build configuration using Visual Studio 17 (2022) / No PCH",
       "inherits": "vs19",
+      "binaryDir": "${sourceDir}/out/vs-nopch",
       "generator": "Visual Studio 17 2022",
       "cacheVariables": {
         "GENESIS_PCH": "OFF"

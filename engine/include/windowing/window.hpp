@@ -47,8 +47,8 @@ namespace gen
 		// Getters
 
 		GEN_NODISCARD mim::vec2i getExtent();
-		GEN_NODISCARD int getWidth();
-		GEN_NODISCARD int getHeight();
+		GEN_NODISCARD int getWidth() const;
+		GEN_NODISCARD int getHeight() const;
 		GEN_NODISCARD CursorMode getCursorMode() const;
 		GEN_NODISCARD GLFWwindow * getHandle() const;
 
@@ -62,8 +62,12 @@ namespace gen
 		void setCursorMode(CursorMode mode);
 
 	private:
+		// Helpers
+		GEN_NODISCARD static Window & getWindow(GLFWwindow * window);
+
 		// Callbacks
 		static void callback_error(int error, const char * description);
+		static void callback_window_size(GLFWwindow * window, int width, int height);
 
 		mim::vec2i m_extent;
 

@@ -7,7 +7,12 @@ set(CMAKE_DEBUG_POSTFIX "-d")
 
 project(genesis VERSION "0.0.1")
 
-file(ARCHIVE_EXTRACT INPUT "${CMAKE_CURRENT_SOURCE_DIR}/tools/dxc.zip" DESTINATION "${CMAKE_CURRENT_SOURCE_DIR}/tools")
+if (EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/tools/dxc")
+  message(STATUS "DXC already extracted! Skipping...")
+else()
+  message(STATUS "Extracting DXC!")
+  file(ARCHIVE_EXTRACT INPUT "${CMAKE_CURRENT_SOURCE_DIR}/tools/dxc.zip" DESTINATION "${CMAKE_CURRENT_SOURCE_DIR}/tools")
+endif()
 
 # include the configuration file
 include(cmake/Config.cmake)

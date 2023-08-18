@@ -29,10 +29,11 @@ namespace vk::util
 	gen::Logger const logger{"graphics"};
 
 	// Gather enabled extensions based on the requested extensions and available extension properties.
-	std::vector<char const *> gatherExtensions(std::vector<std::string> const & extensions
+	std::vector<char const *> gatherExtensions(
+		std::vector<std::string> const & extensions
 #ifndef GEN_NDEBUG
-											   ,
-											   std::vector<vk::ExtensionProperties> const & extensionProperties
+		,
+		std::vector<vk::ExtensionProperties> const & extensionProperties
 #endif
 	)
 	{
@@ -45,14 +46,18 @@ namespace vk::util
 		for (auto const & eProp : extensionProperties) { availableExtensions.push_back(eProp.extensionName); }
 #endif
 
-		logger.debug("Available extensions: \n\t{}",
-					 std::accumulate(availableExtensions.begin(), availableExtensions.end(), std::string(),
-									 [](const std::string & acc, const std::string & ext) { return acc.empty() ? ext : acc + ", \n\t" + ext; }));
+		logger.debug(
+			"Available extensions: \n\t{}",
+			std::accumulate(
+				availableExtensions.begin(),
+				availableExtensions.end(),
+				std::string(),
+				[](const std::string & acc, const std::string & ext) { return acc.empty() ? ext : acc + ", \n\t" + ext; }));
 
 		for (auto const & ext : extensions)
 		{
-			assert(std::any_of(extensionProperties.begin(), extensionProperties.end(),
-							   [ext](vk::ExtensionProperties const & eProp) { return ext == eProp.extensionName; }));
+			assert(std::any_of(
+				extensionProperties.begin(), extensionProperties.end(), [ext](vk::ExtensionProperties const & eProp) { return ext == eProp.extensionName; }));
 
 			enabledExtensions.push_back(ext.data());
 		}
@@ -61,8 +66,8 @@ namespace vk::util
 	}
 
 	// Create an instance create info chain with or without debug utils messenger in debug mode.
-	vk::StructureChain<vk::InstanceCreateInfo> makeInstanceCreateInfoChain(const vk::ApplicationInfo & appInfo, std::vector<const char *> const & layers,
-																		   std::vector<const char *> const & extensions)
+	vk::StructureChain<vk::InstanceCreateInfo> makeInstanceCreateInfoChain(
+		const vk::ApplicationInfo & appInfo, std::vector<const char *> const & layers, std::vector<const char *> const & extensions)
 	{
 
 		// When in non-debug mode, use the InstanceCreateInfo for instance creation.

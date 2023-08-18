@@ -13,6 +13,9 @@ AllowShortBlocksOnASingleLine: Always
 AllowShortIfStatementsOnASingleLine: WithoutElse
 AllowShortLoopsOnASingleLine: true
 AlwaysBreakTemplateDeclarations: Yes
+AlignAfterOpenBracket: AlwaysBreak
+BinPackArguments: false
+BinPackParameters: false
 BraceWrapping:
     AfterCaseLabel: true
     AfterClass: true
