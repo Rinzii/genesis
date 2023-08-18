@@ -3,7 +3,11 @@ project(genesis-ext)
 find_package(Threads)
 
 if (EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/src")
-    message(STATUS "SRC directory already extracted! Skipping...")
+    # delete the src directory if it exists
+    message(STATUS "Deleting SRC directory!")
+    file(REMOVE_RECURSE "${CMAKE_CURRENT_SOURCE_DIR}/src")
+    message(STATUS "Extracting SRC directory!")
+    file(ARCHIVE_EXTRACT INPUT "${CMAKE_CURRENT_SOURCE_DIR}/src.zip" DESTINATION "${CMAKE_CURRENT_SOURCE_DIR}")
 else ()
     message(STATUS "Extracting SRC directory!")
     file(ARCHIVE_EXTRACT INPUT "${CMAKE_CURRENT_SOURCE_DIR}/src.zip" DESTINATION "${CMAKE_CURRENT_SOURCE_DIR}")
