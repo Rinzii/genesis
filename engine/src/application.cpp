@@ -24,8 +24,4 @@ namespace gen
 	{
 	}
 
-	Application::Application(const char * appName, mim::vec2i const & initialSize) : m_window{initialSize, appName}, m_graphicsDevice{m_window, appName}
-	{
-	}
-
 } // namespace gen
