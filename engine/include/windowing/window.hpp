@@ -62,6 +62,9 @@ namespace gen
 		void setCursorMode(CursorMode mode);
 
 	private:
+		// Helpers
+		GEN_NODISCARD static Window & getWindow(GLFWwindow * window);
+
 		// Callbacks
 		static void callback_error(int error, const char * description);
 		static void callback_window_size(GLFWwindow * window, int width, int height);

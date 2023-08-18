@@ -25,7 +25,7 @@ namespace gen
 
 		// Set window hints
 		glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
-		glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE); // TODO: Later add support for resizing of windows.
+		glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE); // TODO: Later add support for resizing of windows.
 
 		// Create window
 		GLFWwindow * window_ = glfwCreateWindow(static_cast<int>(m_extent.x), static_cast<int>(m_extent.y), title, nullptr, nullptr);
@@ -125,6 +125,14 @@ namespace gen
 		glfwSetInputMode(m_window.get(), GLFW_CURSOR, static_cast<int>(m_currentCursorMode));
 	}
 
+	/// Helpers
+	Window & Window::getWindow(GLFWwindow * window)
+	{
+		auto * const self = static_cast<Window *>(glfwGetWindowUserPointer(window));
+		assert(self != nullptr);
+		return *self;
+	}
+
 	/// Callbacks
 
 	void Window::callback_error(int error, const char * description)
@@ -135,9 +143,8 @@ namespace gen
 
 	void Window::callback_window_size(GLFWwindow * window, int width, int height)
 	{
-		auto * const self = static_cast<Window *>(glfwGetWindowUserPointer(window));
-		self->m_extent	  = {width, height};
-		self->m_logger.info("Window resized to {}x{}", width, height);
+		auto & self	  = getWindow(window);
+		self.m_extent = {width, height};
 	}
 
 	void Window::Deleter::operator()(GLFWwindow * ptr) const
