@@ -25,7 +25,7 @@ namespace gen
 
 		// Set window hints
 		glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
-		glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE); // TODO: Later add support for resizing of windows.
+		glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE); // TODO: Later add support for resizing of windows.
 
 		// Create window
 		GLFWwindow * window_ = glfwCreateWindow(static_cast<int>(m_extent.x), static_cast<int>(m_extent.y), title, nullptr, nullptr);

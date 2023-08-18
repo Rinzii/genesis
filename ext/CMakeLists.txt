@@ -4,12 +4,12 @@ find_package(Threads)
 
 if (EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/src")
     # delete the src directory if it exists
-    message(STATUS "Deleting SRC directory!")
+    message(STATUS "Deleting ext/src directory!")
     file(REMOVE_RECURSE "${CMAKE_CURRENT_SOURCE_DIR}/src")
-    message(STATUS "Extracting SRC directory!")
+    message(STATUS "Extracting ext/src directory!")
     file(ARCHIVE_EXTRACT INPUT "${CMAKE_CURRENT_SOURCE_DIR}/src.zip" DESTINATION "${CMAKE_CURRENT_SOURCE_DIR}")
 else ()
-    message(STATUS "Extracting SRC directory!")
+    message(STATUS "Extracting ext/src directory!")
     file(ARCHIVE_EXTRACT INPUT "${CMAKE_CURRENT_SOURCE_DIR}/src.zip" DESTINATION "${CMAKE_CURRENT_SOURCE_DIR}")
 endif ()
 
