@@ -63,13 +63,13 @@ namespace gen
 		static vk::SurfaceFormatKHR chooseSwapSurfaceFormat(const std::vector<vk::SurfaceFormatKHR> & availableFormats);
 		static vk::PresentModeKHR chooseSwapPresentMode(const std::vector<vk::PresentModeKHR> & availablePresentModes, vk::PresentModeKHR preferredMode);
 
-		vk::UniqueInstance m_instance;
-		vk::UniqueSurfaceKHR m_surface;
-		Gpu m_gpu;
-		vk::UniqueDevice m_device;
-		vk::Queue m_graphicsQueue;
-		vk::SwapchainCreateInfoKHR m_swapChainInfo;
-		vk::UniqueSwapchainKHR m_swapChain;
+		vk::UniqueInstance m_instance{};
+		vk::UniqueSurfaceKHR m_surface{};
+		Gpu m_gpu{};
+		vk::UniqueDevice m_device{};
+		vk::Queue m_graphicsQueue{};
+		vk::SwapchainCreateInfoKHR m_swapChainInfo{};
+		vk::UniqueSwapchainKHR m_swapChain{};
 
 		Logger m_logger{"graphics"};
 	};
