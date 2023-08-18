@@ -15,7 +15,6 @@
 #endif
 #include <spirv_cross.hpp>
 #include <spirv_hlsl.hpp>
-#include "logger/log.hpp"
 
 #if (VULKAN_HPP_DISPATCH_LOADER_DYNAMIC == 1)
 // NOLINTNEXTLINE
@@ -71,7 +70,7 @@ namespace vk::util
 	{
 
 		// When in non-debug mode, use the InstanceCreateInfo for instance creation.
-		vk::StructureChain<vk::InstanceCreateInfo> const instanceCreateInfo({{}, &appInfo, layers, extensions});
+		vk::StructureChain<vk::InstanceCreateInfo> instanceCreateInfo({{}, &appInfo, layers, extensions});
 
 		return instanceCreateInfo;
 	}
