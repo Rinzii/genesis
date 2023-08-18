@@ -39,6 +39,11 @@ endif()
 option(GENESIS_BUILD_EDITOR "Build the genesis editor (else only library)" ON)
 option(GENESIS_BUILD_SHADERS "Build the genesis shaders" ON)
 option(GENESIS_BUILD_TOOLS "Build Genesis tools" ON)
+option(GENESIS_AUTOFORMAT "Run code-formatter before building Genesis" ON)
+
+if(NOT GENESIS_BUILD_TOOLS AND GENESIS_AUTOFORMAT)
+  message(FATAL_ERROR "Cannot enable GENESIS_AUTOFORMAT without GENESIS_BUILD_TOOLS")
+endif()
 
 if(GENESIS_BUILD_EDITOR)
     set(GENESIS_BUILD_SHADERS ON)
@@ -55,14 +60,16 @@ endif()
 if (GENESIS_BUILD_TOOLS)
   add_subdirectory(tools/code-formatter)
 
-  add_custom_target(autoformat ALL
-    code-formatter -q engine
-    COMMAND code-formatter -q editor/src
-    WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
-    USES_TERMINAL
-    COMMENT "Formatting sources"
-  )
+  if (GENESIS_AUTOFORMAT)
+    add_custom_target(autoformat ALL
+      code-formatter -q engine
+      COMMAND code-formatter -q editor/src
+      WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
+      USES_TERMINAL
+      COMMENT "Formatting sources"
+    )
 
-  add_dependencies(genesis autoformat)
-  add_dependencies(genesis-editor autoformat)
+    add_dependencies(genesis autoformat)
+    add_dependencies(genesis-editor autoformat)
+  endif()
 endif()
