@@ -16,7 +16,11 @@
 
 namespace gen
 {
+#ifdef GEN_PLATFORM_APPLE
+	static const std::vector<const char *> deviceExtensions = {VK_KHR_SWAPCHAIN_EXTENSION_NAME, VK_KHR_PORTABILITY_ENUMERATION_EXTENSION_NAME};
+#else
 	static const std::vector<const char *> deviceExtensions = {VK_KHR_SWAPCHAIN_EXTENSION_NAME};
+#endif
 	constexpr auto desiredSrgbFormats_v						= std::array{vk::Format::eB8G8R8A8Srgb, vk::Format::eR8G8B8A8Srgb};
 	constexpr vk::PresentModeKHR desiredPresentMode_v		= {vk::PresentModeKHR::eMailbox};
 
@@ -194,7 +198,7 @@ namespace gen
 		}
 
 		auto maxImageCount = m_swapChainSupport.capabilities.maxImageCount;
-    
+
 		if (maxImageCount == 0) { maxImageCount = std::numeric_limits<u32>::max(); }
 
 		m_swapChainInfo = vk::SwapchainCreateInfoKHR(
