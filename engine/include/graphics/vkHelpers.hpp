@@ -37,4 +37,6 @@ namespace vk::util
 
 	vk::UniqueSurfaceKHR createWindowSurface(vk::Instance instance, gen::Window const & window);
 
+	std::string intToSemver(uint32_t version);
+
 } // namespace vk::util

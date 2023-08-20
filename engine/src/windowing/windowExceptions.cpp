@@ -1,14 +1,14 @@
 // Copyright (c) 2023-present Genesis Engine contributors (see LICENSE.txt)
 
-#include "graphics/graphicsExceptions.hpp"
+#include "windowing/windowExceptions.hpp"
 
 #include "logger/log.hpp"
 
 namespace gen
 {
-	vulkan_error::vulkan_error(const std::string & message) : std::runtime_error{message}
+	windowing_error::windowing_error(const std::string & message) : std::runtime_error{message}
 	{
-		Logger const log{"graphics"};
+		Logger const log{"windowing"};
 		log.error("{}", message);
 	}
 

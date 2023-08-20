@@ -16,9 +16,14 @@
 
 namespace gen
 {
-	static const std::vector<const char *> deviceExtensions = {VK_KHR_SWAPCHAIN_EXTENSION_NAME};
-	constexpr auto desiredSrgbFormats_v						= std::array{vk::Format::eB8G8R8A8Srgb, vk::Format::eR8G8B8A8Srgb};
-	constexpr vk::PresentModeKHR desiredPresentMode_v		= {vk::PresentModeKHR::eMailbox};
+	static const std::vector<const char *> deviceExtensions = {
+		VK_KHR_SWAPCHAIN_EXTENSION_NAME,
+#ifdef GEN_PLATFORM_APPLE
+		VK_KHR_PORTABILITY_ENUMERATION_EXTENSION_NAME,
+#endif
+	};
+	constexpr auto desiredSrgbFormats_v				  = std::array{vk::Format::eB8G8R8A8Srgb, vk::Format::eR8G8B8A8Srgb};
+	constexpr vk::PresentModeKHR desiredPresentMode_v = {vk::PresentModeKHR::eMailbox};
 
 	GraphicsDevice::GraphicsDevice(const Window & window, std::string const & appName)
 	{
@@ -29,6 +34,7 @@ namespace gen
 		pickPhysicalDevice();
 		createLogicalDevice();
 		createSwapChain(window);
+		createImageViews();
 
 		m_logger.info("GraphicsDevice constructed");
 	}
@@ -119,10 +125,10 @@ namespace gen
 				 << "\n"
 				 << "\t\tName: " << availablePhysicalDevices[i].getProperties().deviceName << "\n"
 				 << "\t\tType: " << to_string(availablePhysicalDevices[i].getProperties().deviceType) << "\n"
-				 << "\t\tAPI Version: " << availablePhysicalDevices[i].getProperties().apiVersion << "\n"
-				 << "\t\tDriver Version: " << availablePhysicalDevices[i].getProperties().driverVersion << "\n"
-				 << "\t\tVendor ID: " << availablePhysicalDevices[i].getProperties().vendorID << "\n"
-				 << "\t\tDevice ID: " << availablePhysicalDevices[i].getProperties().deviceID << "\n";
+				 << "\t\tAPI Version: " << vk::util::intToSemver(availablePhysicalDevices[i].getProperties().apiVersion) << "\n"
+				 << "\t\tDriver Version: " << vk::util::intToSemver(availablePhysicalDevices[i].getProperties().driverVersion) << "\n"
+				 << "\t\tVendor ID: 0x" << std::hex << availablePhysicalDevices[i].getProperties().vendorID << "\n"
+				 << "\t\tDevice ID: 0x" << std::hex << availablePhysicalDevices[i].getProperties().deviceID << "\n";
 		}
 		m_logger.debug("Found Physical Devices: \n{}\n", aDev.str());
 	}
@@ -169,38 +175,39 @@ namespace gen
 
 	void GraphicsDevice::createSwapChain(const Window & window)
 	{
-		SwapChainSupportDetails const swapChainSupport = querySwapChainSupport(m_gpu.physicalDevice, m_surface.get());
-		assert(!swapChainSupport.formats.empty());
+		m_swapChainSupport = querySwapChainSupport(m_gpu.physicalDevice, m_surface.get());
+		assert(!m_swapChainSupport.availableFormats.empty());
 
-		vk::SurfaceFormatKHR const surfaceFormat = chooseSwapSurfaceFormat(swapChainSupport.formats);
+		m_swapChainSupport.selectedFormat = chooseSwapSurfaceFormat(m_swapChainSupport.availableFormats);
 
 		vk::Extent2D swapchainExtent{};
 		int width{}, height{}; // NOLINT
 		glfwGetFramebufferSize(window.getHandle(), &width, &height);
 
-		if (swapChainSupport.capabilities.currentExtent.width == std::numeric_limits<u32>::max())
+		if (m_swapChainSupport.capabilities.currentExtent.width == std::numeric_limits<u32>::max())
 		{
 			// If the surface size is undefined, the size is set to the size of the images requested.
 			swapchainExtent.width =
-				std::clamp(static_cast<u32>(width), swapChainSupport.capabilities.minImageExtent.width, swapChainSupport.capabilities.maxImageExtent.width);
-			swapchainExtent.height =
-				std::clamp(static_cast<u32>(height), swapChainSupport.capabilities.minImageExtent.height, swapChainSupport.capabilities.maxImageExtent.height);
+				std::clamp(static_cast<u32>(width), m_swapChainSupport.capabilities.minImageExtent.width, m_swapChainSupport.capabilities.maxImageExtent.width);
+			swapchainExtent.height = std::clamp(
+				static_cast<u32>(height), m_swapChainSupport.capabilities.minImageExtent.height, m_swapChainSupport.capabilities.maxImageExtent.height);
 		}
 		else
 		{
 			// If the surface size is defined, the swap chain size must match
-			swapchainExtent = swapChainSupport.capabilities.currentExtent;
+			swapchainExtent = m_swapChainSupport.capabilities.currentExtent;
 		}
 
-		auto maxImageCount = swapChainSupport.capabilities.maxImageCount;
+		auto maxImageCount = m_swapChainSupport.capabilities.maxImageCount;
+
 		if (maxImageCount == 0) { maxImageCount = std::numeric_limits<u32>::max(); }
 
 		m_swapChainInfo = vk::SwapchainCreateInfoKHR(
 			vk::SwapchainCreateFlagsKHR(),
 			m_surface.get(),
-			std::clamp(3U, swapChainSupport.capabilities.minImageCount, maxImageCount),
-			surfaceFormat.format,
-			surfaceFormat.colorSpace,
+			std::clamp(3U, m_swapChainSupport.capabilities.minImageCount, maxImageCount),
+			m_swapChainSupport.selectedFormat.format,
+			m_swapChainSupport.selectedFormat.colorSpace,
 			swapchainExtent,
 			1,
 			vk::ImageUsageFlagBits::eColorAttachment,
@@ -208,11 +215,30 @@ namespace gen
 			{},
 			vk::SurfaceTransformFlagBitsKHR::eIdentity,
 			vk::CompositeAlphaFlagBitsKHR::eOpaque,
-			swapChainSupport.selectedPresentMode,
+			m_swapChainSupport.selectedPresentMode,
 			true, // NOLINT(readability-implicit-bool-conversion)
 			nullptr);
 
 		m_swapChain = m_device->createSwapchainKHRUnique(m_swapChainInfo);
+	}
+
+	void GraphicsDevice::createImageViews()
+	{
+		m_swapChainImages = m_device->getSwapchainImagesKHR(m_swapChain.get());
+
+		m_swapChainImageViews.reserve(m_swapChainImages.size());
+
+		for (auto image : m_swapChainImages)
+		{
+			vk::ImageViewCreateInfo const imageViewCreateInfo(
+				vk::ImageViewCreateFlags(),
+				image,
+				vk::ImageViewType::e2D,
+				m_swapChainSupport.selectedFormat.format,
+				vk::ComponentMapping{vk::ComponentSwizzle::eR, vk::ComponentSwizzle::eG, vk::ComponentSwizzle::eB, vk::ComponentSwizzle::eA},
+				vk::ImageSubresourceRange{vk::ImageAspectFlagBits::eColor, 0, 1, 0, 1});
+			m_swapChainImageViews.push_back(m_device->createImageViewUnique(imageViewCreateInfo));
+		}
 	}
 
 	u32 GraphicsDevice::findQueueFamilies(vk::PhysicalDevice device, vk::SurfaceKHR surface)
@@ -260,7 +286,7 @@ namespace gen
 	{
 		SwapChainSupportDetails details;
 		details.capabilities		  = device.getSurfaceCapabilitiesKHR(surface);
-		details.formats				  = device.getSurfaceFormatsKHR(surface);
+		details.availableFormats	  = device.getSurfaceFormatsKHR(surface);
 		details.availablePresentModes = device.getSurfacePresentModesKHR(surface);
 		details.selectedPresentMode	  = chooseSwapPresentMode(details.availablePresentModes, desiredPresentMode_v);
 		return details;
