@@ -24,7 +24,8 @@ namespace gen
 	struct SwapChainSupportDetails
 	{
 		vk::SurfaceCapabilitiesKHR capabilities{};
-		std::vector<vk::SurfaceFormatKHR> formats{};
+		std::vector<vk::SurfaceFormatKHR> availableFormats{};
+		vk::SurfaceFormatKHR selectedFormat{};
 		std::vector<vk::PresentModeKHR> availablePresentModes{};
 		vk::PresentModeKHR selectedPresentMode{};
 	};
@@ -55,6 +56,7 @@ namespace gen
 		void pickPhysicalDevice();
 		void createLogicalDevice();
 		void createSwapChain(const Window & window);
+		void createImageViews();
 
 		/// Helpers
 
@@ -68,8 +70,11 @@ namespace gen
 		Gpu m_gpu{};
 		vk::UniqueDevice m_device{};
 		vk::Queue m_graphicsQueue{};
+		SwapChainSupportDetails m_swapChainSupport{};
 		vk::SwapchainCreateInfoKHR m_swapChainInfo{};
 		vk::UniqueSwapchainKHR m_swapChain{};
+		std::vector<vk::Image> m_swapChainImages{};
+		std::vector<vk::UniqueImageView> m_swapChainImageViews{};
 
 		Logger m_logger{"graphics"};
 	};

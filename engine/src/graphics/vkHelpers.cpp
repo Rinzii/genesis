@@ -15,7 +15,6 @@
 #endif
 #include <spirv_cross.hpp>
 #include <spirv_hlsl.hpp>
-#include "logger/log.hpp"
 
 #if (VULKAN_HPP_DISPATCH_LOADER_DYNAMIC == 1)
 // NOLINTNEXTLINE
@@ -71,7 +70,7 @@ namespace vk::util
 	{
 
 		// When in non-debug mode, use the InstanceCreateInfo for instance creation.
-		vk::StructureChain<vk::InstanceCreateInfo> const instanceCreateInfo({{}, &appInfo, layers, extensions});
+		vk::StructureChain<vk::InstanceCreateInfo> instanceCreateInfo({{}, &appInfo, layers, extensions});
 
 		return instanceCreateInfo;
 	}
@@ -141,6 +140,15 @@ namespace vk::util
 		if (err != VK_SUCCESS) { throw gen::vulkan_error(std::format("Failed to create window surface: {}", vk::to_string(vk::Result(err)))); }
 
 		return vk::UniqueSurfaceKHR(surface_, instance);
+	}
+
+	std::string intToSemver(uint32_t version)
+	{
+		uint32_t major = (version >> 22U) & 127U;
+		uint32_t minor = (version >> 12U) & 1023U;
+		uint32_t patch = version & 4095U;
+
+		return std::to_string(major) + "." + std::to_string(minor) + "." + std::to_string(patch);
 	}
 
 } // namespace vk::util

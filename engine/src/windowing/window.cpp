@@ -2,25 +2,23 @@
 
 // internal
 #include "windowing/window.hpp"
+#include "windowing/windowExceptions.hpp"
 
 // external
 #include <GLFW/glfw3.h>
 
 // std
 #include <cassert>
-#include <format>
 
 namespace gen
 {
-
 	Window::Window(const mim::vec2i extent, const char * title) // NOLINT(performance-unnecessary-value-param)
 		: m_extent{extent}										// NOLINT(cppcoreguidelines-pro-type-member-init)
 	{
 
 		if (!glfwInit()) // NOLINT(readability-implicit-bool-conversion)
 		{
-			m_logger.error("Failed to initialize GLFW");
-			throw std::runtime_error("Failed to initialize GLFW");
+			throw gen::windowing_error("Failed to initialize GLFW");
 		}
 
 		// Set window hints
@@ -33,11 +31,7 @@ namespace gen
 		m_window = std::unique_ptr<GLFWwindow, Deleter>(window_);
 
 		// Check if window was created
-		if (!m_window)
-		{
-			m_logger.error("Failed to create GLFW window");
-			throw std::runtime_error("Failed to create GLFW window");
-		}
+		if (!m_window) { throw gen::windowing_error("Failed to create GLFW window"); }
 
 		// Set modes
 		glfwSetInputMode(m_window.get(), GLFW_CURSOR, static_cast<int>(m_currentCursorMode));
