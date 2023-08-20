@@ -21,7 +21,7 @@ set(graphics_headers
         include/graphics/vkHelpers.hpp
 		)
 
-set (inputs_headers
+set(inputs_headers
 		include/inputs/controller.hpp
 		)
 		
@@ -59,6 +59,7 @@ set(logger_headers
 
 set(windowing_headers
         include/windowing/window.hpp
+        include/windowing/windowExceptions.hpp
         )
 
 # core header include

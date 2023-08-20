@@ -16,13 +16,14 @@
 
 namespace gen
 {
+	static const std::vector<const char *> deviceExtensions = {
+		VK_KHR_SWAPCHAIN_EXTENSION_NAME,
 #ifdef GEN_PLATFORM_APPLE
-	static const std::vector<const char *> deviceExtensions = {VK_KHR_SWAPCHAIN_EXTENSION_NAME, VK_KHR_PORTABILITY_ENUMERATION_EXTENSION_NAME};
-#else
-	static const std::vector<const char *> deviceExtensions = {VK_KHR_SWAPCHAIN_EXTENSION_NAME};
+		VK_KHR_PORTABILITY_ENUMERATION_EXTENSION_NAME,
 #endif
-	constexpr auto desiredSrgbFormats_v						= std::array{vk::Format::eB8G8R8A8Srgb, vk::Format::eR8G8B8A8Srgb};
-	constexpr vk::PresentModeKHR desiredPresentMode_v		= {vk::PresentModeKHR::eMailbox};
+	};
+	constexpr auto desiredSrgbFormats_v				  = std::array{vk::Format::eB8G8R8A8Srgb, vk::Format::eR8G8B8A8Srgb};
+	constexpr vk::PresentModeKHR desiredPresentMode_v = {vk::PresentModeKHR::eMailbox};
 
 	GraphicsDevice::GraphicsDevice(const Window & window, std::string const & appName)
 	{
@@ -124,10 +125,10 @@ namespace gen
 				 << "\n"
 				 << "\t\tName: " << availablePhysicalDevices[i].getProperties().deviceName << "\n"
 				 << "\t\tType: " << to_string(availablePhysicalDevices[i].getProperties().deviceType) << "\n"
-				 << "\t\tAPI Version: " << availablePhysicalDevices[i].getProperties().apiVersion << "\n"
-				 << "\t\tDriver Version: " << availablePhysicalDevices[i].getProperties().driverVersion << "\n"
-				 << "\t\tVendor ID: " << availablePhysicalDevices[i].getProperties().vendorID << "\n"
-				 << "\t\tDevice ID: " << availablePhysicalDevices[i].getProperties().deviceID << "\n";
+				 << "\t\tAPI Version: " << vk::util::intToSemver(availablePhysicalDevices[i].getProperties().apiVersion) << "\n"
+				 << "\t\tDriver Version: " << vk::util::intToSemver(availablePhysicalDevices[i].getProperties().driverVersion) << "\n"
+				 << "\t\tVendor ID: 0x" << std::hex << availablePhysicalDevices[i].getProperties().vendorID << "\n"
+				 << "\t\tDevice ID: 0x" << std::hex << availablePhysicalDevices[i].getProperties().deviceID << "\n";
 		}
 		m_logger.debug("Found Physical Devices: \n{}\n", aDev.str());
 	}

@@ -142,4 +142,13 @@ namespace vk::util
 		return vk::UniqueSurfaceKHR(surface_, instance);
 	}
 
+	std::string intToSemver(uint32_t version)
+	{
+		uint32_t major = (version >> 22U) & 127U;
+		uint32_t minor = (version >> 12U) & 1023U;
+		uint32_t patch = version & 4095U;
+
+		return std::to_string(major) + "." + std::to_string(minor) + "." + std::to_string(patch);
+	}
+
 } // namespace vk::util
