@@ -23,7 +23,7 @@ include(FetchContent)
 FetchContent_Declare(
         mim
         GIT_REPOSITORY https://github.com/Rinzii/mim.git
-        GIT_TAG       origin/next
+        GIT_TAG       origin/main
 )
 FetchContent_MakeAvailable(mim)
 
