@@ -19,6 +19,7 @@ set(graphics_headers
 		include/graphics/graphicsExceptions.hpp
         include/graphics/device.hpp
         include/graphics/vkHelpers.hpp
+		include/graphics/pipeline.hpp
 		)
 
 set(inputs_headers

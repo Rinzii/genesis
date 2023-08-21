@@ -9,7 +9,7 @@ namespace gen
 		namespace
 		{
 			std::vector<Controller> g_connectedControllers; // Max 16 (because of GLFW)
-		}
+		}													// namespace
 
 		void init()
 		{
@@ -68,7 +68,8 @@ namespace gen
 
 		Controller * getController(int i)
 		{
-			if (i < g_connectedControllers.size() && g_connectedControllers[i].isActive()) { return &g_connectedControllers[i]; }
+			std::size_t const index{static_cast<size_t>(i)};
+			if (index < g_connectedControllers.size() && g_connectedControllers[index].isActive()) { return &g_connectedControllers[index]; }
 
 			return nullptr;
 		}

@@ -39,3 +39,19 @@ if(GENESIS_PCH)
           <vector>
           )
 endif()
+
+### Currently we require that the editor has all spv binary files in the same directory as the executable
+# This may change at a later date. For now, we copy the files to the build directory.
+
+# Set the source and destination directories
+set(SOURCE_DIR "${CMAKE_SOURCE_DIR}/editor/bin")
+set(DEST_DIR "${CMAKE_CURRENT_BINARY_DIR}/bin")
+
+
+add_custom_command(
+        TARGET genesis-editor PRE_BUILD
+        COMMAND ${CMAKE_COMMAND} -E make_directory ${DEST_DIR}
+        COMMAND ${CMAKE_COMMAND} -E copy_directory ${SOURCE_DIR} ${DEST_DIR}
+        COMMENT "Copying .spv files to build directory"
+)
+

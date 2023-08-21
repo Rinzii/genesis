@@ -9,6 +9,12 @@ namespace gen
 {
 	// possibly change this to instead use Update() and Draw() functions
 
+	Application::Application(const char * appName, const mim::vec2i & initialSize)
+		: m_window(initialSize, appName), m_graphicsDevice(m_window, appName),
+		  m_graphicsPipeline(m_graphicsDevice, GraphicsPipeline::defaultPipelineConfigInfo(initialSize))
+	{
+	}
+
 	void Application::run()
 	{
 		gameLoop();
@@ -21,10 +27,6 @@ namespace gen
 	}
 
 	void Application::shutdown()
-	{
-	}
-
-	Application::Application(const char * appName, mim::vec2i const & initialSize) : m_window{initialSize, appName}, m_graphicsDevice{m_window, appName}
 	{
 	}
 

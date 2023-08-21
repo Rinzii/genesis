@@ -8,6 +8,7 @@
 
 #include <logger/log.hpp>
 #include "graphics/device.hpp"
+#include "graphics/pipeline.hpp"
 #include "windowing/window.hpp"
 
 namespace gen
@@ -25,6 +26,7 @@ namespace gen
 
 		Window m_window;
 		GraphicsDevice m_graphicsDevice;
+		GraphicsPipeline m_graphicsPipeline;
 
 		Logger m_logger{"application"};
 	};
