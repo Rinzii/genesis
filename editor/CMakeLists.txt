@@ -45,6 +45,7 @@ endif()
 
 # Set the source and destination directories
 set(SOURCE_DIR "${CMAKE_SOURCE_DIR}/editor/bin")
+set(DEST_DIR "${CMAKE_CURRENT_BINARY_DIR}/bin")
 
 # Get a list of all .spv files in the source directory
 file(GLOB SPV_FILES "${SOURCE_DIR}/*.spv")
@@ -56,9 +57,8 @@ file(GLOB SPV_FILES "${SOURCE_DIR}/*.spv")
 
 add_custom_command(
         TARGET genesis-editor PRE_BUILD
-        COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_CURRENT_BINARY_DIR}/bin
-        COMMAND ${CMAKE_COMMAND} -E remove ${CMAKE_CURRENT_BINARY_DIR}/bin/*.spv
-        COMMAND ${CMAKE_COMMAND} -E copy ${SPV_FILES} ${CMAKE_CURRENT_BINARY_DIR}/bin
+        COMMAND ${CMAKE_COMMAND} -E make_directory ${DEST_DIR}
+        COMMAND ${CMAKE_COMMAND} -E copy_directory ${SOURCE_DIR} ${DEST_DIR}
         COMMENT "Copying .spv files to build directory"
 )
 
