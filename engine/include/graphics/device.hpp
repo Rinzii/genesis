@@ -61,6 +61,7 @@ namespace gen
 		void createSurface(const Window & window);
 		void pickPhysicalDevice();
 		void createLogicalDevice();
+		void createCommandPoolAndBuffer();
 		void createSwapChain(const Window & window);
 		void createImageViews();
 
@@ -75,6 +76,8 @@ namespace gen
 		vk::UniqueSurfaceKHR m_surface{};
 		Gpu m_gpu{};
 		vk::UniqueDevice m_device{};
+		vk::UniqueCommandPool m_commandPool{};
+		vk::UniqueCommandBuffer m_commandBuffer{};
 		vk::Queue m_graphicsQueue{};
 		SwapChainSupportDetails m_swapChainSupport{};
 		vk::SwapchainCreateInfoKHR m_swapChainInfo{};

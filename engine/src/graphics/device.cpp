@@ -34,6 +34,7 @@ namespace gen
 		createSurface(window);
 		pickPhysicalDevice();
 		createLogicalDevice();
+		createCommandPoolAndBuffer();
 		createSwapChain(window);
 		createImageViews();
 
@@ -141,6 +142,14 @@ namespace gen
 		std::vector<vk::DeviceQueueCreateInfo> queueCreateInfos;
 		std::set<u32> const uniqueQueueFamilies = {m_gpu.queueFamily};
 
+		auto enabledFeatures			  = vk::PhysicalDeviceFeatures{};
+		auto availableFeatures			  = m_gpu.physicalDevice.getFeatures();
+		enabledFeatures.fillModeNonSolid  = availableFeatures.fillModeNonSolid;
+		enabledFeatures.wideLines		  = availableFeatures.wideLines;
+		enabledFeatures.samplerAnisotropy = availableFeatures.samplerAnisotropy;
+		enabledFeatures.sampleRateShading = availableFeatures.sampleRateShading;
+		enabledFeatures.logicOp			  = availableFeatures.logicOp;
+
 		float const queuePriority = 1.0F;
 		for (u32 const queueFamily : uniqueQueueFamilies)
 		{
@@ -148,16 +157,16 @@ namespace gen
 			queueCreateInfos.push_back(queueCreateInfo);
 		}
 
-		vk::DeviceCreateInfo const createInfo(
-			{},
-			static_cast<u32>(queueCreateInfos.size()),
-			queueCreateInfos.data(),
-			0,		 // ignored by spec
-			nullptr, // ignored by spec
-			static_cast<u32>(deviceExtensions.size()),
-			deviceExtensions.data(),
-			nullptr // to be used later
-		);
+		auto createInfo = vk::DeviceCreateInfo{};
+
+		createInfo.queueCreateInfoCount	   = static_cast<u32>(queueCreateInfos.size());
+		createInfo.pQueueCreateInfos	   = queueCreateInfos.data();
+		createInfo.enabledExtensionCount   = static_cast<u32>(deviceExtensions.size());
+		createInfo.ppEnabledExtensionNames = deviceExtensions.data();
+		createInfo.pEnabledFeatures		   = &enabledFeatures;
+
+		auto dynamicRenderingFeature = vk::PhysicalDeviceDynamicRenderingFeatures{true};
+		createInfo.pNext			 = &dynamicRenderingFeature;
 
 		m_device = m_gpu.physicalDevice.createDeviceUnique(createInfo);
 
@@ -172,6 +181,14 @@ namespace gen
 		m_logger.debug("Found Device Extensions: \n{}\n", aExt.str());
 
 		m_graphicsQueue = m_device->getQueue(m_gpu.queueFamily, 0);
+	}
+
+	void GraphicsDevice::createCommandPoolAndBuffer()
+	{
+		m_commandPool = m_device->createCommandPoolUnique(vk::CommandPoolCreateInfo(vk::CommandPoolCreateFlags(), m_gpu.queueFamily));
+
+		m_commandBuffer =
+			std::move(m_device->allocateCommandBuffersUnique(vk::CommandBufferAllocateInfo(m_commandPool.get(), vk::CommandBufferLevel::ePrimary, 1)).front());
 	}
 
 	void GraphicsDevice::createSwapChain(const Window & window)

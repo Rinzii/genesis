@@ -14,7 +14,6 @@ namespace gen
 {
 	GraphicsPipeline::GraphicsPipeline(GraphicsDevice & device, const PipelineConfigInfo & configInfo) : m_device{device}, m_configInfo{configInfo}
 	{
-		createRenderPass();
 		createGraphicsPipeline();
 		m_logger.info("Graphics pipeline constructed");
 	}
@@ -131,42 +130,12 @@ namespace gen
 		return buffer;
 	}
 
-	void GraphicsPipeline::createRenderPass()
-	{
-		vk::AttachmentDescription colorAttachment{
-			{},
-			m_device.getSwapChainInfo().imageFormat,
-			vk::SampleCountFlagBits::e1,
-			vk::AttachmentLoadOp::eClear,  // Clear framebuffer to black before drawing a new frame.
-			vk::AttachmentStoreOp::eStore, // Store the framebuffer to memory after drawing a new frame.
-			vk::AttachmentLoadOp::eDontCare,
-			vk::AttachmentStoreOp::eDontCare,
-			vk::ImageLayout::eUndefined,
-			vk::ImageLayout::ePresentSrcKHR};
-
-		vk::AttachmentReference colorAttachmentRef{0, vk::ImageLayout::eColorAttachmentOptimal};
-
-		// for the time being we are only doing a single subpass
-		vk::SubpassDescription subpass{{}, vk::PipelineBindPoint::eGraphics, 0, nullptr, 1, &colorAttachmentRef, nullptr, nullptr, 0, nullptr};
-
-		vk::SubpassDependency dependency{
-			VK_SUBPASS_EXTERNAL,
-			0,
-			vk::PipelineStageFlagBits::eColorAttachmentOutput,
-			vk::PipelineStageFlagBits::eColorAttachmentOutput,
-			{},
-			vk::AccessFlagBits::eColorAttachmentRead | vk::AccessFlagBits::eColorAttachmentWrite};
-
-		vk::RenderPassCreateInfo renderPassInfo{{}, 1, &colorAttachment, 1, &subpass, 1, &dependency};
-
-		m_renderPass = m_device.getUniqueDevice()->createRenderPassUnique(renderPassInfo);
-	}
-
 	void GraphicsPipeline::createGraphicsPipeline()
 	{
-		// This will be removed later.
-		auto vertShaderCode = readFile("bin/simplePS.spv");
-		auto fragShaderCode = readFile("bin/simpleVS.spv");
+		// This will be removed later and replaced with a better system.
+		// Just here so we can eventually render a triangle.
+		auto vertShaderCode = readFile("bin/simpleVS.spv");
+		auto fragShaderCode = readFile("bin/simplePS.spv");
 
 		m_vertShaderModule = vk::util::createShaderModule(m_device.getDevice(), vertShaderCode);
 		m_fragShaderModule = vk::util::createShaderModule(m_device.getDevice(), fragShaderCode);
@@ -200,7 +169,7 @@ namespace gen
 			&m_configInfo.colorBlendInfo,
 			&dynamicStateCreateInfo,
 			m_pipelineLayout.get(),
-			m_renderPass.get(),
+			nullptr, // render pass is no longer needed with dynamic rendering
 			m_configInfo.subpass,
 			nullptr, // optional
 			-1};	 // optional

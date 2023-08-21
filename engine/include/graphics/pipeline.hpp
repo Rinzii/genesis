@@ -40,8 +40,6 @@ namespace gen
 		static PipelineConfigInfo defaultPipelineConfigInfo(mim::vec2i extent);
 
 	private:
-		void createRenderPass();
-
 		static std::vector<char> readFile(const std::string & filePath);
 
 		void createGraphicsPipeline();
@@ -53,7 +51,6 @@ namespace gen
 		vk::UniqueShaderModule m_vertShaderModule;
 		vk::UniqueShaderModule m_fragShaderModule;
 
-		vk::UniqueRenderPass m_renderPass;
 		vk::UniquePipelineLayout m_pipelineLayout;
 		vk::UniquePipeline m_graphicsPipeline;
 
