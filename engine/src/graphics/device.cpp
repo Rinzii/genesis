@@ -18,6 +18,7 @@ namespace gen
 {
 	static const std::vector<const char *> deviceExtensions = {
 		VK_KHR_SWAPCHAIN_EXTENSION_NAME,
+		VK_KHR_DYNAMIC_RENDERING_EXTENSION_NAME,
 #ifdef GEN_PLATFORM_APPLE
 		VK_KHR_PORTABILITY_ENUMERATION_EXTENSION_NAME,
 #endif

@@ -47,6 +47,12 @@ namespace gen
 		GEN_NODISCARD vk::SurfaceKHR const & getSurface() const { return m_surface.get(); }
 		GEN_NODISCARD vk::PhysicalDevice const & getPhysicalDevice() const { return m_gpu.physicalDevice; }
 		GEN_NODISCARD vk::Device const & getDevice() const { return m_device.get(); }
+		GEN_NODISCARD vk::UniqueDevice const & getUniqueDevice() const { return m_device; }
+		GEN_NODISCARD vk::Queue const & getGraphicsQueue() const { return m_graphicsQueue; }
+		GEN_NODISCARD vk::SwapchainKHR const & getSwapChain() const { return m_swapChain.get(); }
+		GEN_NODISCARD vk::SwapchainCreateInfoKHR const & getSwapChainInfo() const { return m_swapChainInfo; }
+		GEN_NODISCARD std::vector<vk::Image> const & getSwapChainImages() const { return m_swapChainImages; }
+		GEN_NODISCARD std::vector<vk::UniqueImageView> const & getSwapChainImageViews() const { return m_swapChainImageViews; }
 
 		/// Setters
 

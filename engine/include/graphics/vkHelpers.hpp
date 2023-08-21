@@ -33,7 +33,9 @@ namespace vk::util
 
 	bool checkDeviceExtensionSupport(vk::PhysicalDevice device, const std::vector<const char *> & deviceExtensions);
 
-	vk::UniqueShaderModule createShaderModule(vk::Device device, vk::ShaderStageFlagBits shaderStage, std::string const & shaderText);
+	vk::UniqueShaderModule createShaderModule(vk::Device device, std::vector<char> const & code);
+
+	vk::UniqueShaderModule createShaderModuleFromHLSL(vk::Device device, vk::ShaderStageFlagBits shaderStage, std::string const & shaderText);
 
 	vk::UniqueSurfaceKHR createWindowSurface(vk::Instance instance, gen::Window const & window);
 

@@ -120,8 +120,14 @@ namespace vk::util
 		return true;
 	}
 
+	vk::UniqueShaderModule createShaderModule(vk::Device device, std::vector<char> const & code)
+	{
+		return device.createShaderModuleUnique(
+			vk::ShaderModuleCreateInfo(vk::ShaderModuleCreateFlags(), code.size(), reinterpret_cast<const uint32_t *>(code.data())));
+	}
+
 	// Create a Vulkan shader module from HLSL shader code.
-	vk::UniqueShaderModule createShaderModule(const vk::Device device, vk::ShaderStageFlagBits shaderStage, std::string const & shaderText)
+	vk::UniqueShaderModule createShaderModuleFromHLSL(const vk::Device device, vk::ShaderStageFlagBits shaderStage, std::string const & shaderText)
 	{
 		std::vector<unsigned int> shaderSPV;
 		if (!HLSLtoSPV(shaderStage, shaderText, shaderSPV))

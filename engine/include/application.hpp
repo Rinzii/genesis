@@ -16,12 +16,7 @@ namespace gen
 	class Application
 	{
 	public:
-		explicit Application(const char * appName, mim::vec2i const & initialSize)
-			: m_window{initialSize, appName},
-			  m_graphicsDevice{m_window, appName},
-
-		{}
-
+		explicit Application(const char * appName, mim::vec2i const & initialSize);
 
 		void run();
 
@@ -32,7 +27,6 @@ namespace gen
 		Window m_window;
 		GraphicsDevice m_graphicsDevice;
 		GraphicsPipeline m_graphicsPipeline;
-
 
 		Logger m_logger{"application"};
 	};
