@@ -47,13 +47,6 @@ endif()
 set(SOURCE_DIR "${CMAKE_SOURCE_DIR}/editor/bin")
 set(DEST_DIR "${CMAKE_CURRENT_BINARY_DIR}/bin")
 
-# Get a list of all .spv files in the source directory
-file(GLOB SPV_FILES "${SOURCE_DIR}/*.spv")
-
-# This target does the following:
-#   - Create the destination directory if it does not exist
-#   - Remove all .spv files from the destination directory if they exist.
-#   - Copy all .spv files from the source directory to the destination directory
 
 add_custom_command(
         TARGET genesis-editor PRE_BUILD

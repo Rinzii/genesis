@@ -142,13 +142,9 @@ namespace gen
 		std::vector<vk::DeviceQueueCreateInfo> queueCreateInfos;
 		std::set<u32> const uniqueQueueFamilies = {m_gpu.queueFamily};
 
-		auto enabledFeatures			  = vk::PhysicalDeviceFeatures{};
-		auto availableFeatures			  = m_gpu.physicalDevice.getFeatures();
-		enabledFeatures.fillModeNonSolid  = availableFeatures.fillModeNonSolid;
-		enabledFeatures.wideLines		  = availableFeatures.wideLines;
-		enabledFeatures.samplerAnisotropy = availableFeatures.samplerAnisotropy;
-		enabledFeatures.sampleRateShading = availableFeatures.sampleRateShading;
-		enabledFeatures.logicOp			  = availableFeatures.logicOp;
+		auto enabledFeatures	= vk::PhysicalDeviceFeatures{};
+		auto availableFeatures	= m_gpu.physicalDevice.getFeatures();
+		enabledFeatures.logicOp = availableFeatures.logicOp;
 
 		float const queuePriority = 1.0F;
 		for (u32 const queueFamily : uniqueQueueFamilies)
