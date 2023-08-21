@@ -36,28 +36,26 @@ namespace gen
 
 		GraphicsPipeline(const GraphicsPipeline &)			   = delete;
 		GraphicsPipeline & operator=(const GraphicsPipeline &) = delete;
+		GraphicsPipeline(GraphicsPipeline &&)				   = delete;
+		GraphicsPipeline & operator=(GraphicsPipeline &&)	   = delete;
 
-		static PipelineConfigInfo defaultPipelineConfigInfo(mim::vec2i extent);
+		static PipelineConfigInfo defaultPipelineConfigInfo(const mim::vec2i& extent);
 
 	private:
 		static std::vector<char> readFile(const std::string & filePath);
 
 		void createGraphicsPipeline();
 
-		void createShaderModule(const std::vector<char> & code);
-
 		// NOLINTNEXTLINE The assumption is that the device will outlive the pipeline at all times since a device fundamentally needs a pipeline to exist
 		GraphicsDevice & m_device;
-		vk::UniqueShaderModule m_vertShaderModule;
-		vk::UniqueShaderModule m_fragShaderModule;
+		vk::UniqueShaderModule m_vertShaderModule{};
+		vk::UniqueShaderModule m_fragShaderModule{};
 
-		vk::UniquePipelineLayout m_pipelineLayout;
-		vk::UniquePipeline m_graphicsPipeline;
+		vk::UniquePipelineLayout m_pipelineLayout{};
+		vk::UniquePipeline m_graphicsPipeline{};
 
-		const PipelineConfigInfo m_configInfo;
+		const PipelineConfigInfo m_configInfo{};
 
-		vk::UniqueInstance m_instance;
-		vk::DebugUtilsMessengerEXT m_debugMessenger;
 
 		Logger m_logger{"graphics"};
 	};

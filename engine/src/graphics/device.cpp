@@ -3,7 +3,6 @@
 #include "graphics/device.hpp"
 #include "graphics/graphicsExceptions.hpp"
 #include "graphics/vkHelpers.hpp"
-#include "logger/log.hpp"
 
 #ifndef GLFW_INCLUDE_NONE
 	#define GLFW_INCLUDE_NONE
@@ -161,7 +160,7 @@ namespace gen
 		createInfo.ppEnabledExtensionNames = deviceExtensions.data();
 		createInfo.pEnabledFeatures		   = &enabledFeatures;
 
-		auto dynamicRenderingFeature = vk::PhysicalDeviceDynamicRenderingFeatures{true};
+		auto dynamicRenderingFeature = vk::PhysicalDeviceDynamicRenderingFeatures{true}; // NOLINT(readability-implicit-bool-conversion)
 		createInfo.pNext			 = &dynamicRenderingFeature;
 
 		m_device = m_gpu.physicalDevice.createDeviceUnique(createInfo);

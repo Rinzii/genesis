@@ -12,7 +12,8 @@
 
 namespace gen
 {
-	GraphicsPipeline::GraphicsPipeline(GraphicsDevice & device, const PipelineConfigInfo & configInfo) : m_device{device}, m_configInfo{configInfo}
+	GraphicsPipeline::GraphicsPipeline(GraphicsDevice & device, const PipelineConfigInfo & configInfo)
+		: m_device{device}, m_configInfo{configInfo}
 	{
 		createGraphicsPipeline();
 		m_logger.info("Graphics pipeline constructed");
@@ -23,7 +24,7 @@ namespace gen
 		m_logger.info("Graphics pipeline destructed");
 	}
 
-	PipelineConfigInfo GraphicsPipeline::defaultPipelineConfigInfo(const mim::vec2i extent)
+	PipelineConfigInfo GraphicsPipeline::defaultPipelineConfigInfo(const mim::vec2i& extent)
 	{
 		PipelineConfigInfo configInfo{};
 
@@ -38,7 +39,7 @@ namespace gen
 
 		configInfo.inputAssemblyInfo.flags					= vk::PipelineInputAssemblyStateCreateFlags{};
 		configInfo.inputAssemblyInfo.topology				= vk::PrimitiveTopology::eTriangleList;
-		configInfo.inputAssemblyInfo.primitiveRestartEnable = false;
+		configInfo.inputAssemblyInfo.primitiveRestartEnable = false; // NOLINT(readability-implicit-bool-conversion)
 
 		configInfo.viewportInfo.flags		  = vk::PipelineViewportStateCreateFlags{};
 		configInfo.viewportInfo.sType		  = vk::StructureType::ePipelineViewportStateCreateInfo;
@@ -49,13 +50,13 @@ namespace gen
 
 		configInfo.rasterizationInfo.flags					 = vk::PipelineRasterizationStateCreateFlags{};
 		configInfo.rasterizationInfo.sType					 = vk::StructureType::ePipelineRasterizationStateCreateInfo;
-		configInfo.rasterizationInfo.depthClampEnable		 = false;
-		configInfo.rasterizationInfo.rasterizerDiscardEnable = false;
+		configInfo.rasterizationInfo.depthClampEnable		 = false; // NOLINT(readability-implicit-bool-conversion)
+		configInfo.rasterizationInfo.rasterizerDiscardEnable = false; // NOLINT(readability-implicit-bool-conversion)
 		configInfo.rasterizationInfo.polygonMode			 = vk::PolygonMode::eFill;
 		configInfo.rasterizationInfo.lineWidth				 = 1.0F;
 		configInfo.rasterizationInfo.cullMode				 = vk::CullModeFlagBits::eNone; // TODO: Switch this to eBack once done testing.
 		configInfo.rasterizationInfo.frontFace				 = vk::FrontFace::eClockwise;
-		configInfo.rasterizationInfo.depthBiasEnable		 = false;
+		configInfo.rasterizationInfo.depthBiasEnable		 = false; // NOLINT(readability-implicit-bool-conversion)
 		configInfo.rasterizationInfo.depthBiasConstantFactor = 0.0F; // Optional
 		configInfo.rasterizationInfo.depthBiasClamp			 = 0.0F; // Optional
 		configInfo.rasterizationInfo.depthBiasSlopeFactor	 = 0.0F; // Optional
@@ -64,18 +65,18 @@ namespace gen
 		configInfo.multisampleInfo.flags				 = vk::PipelineMultisampleStateCreateFlags{};
 		configInfo.multisampleInfo.sType				 = vk::StructureType::ePipelineMultisampleStateCreateInfo;
 		configInfo.multisampleInfo.rasterizationSamples	 = vk::SampleCountFlagBits::e1;
-		configInfo.multisampleInfo.sampleShadingEnable	 = false;
+		configInfo.multisampleInfo.sampleShadingEnable	 = false; // NOLINT(readability-implicit-bool-conversion)
 		configInfo.multisampleInfo.minSampleShading		 = 1.0F;	// Optional
 		configInfo.multisampleInfo.pSampleMask			 = nullptr; // Optional
-		configInfo.multisampleInfo.alphaToCoverageEnable = false;	// Optional
-		configInfo.multisampleInfo.alphaToOneEnable		 = false;	// Optional
+		configInfo.multisampleInfo.alphaToCoverageEnable = false;	// Optional // NOLINT(readability-implicit-bool-conversion)
+		configInfo.multisampleInfo.alphaToOneEnable		 = false;	// Optional // NOLINT(readability-implicit-bool-conversion)
 
 		// implement depth and stencil later
 
 		configInfo.colorBlendAttachment.colorWriteMask =
 			vk::ColorComponentFlagBits::eR | vk::ColorComponentFlagBits::eG | vk::ColorComponentFlagBits::eB | vk::ColorComponentFlagBits::eA;
 		// this implements alpha blending
-		configInfo.colorBlendAttachment.blendEnable			= true;
+		configInfo.colorBlendAttachment.blendEnable			= true; // NOLINT(readability-implicit-bool-conversion)
 		configInfo.colorBlendAttachment.srcColorBlendFactor = vk::BlendFactor::eSrcAlpha;		  // Optional
 		configInfo.colorBlendAttachment.dstColorBlendFactor = vk::BlendFactor::eOneMinusSrcAlpha; // Optional
 		configInfo.colorBlendAttachment.colorBlendOp		= vk::BlendOp::eAdd;				  // Optional
@@ -85,7 +86,7 @@ namespace gen
 
 		configInfo.colorBlendInfo.flags				= vk::PipelineColorBlendStateCreateFlags{};
 		configInfo.colorBlendInfo.sType				= vk::StructureType::ePipelineColorBlendStateCreateInfo;
-		configInfo.colorBlendInfo.logicOpEnable		= true;
+		configInfo.colorBlendInfo.logicOpEnable		= true; // NOLINT(readability-implicit-bool-conversion)
 		configInfo.colorBlendInfo.logicOp			= vk::LogicOp::eCopy; // Optional
 		configInfo.colorBlendInfo.attachmentCount	= 1;
 		configInfo.colorBlendInfo.pAttachments		= &configInfo.colorBlendAttachment;
@@ -105,7 +106,7 @@ namespace gen
 
 		const Logger logger{"graphics"};
 
-		std::string currentDir = std::filesystem::current_path().string();
+		std::string const currentDir = std::filesystem::current_path().string();
 		std::string path	   = currentDir + "/" + filePath;
 
 		logger.info("Attempting to open file: {}", path);
@@ -140,8 +141,8 @@ namespace gen
 		m_vertShaderModule = vk::util::createShaderModule(m_device.getDevice(), vertShaderCode);
 		m_fragShaderModule = vk::util::createShaderModule(m_device.getDevice(), fragShaderCode);
 
-		vk::PipelineShaderStageCreateInfo vertShaderStageInfo{{}, vk::ShaderStageFlagBits::eVertex, m_vertShaderModule.get(), "main"};
-		vk::PipelineShaderStageCreateInfo fragShaderStageInfo{{}, vk::ShaderStageFlagBits::eFragment, m_fragShaderModule.get(), "main"};
+		vk::PipelineShaderStageCreateInfo const vertShaderStageInfo{{}, vk::ShaderStageFlagBits::eVertex, m_vertShaderModule.get(), "main"};
+		vk::PipelineShaderStageCreateInfo const fragShaderStageInfo{{}, vk::ShaderStageFlagBits::eFragment, m_fragShaderModule.get(), "main"};
 
 		// vk::PipelineVertexInputStateCreateInfo vertexInputInfo{{}, 0, nullptr, 0, nullptr};
 
@@ -149,13 +150,13 @@ namespace gen
 
 		std::vector<vk::DynamicState> dynamicStates = {vk::DynamicState::eViewport, vk::DynamicState::eScissor};
 
-		vk::PipelineDynamicStateCreateInfo dynamicStateCreateInfo{{}, static_cast<uint32_t>(dynamicStates.size()), dynamicStates.data()};
+		vk::PipelineDynamicStateCreateInfo const dynamicStateCreateInfo{{}, static_cast<uint32_t>(dynamicStates.size()), dynamicStates.data()};
 
-		vk::PipelineVertexInputStateCreateInfo vertexInputInfo{{}, 0, nullptr, 0, nullptr};
+		vk::PipelineVertexInputStateCreateInfo const vertexInputInfo{{}, 0, nullptr, 0, nullptr};
 
 		m_pipelineLayout = m_device.getUniqueDevice()->createPipelineLayoutUnique(vk::PipelineLayoutCreateInfo{{}, 0, nullptr, 0, nullptr});
 
-		vk::GraphicsPipelineCreateInfo pipelineInfo{
+		vk::GraphicsPipelineCreateInfo const pipelineInfo{
 			{},
 			2,
 			shaderStages.data(),
@@ -177,8 +178,5 @@ namespace gen
 		m_graphicsPipeline = m_device.getUniqueDevice()->createGraphicsPipelineUnique(nullptr, pipelineInfo).value;
 	}
 
-	void GraphicsPipeline::createShaderModule(const std::vector<char> & code)
-	{
-	}
 
 } // namespace gen
