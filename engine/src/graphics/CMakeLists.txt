@@ -4,5 +4,7 @@
 target_sources(${PROJECT_NAME} PRIVATE
         graphicsExceptions.cpp
         device.cpp
+        swapchain.cpp
+        renderer.cpp
         vkHelpers.cpp
         )

@@ -21,60 +21,35 @@ namespace gen
 		u32 queueFamily{};
 	};
 
-	struct SwapChainSupportDetails
-	{
-		vk::SurfaceCapabilitiesKHR capabilities{};
-		std::vector<vk::SurfaceFormatKHR> availableFormats{};
-		vk::SurfaceFormatKHR selectedFormat{};
-		std::vector<vk::PresentModeKHR> availablePresentModes{};
-		vk::PresentModeKHR selectedPresentMode{};
-	};
-
-	class GraphicsDevice
+	class Device
 	{
 	public:
-		GraphicsDevice(const GraphicsDevice &)			   = delete;
-		GraphicsDevice & operator=(const GraphicsDevice &) = delete;
-		GraphicsDevice(GraphicsDevice &&)				   = delete;
-		GraphicsDevice & operator=(GraphicsDevice &&)	   = delete;
+		Device(vk::Instance const & instance, vk::SurfaceKHR const & surface);
+		~Device();
 
-		explicit GraphicsDevice(const Window & window, std::string const & appName);
-		~GraphicsDevice();
+		Device(const Device &)			   = delete;
+		Device(Device &&)				   = delete;
+		Device & operator=(const Device &) = delete;
+		Device & operator=(Device &&)	   = delete;
 
 		/// Getters
 
-		GEN_NODISCARD vk::Instance const & getInstance() const { return m_instance.get(); }
-		GEN_NODISCARD vk::SurfaceKHR const & getSurface() const { return m_surface.get(); }
-		GEN_NODISCARD vk::PhysicalDevice const & getPhysicalDevice() const { return m_gpu.physicalDevice; }
-		GEN_NODISCARD vk::Device const & getDevice() const { return m_device.get(); }
-
-		/// Setters
+		GEN_NODISCARD vk::Device getDevice() const { return m_device.get(); }
+		GEN_NODISCARD Gpu getGpu() const { return m_gpu; }
+		GEN_NODISCARD vk::Queue getGraphicsQueue() const { return m_graphicsQueue; }
 
 	private:
-		void createInstance(const std::string & appName, const std::string & engineName, const gen::u32 & apiVersion);
-		void createSurface(const Window & window);
-		void pickPhysicalDevice();
-		void createLogicalDevice();
-		void createSwapChain(const Window & window);
-		void createImageViews();
+		void selectPhysicalDevice(vk::Instance const & instance);
+		void createLogicalDevice(vk::SurfaceKHR const & surface);
+		void createCommandPoolAndBuffer();
 
-		/// Helpers
+		static u32 findQueueFamily(vk::PhysicalDevice const & physicalDevice, vk::SurfaceKHR const & surface);
 
-		u32 findQueueFamilies(vk::PhysicalDevice device, vk::SurfaceKHR surface);
-		static SwapChainSupportDetails querySwapChainSupport(vk::PhysicalDevice device, vk::SurfaceKHR surface);
-		static vk::SurfaceFormatKHR chooseSwapSurfaceFormat(const std::vector<vk::SurfaceFormatKHR> & availableFormats);
-		static vk::PresentModeKHR chooseSwapPresentMode(const std::vector<vk::PresentModeKHR> & availablePresentModes, vk::PresentModeKHR preferredMode);
-
-		vk::UniqueInstance m_instance{};
-		vk::UniqueSurfaceKHR m_surface{};
-		Gpu m_gpu{};
 		vk::UniqueDevice m_device{};
+		Gpu m_gpu{};
 		vk::Queue m_graphicsQueue{};
-		SwapChainSupportDetails m_swapChainSupport{};
-		vk::SwapchainCreateInfoKHR m_swapChainInfo{};
-		vk::UniqueSwapchainKHR m_swapChain{};
-		std::vector<vk::Image> m_swapChainImages{};
-		std::vector<vk::UniqueImageView> m_swapChainImageViews{};
+		vk::UniqueCommandPool m_commandPool{}; // TODO: Does a command buffer and a command pool belong to a device?
+		vk::CommandBuffer m_commandBuffer{};
 
 		Logger m_logger{"graphics"};
 	};

@@ -223,7 +223,7 @@ message(STATUS "PRECOMPILED HEADERS: ${GENESIS_PCH}")
 
 
 # HEADERS AND SOURCES
-include(header_list.cmake)
+include(genesis_list.cmake)
 target_sources(genesis PRIVATE ${genesis_headers})
 add_subdirectory(src)
 

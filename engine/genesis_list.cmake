@@ -17,6 +17,8 @@ set(base_headers
 
 set(graphics_headers
 		include/graphics/graphicsExceptions.hpp
+        include/graphics/renderer.hpp
+        include/graphics/swapchain.hpp
         include/graphics/device.hpp
         include/graphics/vkHelpers.hpp
 		)
@@ -73,6 +75,7 @@ set(genesis_headers
         ${logger_headers}
         ${windowing_headers}
         include/application.hpp
+        include/engine.hpp
         include/core.hpp
 		include/time.hpp
         )

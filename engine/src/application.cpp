@@ -7,25 +7,33 @@
 
 namespace gen
 {
-	// possibly change this to instead use Update() and Draw() functions
+
+	Application::Application(const char * appName, mim::vec2i const & initialSize) : m_engine{appName, initialSize}
+	{
+	}
+
+	Application::~Application()
+	{
+	}
 
 	void Application::run()
 	{
-		gameLoop();
-		shutdown();
+		while (m_engine.window().shouldClose())
+		{
+			update(Time::GetDeltaTime());
+			draw();
+		}
 	}
 
-	void Application::gameLoop()
-	{
-		while (!m_window.shouldClose()) { Window::pollEvents(); }
-	}
-
-	void Application::shutdown()
+	// Internal draw function that should be overridden by the user for game specific drawing
+	void Application::draw()
 	{
 	}
 
-	Application::Application(const char * appName, mim::vec2i const & initialSize) : m_window{initialSize, appName}, m_graphicsDevice{m_window, appName}
+	// Internal update function that should be overridden by the user for game specific updating
+	void Application::update(double dt)
 	{
+		Window::pollEvents();
 	}
 
 } // namespace gen

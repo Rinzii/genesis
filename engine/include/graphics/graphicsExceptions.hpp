@@ -12,4 +12,11 @@ namespace gen
 
 		explicit vulkan_error(const std::string & message);
 	};
+
+	struct graphics_error : public std::runtime_error
+	{
+
+		explicit graphics_error(const std::string & message);
+	};
+
 } // namespace gen

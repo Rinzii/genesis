@@ -20,6 +20,8 @@ endif()
 
 target_sources(genesis-editor PRIVATE
         src/main.cpp
+        src/game.cpp
+        src/game.hpp
         )
 
 if(GENESIS_PCH)
