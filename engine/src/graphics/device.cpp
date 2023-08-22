@@ -147,7 +147,9 @@ namespace gen
 			queueCreateInfos.push_back(queueCreateInfo);
 		}
 
-		vk::DeviceCreateInfo const createInfo(
+		auto const sync2 = vk::PhysicalDeviceSynchronization2Features{vk::True};
+
+		vk::DeviceCreateInfo createInfo(
 			{},
 			static_cast<u32>(queueCreateInfos.size()),
 			queueCreateInfos.data(),
@@ -157,6 +159,7 @@ namespace gen
 			deviceExtensions.data(),
 			nullptr // to be used later
 		);
+		createInfo.pNext = &sync2;
 
 		m_device = m_gpu.physicalDevice.createDeviceUnique(createInfo);
 
@@ -238,6 +241,7 @@ namespace gen
 				vk::ComponentMapping{vk::ComponentSwizzle::eR, vk::ComponentSwizzle::eG, vk::ComponentSwizzle::eB, vk::ComponentSwizzle::eA},
 				vk::ImageSubresourceRange{vk::ImageAspectFlagBits::eColor, 0, 1, 0, 1});
 			m_swapChainImageViews.push_back(m_device->createImageViewUnique(imageViewCreateInfo));
+			m_swapChainImageViewViews.push_back(*m_swapChainImageViews.back());
 		}
 	}
 

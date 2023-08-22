@@ -23,8 +23,22 @@ namespace gen
 		void gameLoop();
 		void shutdown();
 
+		void poll();
+		void render();
+
 		Window m_window;
 		GraphicsDevice m_graphicsDevice;
+
+		vk::UniqueCommandPool m_commandPool{};
+
+		// TODO: double buffering
+		struct
+		{
+			vk::CommandBuffer cmd{};
+			vk::UniqueSemaphore acquire{};
+			vk::UniqueSemaphore present{};
+			vk::UniqueFence ready{};
+		} m_sync{};
 
 		Logger m_logger{"application"};
 	};

@@ -30,6 +30,13 @@ namespace gen
 		vk::PresentModeKHR selectedPresentMode{};
 	};
 
+	struct Swapchain
+	{
+		vk::SwapchainKHR swapchain{};
+		std::span<vk::Image const> images{};
+		std::span<vk::ImageView const> imageViews{};
+	};
+
 	class GraphicsDevice
 	{
 	public:
@@ -47,6 +54,13 @@ namespace gen
 		GEN_NODISCARD vk::SurfaceKHR const & getSurface() const { return m_surface.get(); }
 		GEN_NODISCARD vk::PhysicalDevice const & getPhysicalDevice() const { return m_gpu.physicalDevice; }
 		GEN_NODISCARD vk::Device const & getDevice() const { return m_device.get(); }
+
+		GEN_NODISCARD vk::Queue getQueue() const { return m_graphicsQueue; }
+
+		GEN_NODISCARD Swapchain getSwapchain() const
+		{
+			return Swapchain{.swapchain = *m_swapChain, .images = m_swapChainImages, .imageViews = m_swapChainImageViewViews};
+		}
 
 		/// Setters
 
@@ -75,6 +89,7 @@ namespace gen
 		vk::UniqueSwapchainKHR m_swapChain{};
 		std::vector<vk::Image> m_swapChainImages{};
 		std::vector<vk::UniqueImageView> m_swapChainImageViews{};
+		std::vector<vk::ImageView> m_swapChainImageViewViews{};
 
 		Logger m_logger{"graphics"};
 	};
