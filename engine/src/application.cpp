@@ -159,7 +159,22 @@ namespace gen
 		imageBarrier.transition(m_sync.cmd);
 
 		// draw
-		// TODO: rendering pass
+		auto rai		= vk::RenderingAttachmentInfo{};
+		rai.imageLayout = vk::ImageLayout::eAttachmentOptimal;
+		rai.imageView	= swapchain.imageViews[imageIndex];
+		rai.clearValue	= vk::ClearColorValue{1.0f, 0.0f, 0.0f, 1.0f};
+		rai.loadOp		= vk::AttachmentLoadOp::eClear;
+		rai.storeOp		= vk::AttachmentStoreOp::eStore;
+
+		auto ri					= vk::RenderingInfo{};
+		ri.renderArea.extent	= vk::Extent2D{800, 600};
+		ri.renderArea.offset	= vk::Offset2D{};
+		ri.colorAttachmentCount = 1;
+		ri.pColorAttachments	= &rai;
+		ri.layerCount			= 1;
+		m_sync.cmd.beginRendering(ri);
+		// bind pipeline, draw stuff
+		m_sync.cmd.endRendering();
 
 		// transition for present
 		imageBarrier.set_optimal_to_present();

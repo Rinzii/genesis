@@ -147,7 +147,9 @@ namespace gen
 			queueCreateInfos.push_back(queueCreateInfo);
 		}
 
-		auto const sync2 = vk::PhysicalDeviceSynchronization2Features{vk::True};
+		auto sync2	= vk::PhysicalDeviceSynchronization2Features{vk::True};
+		auto dr		= vk::PhysicalDeviceDynamicRenderingFeatures{vk::True};
+		sync2.pNext = &dr;
 
 		vk::DeviceCreateInfo createInfo(
 			{},
