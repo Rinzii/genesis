@@ -1,6 +1,6 @@
 // Copyright (c) 2023-present Genesis Engine contributors (see LICENSE.txt)
 
-#include <application.hpp>
+#include <game.hpp>
 #include <logger/instance.hpp>
 #include <logger/log.hpp>
 
@@ -14,7 +14,7 @@ int main()
 	{
 		auto logger = gen::logger::Instance{}; // Required to initialize the logger
 
-		gen::Application app{appName, startingWindowSize};
+		gen::Game app{appName, startingWindowSize};
 		app.run();
 	}
 	catch (std::exception const & e)
