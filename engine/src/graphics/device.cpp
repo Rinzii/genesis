@@ -20,23 +20,21 @@ namespace gen
 
 	Device::Device(const std::string & appName, const std::string & engineName, const u32 & apiVersion, const Window & window)
 	{
-		m_logger.info("Creating Device");
 		createInstance(appName, engineName, apiVersion);
 		createSurface(window);
 		selectPhysicalDevice();
 		createLogicalDevice();
-		m_logger.info("Device created");
+		m_logger.debug("Device constructed");
 	}
 
 	Device::~Device()
 	{
 		m_device->waitIdle();
-		m_logger.info("Device destructed");
+		m_logger.debug("Device destroyed");
 	}
 
 	void Device::createInstance(const std::string & appName, const std::string & engineName, const u32 & apiVersion)
 	{
-		m_logger.error("Creating Instance");
 #if (VULKAN_HPP_DISPATCH_LOADER_DYNAMIC == 1)
 		static vk::DynamicLoader const dynLoader;
 		auto vkGetInstanceProcAddr = dynLoader.getProcAddress<PFN_vkGetInstanceProcAddr>("vkGetInstanceProcAddr");
@@ -71,14 +69,11 @@ namespace gen
 
 	void Device::createSurface(const Window & window)
 	{
-		m_logger.error("Creating Surface");
 		m_surface = vk::util::createWindowSurface(m_instance.get(), window);
-		m_logger.debug("Created surface");
 	}
 
 	void Device::selectPhysicalDevice()
 	{
-		m_logger.error("Selecting Physical Device");
 		auto availablePhysicalDevices = m_instance.get().enumeratePhysicalDevices();
 		if (availablePhysicalDevices.empty()) { throw gen::vulkan_error("Failed to find GPUs with Vulkan support!"); }
 
@@ -119,8 +114,6 @@ namespace gen
 
 	void Device::createLogicalDevice()
 	{
-
-		m_logger.error("Creating Logical Device");
 		m_gpu.queueFamily = findQueueFamily(m_gpu.physicalDevice, m_surface.get());
 
 		std::vector<vk::DeviceQueueCreateInfo> queueCreateInfos;
@@ -149,7 +142,7 @@ namespace gen
 		createInfo.pNext			 = &dynamicRenderingFeature;
 
 		auto pDeviceSyncFeatures  = vk::PhysicalDeviceSynchronization2FeaturesKHR{vk::True};
-		pDeviceSyncFeatures.pNext = &dynamicRenderingFeature;
+		dynamicRenderingFeature.pNext = &pDeviceSyncFeatures;
 
 		m_device = m_gpu.physicalDevice.createDeviceUnique(createInfo);
 
