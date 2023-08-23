@@ -1,12 +1,12 @@
 // Copyright (c) 2023-present Genesis Engine contributors (see LICENSE.txt)
 
 #pragma once
-#include <logger/level.hpp>
-#include <logger/target.hpp>
-#include <util/fixed_string.hpp>
 #include <cassert>
 #include <string>
 #include <unordered_map>
+#include "gen/util/fixed_string.hpp"
+#include "level.hpp"
+#include "target.hpp"
 
 namespace gen::logger
 {

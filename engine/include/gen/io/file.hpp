@@ -10,7 +10,7 @@
 
 #pragma once
 
-#include "core.hpp"
+#include "gen/core.hpp"
 
 #include <filesystem>
 #include <fstream>

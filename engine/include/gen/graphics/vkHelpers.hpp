@@ -10,10 +10,10 @@
 #ifndef GLFW_INCLUDE_NONE
 	#define GLFW_INCLUDE_NONE
 #endif
-#include <GLFW/glfw3.h>
+#include "GLFW/glfw3.h"
 
-#include "core.hpp"
-#include "windowing/window.hpp"
+#include "gen/core.hpp"
+#include "gen/windowing/window.hpp"
 
 namespace vk::util
 {

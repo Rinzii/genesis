@@ -1,9 +1,9 @@
 // Copyright (c) 2023-present Genesis Engine contributors (see LICENSE.txt)
 
 #pragma once
-#include <logger/level.hpp>
 #include <chrono>
 #include <string_view>
+#include "level.hpp"
 
 namespace gen::logger
 {

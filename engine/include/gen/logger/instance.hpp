@@ -1,11 +1,11 @@
 // Copyright (c) 2023-present Genesis Engine contributors (see LICENSE.txt)
 
 #pragma once
-#include <logger/config.hpp>
-#include <logger/sink.hpp>
-#include <logger/target.hpp>
 #include <memory>
 #include <stdexcept>
+#include "config.hpp"
+#include "sink.hpp"
+#include "target.hpp"
 
 namespace gen::logger
 {

@@ -3,9 +3,9 @@
 #pragma once
 
 // internal
-#include "core.hpp"
-#include "graphics/device.hpp"
-#include "windowing/window.hpp"
+#include "device.hpp"
+#include "gen/core.hpp"
+#include "gen/windowing/window.hpp"
 
 // external
 #include <vulkan/vulkan.hpp>

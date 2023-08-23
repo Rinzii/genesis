@@ -2,66 +2,66 @@
 
 
 set(base_config_headers
-        include/base/config/architecture.hpp
-        include/base/config/compiler.hpp
-        include/base/config/compilerTraits.hpp
-        include/base/config/defines.hpp
-        include/base/config/platform.hpp
-        include/base/config/settings.hpp
+        include/gen/base/config/architecture.hpp
+        include/gen/base/config/compiler.hpp
+        include/gen/base/config/compilerTraits.hpp
+        include/gen/base/config/defines.hpp
+        include/gen/base/config/platform.hpp
+        include/gen/base/config/settings.hpp
         )
 
 set(base_headers
         ${base_config_headers}
-        include/base/base.hpp
+        include/gen/base/base.hpp
         )
 
 set(graphics_headers
-		include/graphics/graphicsExceptions.hpp
-        include/graphics/renderer.hpp
-        include/graphics/swapchain.hpp
-        include/graphics/device.hpp
-        include/graphics/vkHelpers.hpp
+        include/gen/graphics/graphicsExceptions.hpp
+        include/gen/graphics/renderer.hpp
+        include/gen/graphics/swapchain.hpp
+        include/gen/graphics/device.hpp
+        include/gen/graphics/vkHelpers.hpp
 		)
 
 set(inputs_headers
-		include/inputs/controller.hpp
+        include/gen/inputs/controller.hpp
 		)
 		
 set(io_headers
-        include/io/fileAsync.hpp
-        include/io/file.hpp
-        include/io/fileHelper.hpp
+        include/gen/io/fileAsync.hpp
+        include/gen/io/file.hpp
+        include/gen/io/fileHelper.hpp
         )
 
 set(system_win32_headers
-        include/system/win32/minWindows.hpp
-        include/system/win32/postWinapi.hpp
-        include/system/win32/preWinapi.hpp
-        include/system/win32/windowsHeader.hpp
+        include/gen/system/win32/minWindows.hpp
+        include/gen/system/win32/postWinapi.hpp
+        include/gen/system/win32/preWinapi.hpp
+        include/gen/system/win32/windowsHeader.hpp
         )
 
 set(system_headers
         ${system_win32_headers}
-        include/system/types.hpp
+        include/gen/system/types.hpp
         )
 
 
 set(util_headers
-        include/util/fixed_string.hpp
-        include/util/version.hpp
+        include/gen/util/fixed_string.hpp
+        include/gen/util/version.hpp
         )
 
 set(logger_headers
-        include/logger/context.hpp
-        include/logger/instance.hpp
-        include/logger/level.hpp
-        include/logger/log.hpp
-        include/logger/sink.hpp
+        include/gen/logger/context.hpp
+        include/gen/logger/instance.hpp
+        include/gen/logger/level.hpp
+        include/gen/logger/log.hpp
+        include/gen/logger/sink.hpp
 )
 
 set(windowing_headers
-        include/windowing/window.hpp
-        include/windowing/windowExceptions.hpp
+        include/gen/windowing/window.hpp
+        include/gen/windowing/windowExceptions.hpp
         )
 
 # core header include
@@ -74,10 +74,10 @@ set(genesis_headers
         ${util_headers}
         ${logger_headers}
         ${windowing_headers}
-        include/application.hpp
-        include/engine.hpp
-        include/core.hpp
-		include/time.hpp
+        include/gen/application.hpp
+        include/gen/engine.hpp
+        include/gen/core.hpp
+        include/gen/time.hpp
         )
 
 

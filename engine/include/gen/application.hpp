@@ -4,10 +4,10 @@
 
 #include "core.hpp"
 
-#include "util/version.hpp"
+#include "gen/util/version.hpp"
 
-#include <logger/log.hpp>
-#include "windowing/window.hpp"
+#include "gen/logger/log.hpp"
+#include "gen/windowing/window.hpp"
 
 #include "engine.hpp"
 #include "time.hpp"

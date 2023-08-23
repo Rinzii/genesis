@@ -1,6 +1,6 @@
 // Copyright (c) 2023-present Genesis Engine contributors (see LICENSE.txt)
 
-#include <logger/instance.hpp>
+#include "gen/logger/instance.hpp"
 #include <algorithm>
 #include <condition_variable>
 #include <filesystem>
@@ -11,7 +11,7 @@
 #include <vector>
 
 #if defined(_WIN32)
-	#include <system/win32/windowsHeader.hpp>
+	#include "gen/system/win32/windowsHeader.hpp"
 #endif
 
 namespace gen::logger

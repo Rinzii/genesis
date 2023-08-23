@@ -1,10 +1,10 @@
 // Copyright (c) 2023-present Genesis Engine contributors (see LICENSE.txt)
 
 #pragma once
-#include <logger/level.hpp>
-#include <logger/target.hpp>
 #include <format>
 #include <string_view>
+#include "level.hpp"
+#include "target.hpp"
 
 namespace gen
 {

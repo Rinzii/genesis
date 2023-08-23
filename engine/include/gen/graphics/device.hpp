@@ -3,8 +3,8 @@
 #pragma once
 
 // internal
-#include "core.hpp"
-#include "windowing/window.hpp"
+#include "gen/core.hpp"
+#include "gen/windowing/window.hpp"
 
 // external
 #include <vulkan/vulkan.hpp>

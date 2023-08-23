@@ -2,8 +2,8 @@
 
 #pragma once
 
-#include <mim/vec2.hpp>
-#include "graphics/renderer.hpp"
+#include "gen/graphics/renderer.hpp"
+#include "mim/vec2.hpp"
 
 namespace gen
 {

@@ -1,14 +1,14 @@
 // Copyright (c) 2023-present Genesis Engine contributors (see LICENSE.txt)
 
-#include "graphics/vkHelpers.hpp"
+#include "gen/graphics/vkHelpers.hpp"
 
 #include <format>
 #include <numeric>
 #include <span>
 #include <unordered_set>
 
-#include "graphics/graphicsExceptions.hpp"
-#include "logger/log.hpp"
+#include "gen/graphics/graphicsExceptions.hpp"
+#include "gen/logger/log.hpp"
 
 #if defined(VULKAN_HPP_NO_TO_STRING)
 	#include <vulkan/vulkan_to_string.hpp>

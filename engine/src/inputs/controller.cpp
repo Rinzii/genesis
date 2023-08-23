@@ -1,6 +1,6 @@
 // Copyright (c) 2023-present Genesis Engine contributors (see LICENSE.txt)
 
-#include "inputs/controller.hpp"
+#include "gen/inputs/controller.hpp"
 
 namespace gen
 {

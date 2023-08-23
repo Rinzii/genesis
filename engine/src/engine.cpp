@@ -1,6 +1,6 @@
 // Copyright (c) 2023-present Genesis Engine contributors (see LICENSE.txt)
 
-#include "engine.hpp"
+#include "gen/engine.hpp"
 
 namespace gen
 {

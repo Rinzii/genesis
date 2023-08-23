@@ -3,11 +3,11 @@
 #pragma once
 
 // internal
-#include "core.hpp"
-#include "graphics/device.hpp"
-#include "graphics/swapchain.hpp"
-#include "logger/log.hpp"
-#include "windowing/window.hpp"
+#include "device.hpp"
+#include "gen/core.hpp"
+#include "gen/logger/log.hpp"
+#include "gen/windowing/window.hpp"
+#include "swapchain.hpp"
 
 // external
 #include <vulkan/vulkan.hpp>

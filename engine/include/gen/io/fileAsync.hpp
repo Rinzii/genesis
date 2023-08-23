@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "core.hpp"
+#include "gen/core.hpp"
 
 namespace gen
 {

@@ -1,10 +1,10 @@
 // Copyright (c) 2023-present Genesis Engine contributors (see LICENSE.txt)
 
 #pragma once
-#include <GLFW/glfw3.h>
-#include <mim/vec2.hpp>
 #include <vector>
-#include "base/config/compilerTraits.hpp"
+#include "GLFW/glfw3.h"
+#include "gen/base/config/compilerTraits.hpp"
+#include "mim/vec2.hpp"
 
 namespace gen
 {

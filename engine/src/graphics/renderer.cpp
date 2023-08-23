@@ -1,8 +1,8 @@
 // Copyright (c) 2023-present Genesis Engine contributors (see LICENSE.txt)
 
-#include "graphics/renderer.hpp"
-#include "graphics/graphicsExceptions.hpp"
-#include "graphics/vkHelpers.hpp"
+#include "gen/graphics/renderer.hpp"
+#include "gen/graphics/graphicsExceptions.hpp"
+#include "gen/graphics/vkHelpers.hpp"
 
 #ifndef GLFW_INCLUDE_NONE
 	#define GLFW_INCLUDE_NONE

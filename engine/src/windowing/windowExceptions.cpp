@@ -1,8 +1,8 @@
 // Copyright (c) 2023-present Genesis Engine contributors (see LICENSE.txt)
 
-#include "windowing/windowExceptions.hpp"
+#include "gen/windowing/windowExceptions.hpp"
 
-#include "logger/log.hpp"
+#include "gen/logger/log.hpp"
 
 namespace gen
 {

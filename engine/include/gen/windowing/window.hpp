@@ -2,10 +2,10 @@
 
 #pragma once
 
-#include "core.hpp"
-#include "logger/log.hpp"
+#include "gen/core.hpp"
+#include "gen/logger/log.hpp"
 
-#include <mim/vec2.hpp>
+#include "mim/vec2.hpp"
 
 #include <memory>
 #include <string>

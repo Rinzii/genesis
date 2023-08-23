@@ -1,7 +1,7 @@
 // Copyright (c) 2023-present Genesis Engine contributors (see LICENSE.txt)
 
-#include "graphics/swapchain.hpp"
-#include "graphics/graphicsExceptions.hpp"
+#include "gen/graphics/swapchain.hpp"
+#include "gen/graphics/graphicsExceptions.hpp"
 
 #ifndef GLFW_INCLUDE_NONE
 	#define GLFW_INCLUDE_NONE
