@@ -141,7 +141,7 @@ namespace gen
 		auto dynamicRenderingFeature = vk::PhysicalDeviceDynamicRenderingFeatures{vk::True};
 		createInfo.pNext			 = &dynamicRenderingFeature;
 
-		auto pDeviceSyncFeatures  = vk::PhysicalDeviceSynchronization2FeaturesKHR{vk::True};
+		auto pDeviceSyncFeatures	  = vk::PhysicalDeviceSynchronization2FeaturesKHR{vk::True};
 		dynamicRenderingFeature.pNext = &pDeviceSyncFeatures;
 
 		m_device = m_gpu.physicalDevice.createDeviceUnique(createInfo);
