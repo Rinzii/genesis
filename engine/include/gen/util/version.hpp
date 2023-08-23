@@ -2,7 +2,7 @@
 
 #pragma once
 #include <compare>
-#include <cstdint>
+#include "gen/system/types.hpp"
 
 namespace gen
 {
@@ -11,9 +11,9 @@ namespace gen
 	///
 	struct Version
 	{
-		std::uint32_t major{};
-		std::uint32_t minor{};
-		std::uint32_t patch{};
+		u32 major{};
+		u32 minor{};
+		u32 patch{};
 
 		auto operator<=>(Version const &) const = default;
 
