@@ -39,12 +39,12 @@ namespace gen
 		GEN_NODISCARD vk::SwapchainKHR const & getSwapChain() const { return m_swapChain.get(); }
 		GEN_NODISCARD vk::Extent2D const & getExtent() const { return m_swapChainInfo.imageExtent; }
 		GEN_NODISCARD vk::Format const & getFormat() const { return m_swapChainInfo.imageFormat; }
-		GEN_NODISCARD std::span<vk::Image> const & getImages() const { return m_swapChainImages; }
-		GEN_NODISCARD std::span<vk::UniqueImageView> const & getImageViews() const { return m_swapChainImageViews; }
+		GEN_NODISCARD std::span<vk::Image const> const & getImages() const { return m_swapChainImages; }
+		GEN_NODISCARD std::vector<vk::UniqueImageView> const & getImageViews() const { return m_swapChainImageViews; }
 
 	private:
 		void createSwapChain(const Window & window, const Device & device, const vk::SurfaceKHR & surface);
-		void createImageViews();
+		void createImageViews(const Device & device);
 
 		/// Helpers
 
@@ -55,8 +55,8 @@ namespace gen
 		SwapChainSupportDetails m_swapChainSupport{};
 		vk::SwapchainCreateInfoKHR m_swapChainInfo{};
 		vk::UniqueSwapchainKHR m_swapChain{};
-		std::span<vk::Image> m_swapChainImages{};
-		std::span<vk::UniqueImageView> m_swapChainImageViews{};
+		std::span<vk::Image const> m_swapChainImages{};
+		std::vector<vk::UniqueImageView> m_swapChainImageViews{};
 
 		Logger m_logger{"graphics"};
 	};

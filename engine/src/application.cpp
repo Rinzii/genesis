@@ -31,7 +31,7 @@ namespace gen
 	}
 
 	// Internal update function that should be overridden by the user for game specific updating
-	void Application::update(double dt)
+	void Application::update(double dt) // NOLINT
 	{
 		Window::pollEvents();
 	}

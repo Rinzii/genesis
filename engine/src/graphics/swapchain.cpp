@@ -15,8 +15,8 @@ namespace gen
 
 	Swapchain::Swapchain(const Window & window, const Device & device, const vk::SurfaceKHR & surface)
 	{
-		// createSwapChain(window, device, surface);
-		// createImageViews();
+		createSwapChain(window, device, surface);
+		createImageViews(device);
 		m_logger.info("Swapchain created");
 	}
 
@@ -68,14 +68,25 @@ namespace gen
 			vk::SurfaceTransformFlagBitsKHR::eIdentity,
 			vk::CompositeAlphaFlagBitsKHR::eOpaque,
 			m_swapChainSupport.selectedPresentMode,
-			true, // NOLINT(readability-implicit-bool-conversion)
+			vk::False,
 			nullptr);
 
 		m_swapChain = device.getDevice().createSwapchainKHRUnique(m_swapChainInfo);
 	}
 
-	void Swapchain::createImageViews()
+	void Swapchain::createImageViews(const Device & device)
 	{
+		m_swapChainImages = device.getDevice().getSwapchainImagesKHR(m_swapChain.get());
+
+		m_swapChainImageViews.reserve(m_swapChainImages.size());
+		vk::ImageViewCreateInfo imageViewCreateInfo(
+			{}, {}, vk::ImageViewType::e2D, m_swapChainSupport.selectedFormat.format, {}, {vk::ImageAspectFlagBits::eColor, 0, 1, 0, 1});
+
+		for (auto image : m_swapChainImages)
+		{
+			imageViewCreateInfo.image = image;
+			m_swapChainImageViews.push_back(device.getDevice().createImageViewUnique(imageViewCreateInfo));
+		}
 	}
 
 	SwapChainSupportDetails Swapchain::querySwapChainSupport(vk::PhysicalDevice device, vk::SurfaceKHR surface)
