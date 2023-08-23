@@ -8,7 +8,7 @@
 namespace gen
 {
 
-	Application::Application(const char * appName, mim::vec2i const & initialSize) : m_engine{appName, initialSize}
+	Application::Application(const char * const appName, const u32 appVersion, mim::vec2i const & initialSize) : m_engine{appName, appVersion, initialSize}
 	{
 	}
 
@@ -31,7 +31,7 @@ namespace gen
 	}
 
 	// Internal update function that should be overridden by the user for game specific updating
-	void Application::update(double dt) // NOLINT
+	void Application::update(double dt)
 	{
 		Window::pollEvents();
 	}

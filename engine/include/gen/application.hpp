@@ -17,7 +17,7 @@ namespace gen
 	class Application
 	{
 	public:
-		explicit Application(const char * appName, mim::vec2i const & initialSize);
+		explicit Application(const char * const appName, const u32 appVersion, mim::vec2i const & initialSize);
 		virtual ~Application();
 
 		virtual void run() final;

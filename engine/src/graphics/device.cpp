@@ -18,9 +18,9 @@ namespace gen
 
 	constexpr float desiredQueuePriority_v = 1.0F;
 
-	Device::Device(const std::string & appName, const std::string & engineName, const u32 & apiVersion, const Window & window)
+	Device::Device(const std::string & appName, const u32 appVersion, const std::string & engineName, const u32 & apiVersion, const Window & window)
 	{
-		createInstance(appName, engineName, apiVersion);
+		createInstance(appName, appVersion, engineName, apiVersion);
 		createSurface(window);
 		selectPhysicalDevice();
 		createLogicalDevice();
@@ -33,7 +33,7 @@ namespace gen
 		m_logger.debug("Device destroyed");
 	}
 
-	void Device::createInstance(const std::string & appName, const std::string & engineName, const u32 & apiVersion)
+	void Device::createInstance(const std::string & appName, const u32 appVersion, const std::string & engineName, const u32 & apiVersion)
 	{
 #if (VULKAN_HPP_DISPATCH_LOADER_DYNAMIC == 1)
 		static vk::DynamicLoader const dynLoader;
@@ -42,7 +42,7 @@ namespace gen
 #endif
 
 		// TODO: Allow for the application to be able to specify its version itself. Instead of just using the engine version.
-		vk::ApplicationInfo const appInfo(appName.c_str(), gen::version_v.getVersion(), engineName.c_str(), gen::version_v.getVersion(), apiVersion);
+		vk::ApplicationInfo const appInfo(appName.c_str(), appVersion, engineName.c_str(), gen::version_v.getVersion(), apiVersion);
 
 		auto extensionsCount	   = 0U;
 		auto * requestedExtensions = glfwGetRequiredInstanceExtensions(&extensionsCount);

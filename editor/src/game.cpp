@@ -4,7 +4,7 @@
 
 namespace gen
 {
-	Game::Game(const char * appName, const mim::vec2i & initialSize) : Application(appName, initialSize)
+	Game::Game(const char * appName, const u32 appVersion, const mim::vec2i & initialSize) : Application(appName, appVersion, initialSize)
 	{
 	}
 

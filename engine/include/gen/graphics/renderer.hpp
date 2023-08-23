@@ -17,7 +17,7 @@ namespace gen
 	class Renderer
 	{
 	public:
-		Renderer(const Window & window, std::string const & appName);
+		Renderer(const Window & window, const char * const appName, const u32 appVersion);
 		~Renderer();
 
 		Renderer(const Renderer &)			   = delete;

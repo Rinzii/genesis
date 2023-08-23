@@ -9,7 +9,7 @@ namespace gen
 	class Game : public Application
 	{
 	public:
-		Game(const char * appName, mim::vec2i const & initialSize);
+		Game(const char * appName, const u32 appVersion, mim::vec2i const & initialSize);
 		~Game() override = default;
 
 		void draw() override;
