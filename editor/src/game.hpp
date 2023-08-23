@@ -10,10 +10,9 @@ namespace gen
 	{
 	public:
 		Game(const char * appName, mim::vec2i const & initialSize);
-		~Game() = default;
+		~Game() override = default;
 
-		void run();
-		void draw();
-		void update(double dt);
+		void draw() override;
+		void update(double dt) override;
 	};
 } // namespace gen

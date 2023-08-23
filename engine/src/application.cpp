@@ -18,7 +18,7 @@ namespace gen
 
 	void Application::run()
 	{
-		while (m_engine.window().shouldClose())
+		while (!m_engine.window().shouldClose())
 		{
 			update(Time::GetDeltaTime());
 			draw();

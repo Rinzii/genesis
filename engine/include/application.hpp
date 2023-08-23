@@ -20,7 +20,7 @@ namespace gen
 		explicit Application(const char * appName, mim::vec2i const & initialSize);
 		virtual ~Application();
 
-		virtual void run();
+		virtual void run() final;
 
 		virtual void draw();
 

@@ -8,12 +8,6 @@ namespace gen
 	{
 	}
 
-	void Game::run()
-	{
-
-		Application::run(); // This is required for internal engine running
-	}
-
 	void Game::draw()
 	{
 
