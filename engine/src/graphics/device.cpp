@@ -18,12 +18,14 @@ namespace gen
 
 	constexpr float desiredQueuePriority_v = 1.0F;
 
-	Device::Device(const vk::Instance & instance, const vk::SurfaceKHR & surface)
+	Device::Device(const std::string & appName, const std::string & engineName, const u32 & apiVersion, const Window & window)
 	{
 		m_logger.info("Creating Device");
-
-		selectPhysicalDevice(instance);
-		createLogicalDevice(surface);
+		createInstance(appName, engineName, apiVersion);
+		createSurface(window);
+		selectPhysicalDevice();
+		createLogicalDevice();
+		m_logger.info("Device created");
 	}
 
 	Device::~Device()
@@ -32,9 +34,52 @@ namespace gen
 		m_logger.info("Device destructed");
 	}
 
-	void Device::selectPhysicalDevice(const vk::Instance & instance)
+	void Device::createInstance(const std::string & appName, const std::string & engineName, const u32 & apiVersion)
 	{
-		auto availablePhysicalDevices = instance.enumeratePhysicalDevices();
+		m_logger.error("Creating Instance");
+#if (VULKAN_HPP_DISPATCH_LOADER_DYNAMIC == 1)
+		static vk::DynamicLoader const dynLoader;
+		auto vkGetInstanceProcAddr = dynLoader.getProcAddress<PFN_vkGetInstanceProcAddr>("vkGetInstanceProcAddr");
+		VULKAN_HPP_DEFAULT_DISPATCHER.init(vkGetInstanceProcAddr);
+#endif
+
+		// TODO: Allow for the application to be able to specify its version itself. Instead of just using the engine version.
+		vk::ApplicationInfo const appInfo(appName.c_str(), gen::version_v.getVersion(), engineName.c_str(), gen::version_v.getVersion(), apiVersion);
+
+		auto extensionsCount	   = 0U;
+		auto * requestedExtensions = glfwGetRequiredInstanceExtensions(&extensionsCount);
+		std::vector<std::string> const requestedExtensionsVec(
+			requestedExtensions,
+			requestedExtensions + extensionsCount); // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+		auto enabledExtensions = vk::util::gatherExtensions(
+			requestedExtensionsVec
+#ifndef GEN_NDEBUG
+			,
+			vk::enumerateInstanceExtensionProperties()
+#endif
+		);
+
+		m_instance = vk::createInstanceUnique(vk::util::makeInstanceCreateInfoChain(appInfo, {}, enabledExtensions).get<vk::InstanceCreateInfo>());
+
+		if (!m_instance) { throw gen::vulkan_error("Failed to create instance!"); }
+
+#if (VULKAN_HPP_DISPATCH_LOADER_DYNAMIC == 1)
+		// initialize function pointers for instance
+		VULKAN_HPP_DEFAULT_DISPATCHER.init(*m_instance);
+#endif
+	}
+
+	void Device::createSurface(const Window & window)
+	{
+		m_logger.error("Creating Surface");
+		m_surface = vk::util::createWindowSurface(m_instance.get(), window);
+		m_logger.debug("Created surface");
+	}
+
+	void Device::selectPhysicalDevice()
+	{
+		m_logger.error("Selecting Physical Device");
+		auto availablePhysicalDevices = m_instance.get().enumeratePhysicalDevices();
 		if (availablePhysicalDevices.empty()) { throw gen::vulkan_error("Failed to find GPUs with Vulkan support!"); }
 
 		// Search for a discrete gpu in our list.
@@ -72,9 +117,11 @@ namespace gen
 		m_logger.info("Found Physical Devices: \n{}\n", aDev.str());
 	}
 
-	void Device::createLogicalDevice(const vk::SurfaceKHR & surface)
+	void Device::createLogicalDevice()
 	{
-		m_gpu.queueFamily = findQueueFamily(m_gpu.physicalDevice, surface);
+
+		m_logger.error("Creating Logical Device");
+		m_gpu.queueFamily = findQueueFamily(m_gpu.physicalDevice, m_surface.get());
 
 		std::vector<vk::DeviceQueueCreateInfo> queueCreateInfos;
 		std::set<u32> const uniqueQueueFamilies = {m_gpu.queueFamily};

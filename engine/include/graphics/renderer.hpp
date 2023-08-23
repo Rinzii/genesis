@@ -26,11 +26,6 @@ namespace gen
 		Renderer & operator=(Renderer &&)	   = delete;
 
 	private:
-		void createInstance(const std::string & appName, const std::string & engineName, const gen::u32 & apiVersion);
-		void createSurface(const Window & window);
-
-		vk::UniqueInstance m_instance{};
-		vk::UniqueSurfaceKHR m_surface{};
 		Device m_device;
 		Swapchain m_swapchain;
 

@@ -15,8 +15,8 @@ namespace gen
 
 	Swapchain::Swapchain(const Window & window, const Device & device, const vk::SurfaceKHR & surface)
 	{
-		createSwapChain(window, device, surface);
-		createImageViews();
+		// createSwapChain(window, device, surface);
+		// createImageViews();
 		m_logger.info("Swapchain created");
 	}
 

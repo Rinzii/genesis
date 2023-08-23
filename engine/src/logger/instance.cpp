@@ -316,3 +316,5 @@ namespace gen::logger
 		s_instance->print(message, context);
 	}
 } // namespace gen::logger
+
+// namespace gen::logger

@@ -24,7 +24,7 @@ namespace gen
 	class Device
 	{
 	public:
-		Device(vk::Instance const & instance, vk::SurfaceKHR const & surface);
+		Device(const std::string & appName, const std::string & engineName, const u32 & apiVersion, const Window & window);
 		~Device();
 
 		Device(const Device &)			   = delete;
@@ -34,17 +34,25 @@ namespace gen
 
 		/// Getters
 
+		GEN_NODISCARD vk::Instance getInstance() const { return m_instance.get(); }
+		GEN_NODISCARD vk::SurfaceKHR getSurface() const { return m_surface.get(); }
 		GEN_NODISCARD vk::Device getDevice() const { return m_device.get(); }
 		GEN_NODISCARD Gpu getGpu() const { return m_gpu; }
 		GEN_NODISCARD vk::Queue getGraphicsQueue() const { return m_graphicsQueue; }
 
 	private:
-		void selectPhysicalDevice(vk::Instance const & instance);
-		void createLogicalDevice(vk::SurfaceKHR const & surface);
+		void createInstance(const std::string & appName, const std::string & engineName, const u32 & apiVersion);
+		void createSurface(const Window & window);
+		void selectPhysicalDevice();
+		void createLogicalDevice();
 		void createCommandPoolAndBuffer();
+
+		/// Helpers
 
 		static u32 findQueueFamily(vk::PhysicalDevice const & physicalDevice, vk::SurfaceKHR const & surface);
 
+		vk::UniqueInstance m_instance{};
+		vk::UniqueSurfaceKHR m_surface{};
 		vk::UniqueDevice m_device{};
 		Gpu m_gpu{};
 		vk::Queue m_graphicsQueue{};
