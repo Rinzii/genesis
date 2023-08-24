@@ -12,8 +12,8 @@ namespace gen
 		void UpdateDeltaTime();
 
 		void SetTimeScale(double timeScale);
-		double GetDeltaTime();
-		double GetTimeScale();
+		float GetDeltaTime();
+		float GetTimeScale();
 
 		std::string GetCurrentTime();
 	} // namespace Time

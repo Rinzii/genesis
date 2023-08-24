@@ -3,9 +3,10 @@
 #pragma once
 
 #include "gen/core.hpp"
+#include "gen/core/monoInstance.hpp"
 #include "gen/logger/log.hpp"
 
-#include "mim/vec2.hpp"
+#include <mim/vec2.hpp>
 
 #include <memory>
 #include <string>
@@ -19,7 +20,7 @@ struct GLFWwindow;
 namespace gen
 {
 
-	class Window
+	class Window : public MonoInstance<Window>
 	{
 	public:
 		// Values mirrored from GLFW
@@ -50,8 +51,8 @@ namespace gen
 
 		Window(const Window &)			   = delete;
 		Window & operator=(const Window &) = delete;
-		Window(Window &&)				   = default;
-		Window & operator=(Window &&)	   = default;
+		Window(Window &&)				   = delete;
+		Window & operator=(Window &&)	   = delete;
 
 		// Default settings
 		// static constexpr WindowSettings DefaultSettings;

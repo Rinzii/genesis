@@ -19,6 +19,7 @@ namespace gen
 
 			while (glfwJoystickPresent(alreadyConnectedGamePadCount) != 0)
 			{
+				// NOLINTNEXTLINE(readability-implicit-bool-conversion)
 				if (glfwJoystickIsGamepad(alreadyConnectedGamePadCount)) { g_connectedControllers.emplace_back(alreadyConnectedGamePadCount); }
 
 				alreadyConnectedGamePadCount++;
@@ -40,7 +41,7 @@ namespace gen
 			switch (event)
 			{
 			case GLFW_CONNECTED:
-				if (glfwJoystickIsGamepad(id))
+				if (glfwJoystickIsGamepad(id)) // NOLINT(readability-implicit-bool-conversion)
 				{
 					for (auto & connectedController : g_connectedControllers)
 					{
@@ -68,7 +69,8 @@ namespace gen
 
 		Controller * getController(int i)
 		{
-			if (i < g_connectedControllers.size() && g_connectedControllers[i].isActive()) { return &g_connectedControllers[i]; }
+			const auto index = static_cast<const size_t>(i);
+			if (index < g_connectedControllers.size() && g_connectedControllers[index].isActive()) { return &g_connectedControllers[index]; }
 
 			return nullptr;
 		}
@@ -79,8 +81,8 @@ namespace gen
 		glfwGetJoystickAxes(m_id, &m_axesCount);
 		glfwGetJoystickButtons(m_id, &m_buttonsCount);
 
-		m_axes	  = std::vector<float>(m_axesCount, 0);
-		m_buttons = std::vector<unsigned char>(m_buttonsCount, '0');
+		m_axes	  = std::vector<float>(static_cast<unsigned long>(m_axesCount), 0);
+		m_buttons = std::vector<unsigned char>(static_cast<unsigned long>(m_buttonsCount), '0');
 	}
 
 	void Controller::update()
@@ -99,6 +101,7 @@ namespace gen
 	{
 		m_axes.clear();
 
+		// NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-pointer-arithmetic)
 		for (int i = 0; i < m_axesCount; i++) { m_axes.push_back((axes[i] + 1) / 2); }
 	}
 
@@ -106,6 +109,7 @@ namespace gen
 	{
 		m_buttons.clear();
 
+		// NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-pointer-arithmetic)
 		for (int i = 0; i < m_buttonsCount; i++) { m_buttons.push_back(buttons[i]); }
 	}
 } // namespace gen

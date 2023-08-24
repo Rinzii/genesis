@@ -3,7 +3,7 @@
 #pragma once
 #include <vector>
 #include "GLFW/glfw3.h"
-#include "gen/base/config/compilerTraits.hpp"
+#include "gen/core/base/config/compilerTraits.hpp"
 #include "mim/vec2.hpp"
 
 namespace gen
@@ -24,7 +24,7 @@ namespace gen
 	class Controller
 	{
 	public:
-		Controller(const int id);
+		explicit Controller(int id);
 
 		void update();
 

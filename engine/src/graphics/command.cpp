@@ -9,7 +9,6 @@ namespace gen
 		createCommandPoolAndBuffer(device);
 	}
 
-
 	void CommandBufferPool::createCommandPoolAndBuffer(const Device & device)
 	{
 		// TODO: Does a command buffer and a command pool belong to a device? Or should to go elsewhere?

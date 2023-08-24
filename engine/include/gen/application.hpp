@@ -12,12 +12,14 @@
 #include "engine.hpp"
 #include "time.hpp"
 
+#include <memory>
+
 namespace gen
 {
 	class Application
 	{
 	public:
-		explicit Application(const char * const appName, const u32 appVersion, mim::vec2i const & initialSize);
+		explicit Application(const char * appName, u32 appVersion, mim::vec2i const & initialSize);
 		virtual ~Application() = default;
 
 		virtual void run() final;
@@ -26,7 +28,7 @@ namespace gen
 
 		virtual void update(float dt);
 
-		Engine m_engine;
+		std::unique_ptr<Engine> m_engine;
 
 		Logger m_logger{"application"};
 	};

@@ -4,6 +4,7 @@
 
 // internal
 #include "gen/core.hpp"
+#include "gen/core/monoInstance.hpp"
 #include "gen/windowing/window.hpp"
 
 // external
@@ -21,10 +22,10 @@ namespace gen
 		u32 queueFamily{};
 	};
 
-	class Device
+	class Device : public MonoInstance<Device>
 	{
 	public:
-		Device(const std::string & appName, const u32 appVersion, const std::string & engineName, const u32 & apiVersion, const Window & window);
+		Device(const std::string & appName, u32 appVersion, const std::string & engineName, const u32 & apiVersion, const Window & window);
 		~Device();
 
 		Device(const Device &)			   = delete;
@@ -41,7 +42,7 @@ namespace gen
 		GEN_NODISCARD vk::Queue getGraphicsQueue() const { return m_graphicsQueue; }
 
 	private:
-		void createInstance(const std::string & appName, const u32 appVersion, const std::string & engineName, const u32 & apiVersion);
+		void createInstance(const std::string & appName, u32 appVersion, const std::string & engineName, const u32 & apiVersion);
 		void createSurface(const Window & window);
 		void selectPhysicalDevice();
 		void createLogicalDevice();

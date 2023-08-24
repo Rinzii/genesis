@@ -1,33 +1,39 @@
+// Copyright (c) 2023-present Genesis Engine contributors (see LICENSE.txt)
+
 #pragma once
+
 #include <stdexcept>
 
-namespace le {
+namespace gen
+{
 	template <typename Type>
-	class MonoInstance {
+	class MonoInstance
+	{
 	public:
-		MonoInstance(MonoInstance const&) = delete;
-		MonoInstance(MonoInstance&&) = delete;
-
-		auto operator=(MonoInstance const&) -> MonoInstance& = delete;
-		auto operator=(MonoInstance&&) -> MonoInstance& = delete;
-
-		MonoInstance() {
+		MonoInstance()
+		{
 			if (s_instance != nullptr) { throw std::runtime_error{"Instance already exists"}; }
-			s_instance = static_cast<Type*>(this);
+			s_instance = static_cast<Type *>(this);
 		}
 
 		~MonoInstance() { s_instance = nullptr; }
 
-		static auto instance() -> Type& {
-			if (!s_instance) { throw std::runtime_error{"Nonexistent instance"}; }
+		MonoInstance(MonoInstance const &)			   = delete;
+		MonoInstance(MonoInstance &&)				   = delete;
+		MonoInstance & operator=(MonoInstance const &) = delete;
+		MonoInstance & operator=(MonoInstance &&)	   = delete;
+
+		static Type & instance()
+		{
+			if (s_instance == nullptr) { throw std::runtime_error{"Instance does not exist"}; }
 			return *s_instance;
 		}
 
-		static auto self() -> Type& { return instance(); }
+		static Type & self() { return instance(); }
 
-		static auto exists() -> bool { return s_instance != nullptr; }
+		static bool exists() { return s_instance != nullptr; }
 
 	protected:
-		inline static Type* s_instance{};
+		inline static Type * s_instance{};
 	};
-} // namespace le
+} // namespace gen

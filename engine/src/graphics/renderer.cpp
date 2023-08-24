@@ -8,7 +8,10 @@ namespace gen
 {
 
 	Renderer::Renderer(const Window & window, const char * const appName, const u32 appVersion)
-		: m_device{appName, appVersion, "Genesis Engine", VK_API_VERSION_1_2, window}, m_swapchain{window, m_device, m_device.getSurface()},
-		  m_commandBufferPool{m_device} {};
+	{
+		m_device			= std::make_unique<Device>(appName, appVersion, "Genesis Engine", VK_API_VERSION_1_2, window);
+		m_swapchain			= std::make_unique<Swapchain>(window, *m_device, m_device->getSurface());
+		m_commandBufferPool = std::make_unique<CommandBufferPool>(*m_device);
+	};
 
 } // namespace gen

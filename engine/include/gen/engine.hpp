@@ -5,9 +5,13 @@
 #include "gen/graphics/renderer.hpp"
 #include "mim/vec2.hpp"
 
+#include "gen/core/monoInstance.hpp"
+
+#include <memory>
+
 namespace gen
 {
-	class Engine
+	class Engine : public MonoInstance<Engine>
 	{
 	public:
 		struct Settings
@@ -17,7 +21,7 @@ namespace gen
 			Window::ScreenMode screenMode = Window::ScreenMode::eWindowed;
 		};
 
-		Engine(const char * appName, const u32 appVersion, mim::vec2i const & initialSize);
+		Engine(const char * appName, u32 appVersion, mim::vec2i const & initialSize);
 		~Engine() = default;
 
 		Engine(const Engine &)			   = delete;
@@ -26,11 +30,11 @@ namespace gen
 		Engine & operator=(Engine &&)	   = delete;
 
 		/// Getters
-		Window & window() { return m_window; }
-		Renderer & renderer() { return m_renderer; }
+		Window & window() { return *m_window; }
+		Renderer & renderer() { return *m_renderer; }
 
 	private:
-		Window m_window;
-		Renderer m_renderer;
+		std::unique_ptr<Window> m_window;
+		std::unique_ptr<Renderer> m_renderer;
 	};
 } // namespace gen

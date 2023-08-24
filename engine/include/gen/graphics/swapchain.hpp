@@ -5,6 +5,7 @@
 // internal
 #include "device.hpp"
 #include "gen/core.hpp"
+#include "gen/core/monoInstance.hpp"
 #include "gen/windowing/window.hpp"
 
 // external
@@ -24,7 +25,7 @@ namespace gen
 		vk::PresentModeKHR selectedPresentMode{};
 	};
 
-	class Swapchain
+	class Swapchain : public MonoInstance<Swapchain>
 	{
 	public:
 		Swapchain(const Window & window, const Device & device, const vk::SurfaceKHR & surface);
@@ -58,7 +59,7 @@ namespace gen
 		std::vector<vk::Image> m_swapChainImages{};
 		std::vector<vk::UniqueImageView> m_swapChainImageViews{};
 
-		Device m_device;
+		// Device m_device;
 
 		Logger m_logger{"graphics"};
 	};

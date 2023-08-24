@@ -6,6 +6,6 @@
 
 #pragma once
 
-#include "gen/base/base.hpp"
+#include "gen/core/base/base.hpp"
 #include "gen/system/types.hpp"
 #include "genesis_version.hpp"

@@ -4,6 +4,7 @@
 
 // internal
 #include "gen/core.hpp"
+#include "gen/core/monoInstance.hpp"
 #include "gen/graphics/device.hpp"
 #include "gen/graphics/swapchain.hpp"
 #include "gen/windowing/window.hpp"
@@ -16,7 +17,7 @@
 
 namespace gen
 {
-	class CommandBufferPool
+	class CommandBufferPool : public MonoInstance<CommandBufferPool>
 	{
 	public:
 		CommandBufferPool(const Device & device);
