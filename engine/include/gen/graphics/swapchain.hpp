@@ -58,6 +58,8 @@ namespace gen
 		std::vector<vk::Image> m_swapChainImages{};
 		std::vector<vk::UniqueImageView> m_swapChainImageViews{};
 
+		Device m_device;
+
 		Logger m_logger{"graphics"};
 	};
 } // namespace gen

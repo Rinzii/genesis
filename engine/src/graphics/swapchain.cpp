@@ -14,6 +14,7 @@ namespace gen
 	constexpr vk::PresentModeKHR desiredPresentMode_v = {vk::PresentModeKHR::eMailbox};
 
 	Swapchain::Swapchain(const Window & window, const Device & device, const vk::SurfaceKHR & surface)
+	: m_device{device}
 	{
 		createSwapChain(window, device, surface);
 		createImageViews(device);
