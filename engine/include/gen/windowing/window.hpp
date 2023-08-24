@@ -55,7 +55,7 @@ namespace gen
 		Window & operator=(Window &&)	   = delete;
 
 		// Default settings
-		// static constexpr WindowSettings DefaultSettings;
+		// static constexpr WindowSettings DefaultSettings; // TODO: Implement this proper.
 
 		// Member functions
 

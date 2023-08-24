@@ -25,7 +25,7 @@ namespace gen
 	class Device : public MonoInstance<Device>
 	{
 	public:
-		Device(const std::string & appName, u32 appVersion, const std::string & engineName, const u32 & apiVersion, const Window & window);
+		Device(const std::string & appName, u32 appVersion, const std::string & engineName, const u32 & apiVersion);
 		~Device();
 
 		Device(const Device &)			   = delete;
@@ -43,7 +43,7 @@ namespace gen
 
 	private:
 		void createInstance(const std::string & appName, u32 appVersion, const std::string & engineName, const u32 & apiVersion);
-		void createSurface(const Window & window);
+		void createSurface();
 		void selectPhysicalDevice();
 		void createLogicalDevice();
 

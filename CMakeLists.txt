@@ -53,13 +53,10 @@ if ((GENESIS_ENABLE_EDITOR OR GENESIS_BUILD_RUNTIME) AND NOT GENESIS_BUILD_GAME)
     message(FATAL_ERROR "Cannot build runtime or editor without game")
 endif()
 
-if(GENESIS_ENABLE_EDITOR)
-  set(GENESIS_BUILD_RUNTIME ON CACHE "Editor requires the runtime" FORCE) # Editor requires the runtime lib
+if((GENESIS_ENABLE_EDITOR OR GENESIS_BUILD_RUNTIME) AND NOT GENESIS_BUILD_SHADERS)
+  set(GENESIS_BUILD_SHADERS ON CACHE BOOL "Runtime requires the shaders" FORCE) # Editor requires the shaders
 endif()
 
-if(GENESIS_BUILD_RUNTIME)
-  set(GENESIS_BUILD_SHADERS ON CACHE "Runtime requires shaders" FORCE) # Runtime requires the shaders
-endif()
 
 
 add_subdirectory(ext)

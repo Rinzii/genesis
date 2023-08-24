@@ -29,12 +29,10 @@ namespace gen
 		Engine & operator=(const Engine &) = delete;
 		Engine & operator=(Engine &&)	   = delete;
 
-		/// Getters
-		Window & window() { return *m_window; }
-		Renderer & renderer() { return *m_renderer; }
-
 	private:
 		std::unique_ptr<Window> m_window;
 		std::unique_ptr<Renderer> m_renderer;
+
+		Logger m_logger{"engine"};
 	};
 } // namespace gen

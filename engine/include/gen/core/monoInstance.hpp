@@ -23,13 +23,13 @@ namespace gen
 		MonoInstance & operator=(MonoInstance const &) = delete;
 		MonoInstance & operator=(MonoInstance &&)	   = delete;
 
-		static Type & instance()
+		static Type & getInstance()
 		{
 			if (s_instance == nullptr) { throw std::runtime_error{"Instance does not exist"}; }
 			return *s_instance;
 		}
 
-		static Type & self() { return instance(); }
+		static Type & self() { return getInstance(); }
 
 		static bool exists() { return s_instance != nullptr; }
 

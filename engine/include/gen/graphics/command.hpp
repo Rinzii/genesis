@@ -17,7 +17,7 @@
 
 namespace gen
 {
-	class CommandBufferPool : public MonoInstance<CommandBufferPool>
+	class CommandBufferPool
 	{
 	public:
 		CommandBufferPool(const Device & device);

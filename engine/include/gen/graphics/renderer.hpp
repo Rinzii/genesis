@@ -18,7 +18,7 @@ namespace gen
 	class Renderer : public MonoInstance<Renderer>
 	{
 	public:
-		Renderer(const Window & window, const char * appName, u32 appVersion);
+		Renderer(const char * appName, u32 appVersion);
 		~Renderer() = default;
 
 		Renderer(const Renderer &)			   = delete;

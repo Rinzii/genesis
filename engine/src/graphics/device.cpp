@@ -18,10 +18,10 @@ namespace gen
 
 	constexpr float desiredQueuePriority_v{1.0F};
 
-	Device::Device(const std::string & appName, const u32 appVersion, const std::string & engineName, const u32 & apiVersion, const Window & window)
+	Device::Device(const std::string & appName, const u32 appVersion, const std::string & engineName, const u32 & apiVersion)
 	{
 		createInstance(appName, appVersion, engineName, apiVersion);
-		createSurface(window);
+		createSurface();
 		selectPhysicalDevice();
 		createLogicalDevice();
 		m_logger.debug("Device constructed");
@@ -66,9 +66,9 @@ namespace gen
 #endif
 	}
 
-	void Device::createSurface(const Window & window)
+	void Device::createSurface()
 	{
-		m_surface = vk::util::createWindowSurface(m_instance.get(), window);
+		m_surface = vk::util::createWindowSurface(m_instance.get(), Window::getInstance());
 	}
 
 	void Device::selectPhysicalDevice()

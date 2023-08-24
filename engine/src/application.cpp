@@ -9,13 +9,13 @@ namespace gen
 {
 
 	Application::Application(const char * const appName, const u32 appVersion, mim::vec2i const & initialSize)
+		: m_engine(std::make_unique<Engine>(appName, appVersion, initialSize))
 	{
-		m_engine = std::make_unique<Engine>(appName, appVersion, initialSize);
 	}
 
 	void Application::run()
 	{
-		while (!m_engine->window().shouldClose())
+		while (!Window::getInstance().shouldClose())
 		{
 			update(Time::GetDeltaTime());
 			draw();
