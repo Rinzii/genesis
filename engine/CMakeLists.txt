@@ -74,8 +74,8 @@ if (GENESIS_BUILD_SHADERS)
   endif ()
 
   # Set the input and output directories
-  set(INPUT_DIRECTORY "${genesis_root_dir}/shaders")
-  set(OUTPUT_DIRECTORY "${genesis_root_dir}/bin")
+  set(INPUT_DIRECTORY "${genesis_root_dir}/data/shaders")
+  set(OUTPUT_DIRECTORY "${genesis_root_dir}/bin/shaders")
 
   # Ensure the output directory exists
   file(MAKE_DIRECTORY ${OUTPUT_DIRECTORY})

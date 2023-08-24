@@ -6,7 +6,7 @@
 #include <gen/util/version.hpp>
 
 // TODO: Replace this with a config file. At least for the startup window size.
-static constexpr const char * appName{"Genesis Game"};
+static constexpr const char * appName{"Genesis Game - Editor"};
 static constexpr gen::Version appVersion{0, 0, 1};
 static constexpr mim::vec2i startingWindowSize{800, 600};
 
