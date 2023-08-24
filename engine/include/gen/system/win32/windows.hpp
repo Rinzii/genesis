@@ -8,7 +8,7 @@
 
 #if GEN_PLATFORM_WINDOWS
 
-#include "gen/system/win32/preWinapi.hpp"
+#include "gen/system/win32/details/preWinapi.hpp"
 
 	// We enable STRICT mode to avoid some type conversions in the Win32 API
 // https://learn.microsoft.com/en-us/windows/win32/winprog/enabling-strict
@@ -16,7 +16,7 @@
 #define STRICT
 #endif
 
-#include "gen/system/win32/minWindows.hpp"
-#include "gen/system/win32/postWinapi.hpp"
+#include "gen/system/win32/details/minWindows.hpp"
+#include "gen/system/win32/details/postWinapi.hpp"
 
 #endif // GEN_PLATFORM_WINDOWS

@@ -1,19 +1,24 @@
 
 
 
-set(base_config_headers
-        include/gen/base/config/architecture.hpp
-        include/gen/base/config/compiler.hpp
-        include/gen/base/config/compilerTraits.hpp
-        include/gen/base/config/defines.hpp
-        include/gen/base/config/platform.hpp
-        include/gen/base/config/settings.hpp
+set(core_base_config_headers
+        include/gen/core/base/config/architecture.hpp
+        include/gen/core/base/config/compiler.hpp
+        include/gen/core/base/config/compilerTraits.hpp
+        include/gen/core/base/config/defines.hpp
+        include/gen/core/base/config/platform.hpp
+        include/gen/core/base/config/settings.hpp
         )
 
-set(base_headers
-        ${base_config_headers}
-        include/gen/base/base.hpp
+set(core_base_headers
+        ${core_base_config_headers}
+        include/gen/core/base/base.hpp
         )
+
+set(core_headers
+        ${core_base_headers}
+        include/gen/core/monoInstance.hpp
+)
 
 set(graphics_headers
         include/gen/graphics/graphicsExceptions.hpp
@@ -35,10 +40,10 @@ set(io_headers
         )
 
 set(system_win32_headers
-        include/gen/system/win32/minWindows.hpp
-        include/gen/system/win32/postWinapi.hpp
-        include/gen/system/win32/preWinapi.hpp
-        include/gen/system/win32/windowsHeader.hpp
+        include/gen/system/win32/details/minWindows.hpp
+        include/gen/system/win32/details/postWinapi.hpp
+        include/gen/system/win32/details/preWinapi.hpp
+        include/gen/system/win32/windows.hpp
         )
 
 set(system_headers
@@ -67,7 +72,7 @@ set(windowing_headers
 
 # core header include
 set(genesis_headers
-        ${base_headers}
+        ${core_headers}
 		${graphics_headers}
 		${inputs_headers}
         ${io_headers}
