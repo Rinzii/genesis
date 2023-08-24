@@ -26,9 +26,23 @@ namespace gen
 		// https://www.glfw.org/docs/3.3/glfw3_8h.html#a2315b99a329ce53e6a13a9d46fd5ca88
 		enum class CursorMode : int
 		{
-			Normal	 = 0x00034001,
-			Hidden	 = 0x00034002,
-			Disabled = 0x00034003
+			eNormal	 = 0x00034001,
+			eHidden	 = 0x00034002,
+			eDisabled = 0x00034003
+		};
+
+		enum class ScreenMode : int
+		{
+			eWindowed = 0,
+			eBorderlessWindowed,
+			eFullscreen
+		};
+
+		// TODO: Implement this into the window class
+		struct WindowSettings
+		{
+			ScreenMode screenMode { ScreenMode::eWindowed };
+			bool resizable { false };
 		};
 
 		Window(mim::vec2i extent, const char * title);
@@ -38,6 +52,9 @@ namespace gen
 		Window & operator=(const Window &) = delete;
 		Window(Window &&)				   = default;
 		Window & operator=(Window &&)	   = default;
+
+		// Default settings
+		//static constexpr WindowSettings DefaultSettings;
 
 		// Member functions
 
@@ -71,7 +88,7 @@ namespace gen
 
 		mim::vec2i m_extent;
 
-		CursorMode m_currentCursorMode{Window::CursorMode::Normal};
+		CursorMode m_currentCursorMode{Window::CursorMode::eNormal};
 
 		struct Deleter
 		{
