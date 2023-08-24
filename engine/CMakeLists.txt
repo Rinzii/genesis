@@ -4,7 +4,7 @@ option(GENESIS_PCH "Use pre-compiled headers for the Genesis Engine" ON)
 option(GENESIS_ENABLE_SIMD "Enable SIMD for Genesis" OFF)
 
 
-add_library(genesis src/graphics/graphicsExceptions.cpp include/gen/graphics/graphicsExceptions.hpp)
+add_library(genesis)
 add_library(genesis::lib ALIAS genesis)
 
 target_compile_definitions(genesis
@@ -74,8 +74,8 @@ if (GENESIS_BUILD_SHADERS)
   endif ()
 
   # Set the input and output directories
-  set(INPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/editor/shaders")
-  set(OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/editor/bin")
+  set(INPUT_DIRECTORY "${genesis_root_dir}/shaders")
+  set(OUTPUT_DIRECTORY "${genesis_root_dir}/bin")
 
   # Ensure the output directory exists
   file(MAKE_DIRECTORY ${OUTPUT_DIRECTORY})

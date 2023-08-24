@@ -3,6 +3,7 @@ project(genesis-editor)
 add_executable(genesis-editor)
 target_link_libraries(genesis-editor PRIVATE
         genesis::lib
+        genesis::game
 		genesis::ext
         )
 target_include_directories(genesis-editor PRIVATE src)
@@ -20,8 +21,6 @@ endif()
 
 target_sources(genesis-editor PRIVATE
         src/main.cpp
-        src/game.cpp
-        src/game.hpp
         )
 
 if(GENESIS_PCH)
