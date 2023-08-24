@@ -13,12 +13,12 @@ namespace gen
 		struct Settings
 		{
 
-			bool vsync = false;
-			Window::ScreenMode screenMode = Window::ScreenMode::Windowed;
+			bool vsync					  = false;
+			Window::ScreenMode screenMode = Window::ScreenMode::eWindowed;
 		};
 
 		Engine(const char * appName, const u32 appVersion, mim::vec2i const & initialSize);
-		~Engine();
+		~Engine() = default;
 
 		Engine(const Engine &)			   = delete;
 		Engine(Engine &&)				   = delete;

@@ -45,7 +45,6 @@ namespace gen
 		void createSurface(const Window & window);
 		void selectPhysicalDevice();
 		void createLogicalDevice();
-		void createCommandPoolAndBuffer();
 
 		/// Helpers
 
@@ -56,8 +55,6 @@ namespace gen
 		vk::UniqueDevice m_device{};
 		Gpu m_gpu{};
 		vk::Queue m_graphicsQueue{};
-		vk::UniqueCommandPool m_commandPool{}; // TODO: Does a command buffer and a command pool belong to a device?
-		vk::CommandBuffer m_commandBuffer{};
 
 		Logger m_logger{"graphics"};
 	};

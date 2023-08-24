@@ -12,10 +12,6 @@ namespace gen
 	{
 	}
 
-	Application::~Application()
-	{
-	}
-
 	void Application::run()
 	{
 		while (!m_engine.window().shouldClose())
@@ -31,7 +27,7 @@ namespace gen
 	}
 
 	// Internal update function that should be overridden by the user for game specific updating
-	void Application::update(double dt)
+	void Application::update(float dt)
 	{
 		Window::pollEvents();
 	}

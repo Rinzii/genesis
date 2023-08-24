@@ -9,14 +9,14 @@
 
 namespace gen
 {
-	static const std::vector<const char *> deviceExtensions_v = {
+	static const std::vector<const char *> deviceExtensions = {
 		VK_KHR_SWAPCHAIN_EXTENSION_NAME,
 #ifdef GEN_PLATFORM_APPLE
 		VK_KHR_PORTABILITY_ENUMERATION_EXTENSION_NAME,
 #endif
 	};
 
-	constexpr float desiredQueuePriority_v = 1.0F;
+	constexpr float desiredQueuePriority_v{1.0F};
 
 	Device::Device(const std::string & appName, const u32 appVersion, const std::string & engineName, const u32 & apiVersion, const Window & window)
 	{
@@ -132,8 +132,8 @@ namespace gen
 		vk::DeviceCreateInfo createInfo{};
 		createInfo.queueCreateInfoCount	   = static_cast<u32>(queueCreateInfos.size());
 		createInfo.pQueueCreateInfos	   = queueCreateInfos.data();
-		createInfo.enabledExtensionCount   = static_cast<u32>(deviceExtensions_v.size());
-		createInfo.ppEnabledExtensionNames = deviceExtensions_v.data();
+		createInfo.enabledExtensionCount   = static_cast<u32>(deviceExtensions.size());
+		createInfo.ppEnabledExtensionNames = deviceExtensions.data();
 		createInfo.pEnabledFeatures		   = &enabledFeatures;
 
 		// Tell our create info that we want to use dynamic rendering.
@@ -171,22 +171,6 @@ namespace gen
 		}
 
 		return indices;
-	}
-
-	void Device::createCommandPoolAndBuffer()
-	{
-		// TODO: Does a command buffer and a command pool belong to a device? Or should to go elsewhere?
-		auto commandPoolCreateInfo			   = vk::CommandPoolCreateInfo{};
-		commandPoolCreateInfo.queueFamilyIndex = m_gpu.queueFamily;
-		commandPoolCreateInfo.flags			   = vk::CommandPoolCreateFlagBits::eResetCommandBuffer;
-
-		m_commandPool = m_device->createCommandPoolUnique(commandPoolCreateInfo);
-
-		auto commandBufferAllocateInfo				 = vk::CommandBufferAllocateInfo{};
-		commandBufferAllocateInfo.commandPool		 = m_commandPool.get();
-		commandBufferAllocateInfo.commandBufferCount = 1;
-
-		m_commandBuffer = m_device->allocateCommandBuffers(commandBufferAllocateInfo).front();
 	}
 
 } // namespace gen

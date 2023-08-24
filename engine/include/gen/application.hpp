@@ -18,13 +18,13 @@ namespace gen
 	{
 	public:
 		explicit Application(const char * const appName, const u32 appVersion, mim::vec2i const & initialSize);
-		virtual ~Application();
+		virtual ~Application() = default;
 
 		virtual void run() final;
 
 		virtual void draw();
 
-		virtual void update(double dt);
+		virtual void update(float dt);
 
 		Engine m_engine;
 

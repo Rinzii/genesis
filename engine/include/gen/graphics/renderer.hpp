@@ -3,14 +3,12 @@
 #pragma once
 
 // internal
+#include "command.hpp"
 #include "device.hpp"
 #include "gen/core.hpp"
 #include "gen/logger/log.hpp"
 #include "gen/windowing/window.hpp"
 #include "swapchain.hpp"
-
-// external
-#include <vulkan/vulkan.hpp>
 
 namespace gen
 {
@@ -18,7 +16,7 @@ namespace gen
 	{
 	public:
 		Renderer(const Window & window, const char * const appName, const u32 appVersion);
-		~Renderer();
+		~Renderer() = default;
 
 		Renderer(const Renderer &)			   = delete;
 		Renderer(Renderer &&)				   = delete;
@@ -28,6 +26,7 @@ namespace gen
 	private:
 		Device m_device;
 		Swapchain m_swapchain;
+		CommandBufferPool m_commandBufferPool;
 
 		Logger m_logger{"graphics"};
 	};

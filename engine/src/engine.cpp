@@ -9,7 +9,4 @@ namespace gen
 	{
 	}
 
-	Engine::~Engine()
-	{
-	}
 } // namespace gen
