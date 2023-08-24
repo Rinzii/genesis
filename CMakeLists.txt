@@ -49,13 +49,16 @@ if(NOT GENESIS_BUILD_TOOLS AND GENESIS_AUTOFORMAT)
   message(FATAL_ERROR "Cannot enable GENESIS_AUTOFORMAT without GENESIS_BUILD_TOOLS")
 endif()
 
+if ((GENESIS_ENABLE_EDITOR OR GENESIS_BUILD_RUNTIME) AND NOT GENESIS_BUILD_GAME)
+    message(FATAL_ERROR "Cannot build runtime or editor without game")
+endif()
+
 if(GENESIS_ENABLE_EDITOR)
-  set(GENESIS_BUILD_RUNTIME ON) # Editor requires the runtime lib
+  set(GENESIS_BUILD_RUNTIME ON CACHE "Editor requires the runtime" FORCE) # Editor requires the runtime lib
 endif()
 
 if(GENESIS_BUILD_RUNTIME)
-  set(GENESIS_BUILD_GAME ON) # Editor requires the game lib
-  set(GENESIS_BUILD_SHADERS ON)
+  set(GENESIS_BUILD_SHADERS ON CACHE "Runtime requires shaders" FORCE) # Runtime requires the shaders
 endif()
 
 
