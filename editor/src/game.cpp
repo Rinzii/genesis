@@ -14,7 +14,7 @@ namespace gen
 		Application::draw(); // This is required for internal engine drawing
 	}
 
-	void Game::update(double dt)
+	void Game::update(float dt)
 	{
 
 		Application::update(dt); // This is required for internal engine updating

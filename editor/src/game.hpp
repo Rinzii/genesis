@@ -13,6 +13,6 @@ namespace gen
 		~Game() override = default;
 
 		void draw() override;
-		void update(double dt) override;
+		void update(float dt) override;
 	};
 } // namespace gen
