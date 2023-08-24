@@ -10,6 +10,13 @@ namespace gen
 	class Engine
 	{
 	public:
+		struct Settings
+		{
+
+			bool vsync = false;
+			Window::ScreenMode screenMode = Window::ScreenMode::Windowed;
+		};
+
 		Engine(const char * appName, const u32 appVersion, mim::vec2i const & initialSize);
 		~Engine();
 
