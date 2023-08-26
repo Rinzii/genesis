@@ -13,9 +13,9 @@ namespace gen
 	constexpr auto desiredSrgbFormats_v				  = std::array{vk::Format::eB8G8R8A8Srgb, vk::Format::eR8G8B8A8Srgb};
 	constexpr vk::PresentModeKHR desiredPresentMode_v = {vk::PresentModeKHR::eMailbox};
 
-	Swapchain::Swapchain(const Window & window, const Device & device, const vk::SurfaceKHR & surface)
+	Swapchain::Swapchain(const Window & window, const Device & device)
 	{
-		createSwapChain(window, device, surface);
+		createSwapChain(window, device);
 		createImageViews(device);
 		m_logger.info("Swapchain created");
 	}
@@ -25,9 +25,9 @@ namespace gen
 		m_logger.info("Swapchain destructed");
 	}
 
-	void Swapchain::createSwapChain(const Window & window, const Device & device, const vk::SurfaceKHR & surface)
+	void Swapchain::createSwapChain(const Window & window, const Device & device)
 	{
-		m_swapChainSupport = querySwapChainSupport(device.getGpu().physicalDevice, surface);
+		m_swapChainSupport = querySwapChainSupport(device.getGpu().physicalDevice, device.getSurface());
 		assert(!m_swapChainSupport.availableFormats.empty());
 
 		m_swapChainSupport.selectedFormat = chooseSwapSurfaceFormat(m_swapChainSupport.availableFormats);
@@ -56,7 +56,7 @@ namespace gen
 
 		m_swapChainInfo = vk::SwapchainCreateInfoKHR(
 			vk::SwapchainCreateFlagsKHR(),
-			surface,
+			device.getSurface(),
 			std::clamp(3U, m_swapChainSupport.capabilities.minImageCount, maxImageCount),
 			m_swapChainSupport.selectedFormat.format,
 			m_swapChainSupport.selectedFormat.colorSpace,

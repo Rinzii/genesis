@@ -28,7 +28,7 @@ namespace gen
 	class Swapchain
 	{
 	public:
-		Swapchain(const Window & window, const Device & device, const vk::SurfaceKHR & surface);
+		Swapchain(const Window & window, const Device & device);
 		~Swapchain();
 
 		Swapchain(Swapchain const &)			 = delete;
@@ -44,7 +44,7 @@ namespace gen
 		GEN_NODISCARD std::vector<vk::UniqueImageView> const & getImageViews() const { return m_swapChainImageViews; }
 
 	private:
-		void createSwapChain(const Window & window, const Device & device, const vk::SurfaceKHR & surface);
+		void createSwapChain(const Window & window, const Device & device);
 		void createImageViews(const Device & device);
 
 		/// Helpers
