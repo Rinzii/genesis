@@ -3,9 +3,15 @@ project(genesis-editor)
 add_executable(genesis-editor)
 target_link_libraries(genesis-editor PRIVATE
         genesis::lib
+        genesis::game
 		genesis::ext
         )
-target_include_directories(genesis-editor PRIVATE src)
+
+# Setup our include structure
+target_include_directories(genesis
+        PUBLIC include "${CMAKE_CURRENT_BINARY_DIR}/include"
+        PRIVATE src
+)
 
 if(CMAKE_CXX_COMPILER_ID STREQUAL Clang OR CMAKE_CXX_COMPILER_ID STREQUAL GNU)
   target_compile_options(genesis-editor PRIVATE
@@ -16,11 +22,6 @@ elseif (CMAKE_CXX_COMPILER_ID STREQUAL MSVC)
           /W4 /WX
           )
 endif()
-
-
-target_sources(genesis-editor PRIVATE
-        src/main.cpp
-        )
 
 if(GENESIS_PCH)
   target_precompile_headers(genesis-editor PRIVATE
@@ -39,3 +40,8 @@ if(GENESIS_PCH)
           <vector>
           )
 endif()
+
+# HEADERS AND SOURCES
+include(editor_list.cmake)
+target_sources(genesis PRIVATE ${editor_headers})
+add_subdirectory(src)

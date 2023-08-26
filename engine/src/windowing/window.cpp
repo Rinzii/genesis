@@ -1,8 +1,8 @@
 // Copyright (c) 2023-present Genesis Engine contributors (see LICENSE.txt)
 
 // internal
-#include "windowing/window.hpp"
-#include "windowing/windowExceptions.hpp"
+#include "gen/windowing/window.hpp"
+#include "gen/windowing/windowExceptions.hpp"
 
 // external
 #include <GLFW/glfw3.h>

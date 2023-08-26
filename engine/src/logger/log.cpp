@@ -1,7 +1,7 @@
 // Copyright (c) 2023-present Genesis Engine contributors (see LICENSE.txt)
 
-#include "logger/log.hpp"
-#include "logger/instance.hpp"
+#include "gen/logger/log.hpp"
+#include "gen/logger/instance.hpp"
 
 namespace gen
 {
