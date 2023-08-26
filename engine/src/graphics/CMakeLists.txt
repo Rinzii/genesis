@@ -3,7 +3,7 @@
 
 target_sources(${PROJECT_NAME} PRIVATE
         graphicsExceptions.cpp
-        command.cpp
+        commandBuffer.cpp
         device.cpp
         swapchain.cpp
         renderer.cpp

@@ -4,6 +4,7 @@
 #include "gen/graphics/graphicsExceptions.hpp"
 #include "gen/graphics/vkHelpers.hpp"
 
+#include <mutex>
 #include <sstream>
 #include <string>
 
@@ -145,7 +146,7 @@ namespace gen
 
 		m_device = m_gpu.physicalDevice.createDeviceUnique(createInfo);
 
-		m_graphicsQueue = m_device->getQueue(m_gpu.queueFamily, 0);
+		m_queue = m_device->getQueue(m_gpu.queueFamily, 0);
 	}
 
 	u32 Device::findQueueFamily(const vk::PhysicalDevice & pDevice, const vk::SurfaceKHR & surface)
@@ -171,6 +172,23 @@ namespace gen
 		}
 
 		return indices;
+	}
+
+	bool Device::waitForFence(vk::Fence fence, u64 timeout) const
+	{
+		return getDevice().waitForFences(fence, vk::True, timeout) == vk::Result::eSuccess;
+	}
+
+	bool Device::submit(const vk::SubmitInfo2 & submitInfo, vk::Fence signal) const
+	{
+		auto lock = std::scoped_lock{m_queueMutex};
+		return getQueue().submit2(1, &submitInfo, signal) == vk::Result::eSuccess;
+	}
+	bool Device::submitAndPresent(const vk::SubmitInfo2 & submitInfo, vk::Fence signal, const vk::PresentInfoKHR & presentInfo) const
+	{
+		auto lock						   = std::scoped_lock{m_queueMutex};
+		[[maybe_unused]] auto const result = getQueue().submit2(1, &submitInfo, signal);
+		return getQueue().presentKHR(&presentInfo) == vk::Result::eSuccess;
 	}
 
 } // namespace gen

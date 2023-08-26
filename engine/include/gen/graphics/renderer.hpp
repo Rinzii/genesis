@@ -3,7 +3,7 @@
 #pragma once
 
 // internal
-#include "command.hpp"
+#include "commandBuffer.hpp"
 #include "device.hpp"
 #include "gen/core.hpp"
 #include "gen/core/monoInstance.hpp"
@@ -29,7 +29,6 @@ namespace gen
 	private:
 		std::unique_ptr<Device> m_device;
 		std::unique_ptr<Swapchain> m_swapchain;
-		std::unique_ptr<CommandBufferPool> m_commandBufferPool;
 
 		Logger m_logger{"graphics"};
 	};
