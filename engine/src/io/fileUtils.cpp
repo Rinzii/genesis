@@ -3,11 +3,15 @@
 #include "gen/io/fileUtils.hpp"
 
 #include "gen/core/base/config/platform.hpp"
+#include <cstdint>
 
 #ifdef GEN_PLATFORM_WINDOWS
 	#include "gen/system/win32/windows.hpp"
 #elif defined(GEN_PLATFORM_LINUX) || defined(GEN_PLATFORM_APPLE)
 	#include <unistd.h>
+	#ifdef GEN_PLATFORM_APPLE
+		#include <mach-o/dyld.h> // Mac requires this
+	#endif
 #endif
 
 namespace gen::io
@@ -27,7 +31,17 @@ namespace gen::io
 #elif defined(GEN_PLATFORM_LINUX) || defined(GEN_PLATFORM_APPLE)
 	std::filesystem::path getExecutablePath()
 	{
-		char buffer[maxPathSize_v];														// NOLINT
+		char buffer[maxPathSize_v];	// NOLINT
+
+		// Apple is slightly different from normal unix and requires a special function.
+	#ifdef GEN_PLATFORM_APPLE
+		uint32_t const outputtedLen = maxPathSize_v;
+		if (_NSGetExecutablePath(buffer, &outputtedLen) == 0) // This fails if the buffer size is too small.
+		{
+			return std::filesystem::path(buffer).parent_path();
+		}
+	#elif defined(GEN_PLATFORM_LINUX)
+		// Read the symbolic link pointing to the executable
 		ssize_t const outputtedLen = readlink("/proc/self/exe", buffer, maxPathSize_v); // NOLINT
 		if (outputtedLen != -1)
 		{
@@ -35,7 +49,9 @@ namespace gen::io
 			buffer[outputtedLen] = '\0'; // Null-terminate the string
 			return std::filesystem::path(buffer).parent_path();
 		}
+	#endif
 
+		// Permission denied (We must be inetd with this app run as other than root).
 		return {};
 	}
 #else
