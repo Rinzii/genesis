@@ -27,7 +27,7 @@ namespace gen::io
 #elif defined(GEN_PLATFORM_LINUX) || defined(GEN_PLATFORM_APPLE)
 	std::filesystem::path getExecutablePath()
 	{
-		char buffer[maxPathSize_v]; // NOLINT
+		char buffer[maxPathSize_v];														// NOLINT
 		ssize_t const outputtedLen = readlink("/proc/self/exe", buffer, maxPathSize_v); // NOLINT
 		if (outputtedLen != -1)
 		{

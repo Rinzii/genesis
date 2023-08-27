@@ -4,7 +4,7 @@
 
 #include <filesystem>
 
-namespace gen::io::util
+namespace gen::io
 {
 	std::filesystem::path getExecutablePath();
 }
