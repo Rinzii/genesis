@@ -6,5 +6,5 @@
 
 namespace gen::io::util
 {
-	std::filesystem::path getCurrentExecutableDir();
+	std::filesystem::path getExecutablePath();
 }
