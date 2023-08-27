@@ -36,6 +36,7 @@ set(inputs_headers
 set(io_headers
         include/gen/io/fileAsync.hpp
         include/gen/io/file.hpp
+        include/gen/io/fileUtils.hpp
         include/gen/io/fileHelper.hpp
         )
 
