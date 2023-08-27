@@ -47,6 +47,8 @@ namespace gen
 		void createSwapChain(const Window & window, const Device & device);
 		void createImageViews(const Device & device);
 
+		void recreateSwapChain(const Window & window, const Device & device);
+
 		/// Helpers
 
 		static SwapChainSupportDetails querySwapChainSupport(vk::PhysicalDevice device, vk::SurfaceKHR surface);

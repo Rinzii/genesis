@@ -20,6 +20,8 @@ namespace gen
 	class CommandBuffer
 	{
 	public:
+		static constexpr std::size_t defaultBufferCount_v{ 2 };
+
 		CommandBuffer();
 		~CommandBuffer() { submit(); }
 
@@ -37,7 +39,23 @@ namespace gen
 		explicit operator vk::CommandBuffer() const { return get(); }
 
 	private:
+
 		vk::UniqueCommandPool m_commandPool{};
 		vk::CommandBuffer m_commandBuffer{};
+
+		struct Frame
+		{
+			struct Sync
+			{
+				vk::UniqueSemaphore imageAvailable{};
+				vk::UniqueSemaphore renderFinished{};
+				vk::UniqueFence inFlight{};
+				vk::UniqueCommandPool commandPool{};
+				vk::UniqueCommandBuffer commandBuffer{};
+			};
+
+			std::array<Sync, defaultBufferCount_v> sync{}; // Currently only double buffering is supported
+		};
+
 	};
 } // namespace gen

@@ -89,6 +89,14 @@ namespace gen
 		}
 	}
 
+	void Swapchain::recreateSwapChain(const Window & window, const Device & device)
+	{
+		device.getDevice().waitIdle();
+
+		createSwapChain(window, device);
+		createImageViews(device);
+	}
+
 	SwapChainSupportDetails Swapchain::querySwapChainSupport(vk::PhysicalDevice device, vk::SurfaceKHR surface)
 	{
 		SwapChainSupportDetails details;
