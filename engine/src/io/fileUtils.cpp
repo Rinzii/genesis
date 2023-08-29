@@ -4,62 +4,71 @@
 
 #include "gen/core/base/config/platform.hpp"
 
+
 #ifdef GEN_PLATFORM_WINDOWS
-	#include "gen/system/win32/windows.hpp"
-#elif defined(GEN_PLATFORM_LINUX) || defined(GEN_PLATFORM_APPLE)
-	#include <unistd.h>
-	#ifdef GEN_PLATFORM_APPLE
-		#include <mach-o/dyld.h> // required for _NSGetExecutablePath()
-		#include <cstdint>
-	#endif
-#endif
+#include "gen/system/win32/windows.hpp"
 
 namespace gen::io
 {
-	static constexpr std::size_t maxPathSize_v{256};
-
 	std::filesystem::path getExecutablePath()
 	{
-#ifdef GEN_PLATFORM_WINDOWS
-		wchar_t buffer[maxPathSize_v];
-		DWORD length = GetModuleFileNameW(nullptr, buffer, maxPathSize_v);
+		wchar_t buffer[MAX_PATH];
+		DWORD length = GetModuleFileNameW(nullptr, buffer, MAX_PATH);
 
-		if (length == 0) { return {}; }
-
-		return std::filesystem::path(buffer).parent_path();
-		// END GEN_PLATFORM_WINDOWS
-
-#elif defined(GEN_PLATFORM_LINUX) || defined(GEN_PLATFORM_APPLE)
-
-		char buffer[maxPathSize_v]; // NOLINT
-
-		// Apple is slightly different from normal unix and requires a special function.
-	#ifdef GEN_PLATFORM_APPLE
-		std::uint32_t const outputtedLen = maxPathSize_v;
-		if (_NSGetExecutablePath(buffer, &outputtedLen) == 0) // This fails if the buffer size is too small.
+		if (length != 0)
 		{
 			return std::filesystem::path(buffer).parent_path();
 		}
-	#elif defined(GEN_PLATFORM_LINUX)
+
+		return {};
+	}
+}
+// END GEN_PLATFORM_WINDOWS
+
+#elif defined(GEN_PLATFORM_LINUX)
+
+#include <unistd.h>
+#include <linux/limits.h> // PATH_MAX
+
+namespace gen::io
+{
+	std::filesystem::path getExecutablePath()
+	{
+		char buffer[PATH_MAX]; // NOLINT
 		// Read the symbolic link pointing to the executable
-		ssize_t const outputtedLen = readlink("/proc/self/exe", buffer, maxPathSize_v); // NOLINT
+		ssize_t const outputtedLen = readlink("/proc/self/exe", buffer, PATH_MAX); // NOLINT
 		if (outputtedLen != -1)
 		{
 			// NOLINTNEXTLINE
 			buffer[outputtedLen] = '\0'; // Null-terminate the string
 			return std::filesystem::path(buffer).parent_path();
 		}
-	#endif
 
-		// Permission denied (We must be inetd with this app run as other than root).
 		return {};
-		// END defined(GEN_PLATFORM_LINUX) || defined(GEN_PLATFORM_APPLE)
-
-#else
-		// If for some reason we are on an unsupported platform, just return an empty path.
-		return {};
-// END ELSE
-#endif
 	}
+}
+// END GEN_PLATFORM_LINUX
 
-} // namespace gen::io
+#elif defined(GEN_PLATFORM_APPLE)
+
+	#include <mach-o/dyld.h> // required for _NSGetExecutablePath()
+	#include <cstdint>
+
+namespace gen::io
+{
+	std::filesystem::path getExecutablePath()
+	{
+		// On mac / ios paths can be no longer than 1024 characters.
+		char buffer[1024]; // NOLINT
+		std::uint32_t const outputtedLen = 1024;
+		if (_NSGetExecutablePath(buffer, &outputtedLen) == 0) // This fails if the buffer size is too small.
+		{
+			return std::filesystem::path(buffer).parent_path();
+		}
+
+		return {};
+	}
+}
+// END GEN_PLATFORM_APPLE
+#endif
+
