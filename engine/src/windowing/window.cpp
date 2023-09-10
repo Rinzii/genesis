@@ -12,14 +12,10 @@
 
 namespace gen
 {
-	Window::Window(const mim::vec2i& extent, const char * title)
-		: m_extent{extent}										// NOLINT(cppcoreguidelines-pro-type-member-init)
+	Window::Window(const mim::vec2i & extent, const char * title) : m_extent{extent} // NOLINT(cppcoreguidelines-pro-type-member-init)
 	{
 
-		if (glfwInit() != GLFW_TRUE || glfwVulkanSupported() != GLFW_TRUE)
-		{
-			throw gen::windowing_error("Failed to initialize GLFW");
-		}
+		if (glfwInit() != GLFW_TRUE || glfwVulkanSupported() != GLFW_TRUE) { throw gen::windowing_error("Failed to initialize GLFW"); }
 
 		// Set window hints
 		glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
