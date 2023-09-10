@@ -4,9 +4,8 @@
 
 #include "gen/core/base/config/platform.hpp" // GEN_PLATFORM_*
 
-
 #ifdef GEN_PLATFORM_WINDOWS
-#include "gen/system/win32/windows.hpp"
+	#include "gen/system/win32/windows.hpp"
 
 namespace gen::io
 {
@@ -15,20 +14,17 @@ namespace gen::io
 		wchar_t buffer[MAX_PATH];
 		DWORD length = GetModuleFileNameW(nullptr, buffer, MAX_PATH);
 
-		if (length != 0)
-		{
-			return std::filesystem::path(buffer).parent_path();
-		}
+		if (length != 0) { return std::filesystem::path(buffer).parent_path(); }
 
 		return {};
 	}
-}
+} // namespace gen::io
 // END GEN_PLATFORM_WINDOWS
 
 #elif defined(GEN_PLATFORM_APPLE)
 
-#include <mach-o/dyld.h> // required for _NSGetExecutablePath()
-#include <cstdint> // required for std::uint32_t
+	#include <cstdint>		 // required for std::uint32_t
+	#include <mach-o/dyld.h> // required for _NSGetExecutablePath()
 
 namespace gen::io
 {
@@ -44,8 +40,8 @@ namespace gen::io
 
 		return {};
 	}
-}
-// END GEN_PLATFORM_APPLE
+} // namespace gen::io
+  // END GEN_PLATFORM_APPLE
 
 #else // This should cover linux, unix, and android (does not cover bsd)
 
@@ -55,6 +51,5 @@ namespace gen::io
 	{
 		return std::filesystem::read_symlink("/proc/self/exe").parent_path();
 	}
-}
+} // namespace gen::io
 #endif
-

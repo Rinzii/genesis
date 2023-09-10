@@ -3,13 +3,13 @@
 #pragma once
 
 // internal
+#include "commandBuffer.hpp"
+#include "device.hpp"
 #include "gen/core.hpp"
 #include "gen/core/monoInstance.hpp"
 #include "gen/logger/log.hpp"
 #include "gen/windowing/window.hpp"
-#include "device.hpp"
 #include "swapchain.hpp"
-#include "commandBuffer.hpp"
 
 #include <memory>
 

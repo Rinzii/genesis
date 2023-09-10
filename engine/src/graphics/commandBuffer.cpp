@@ -38,5 +38,4 @@ namespace gen
 		m_commandBuffer = vk::CommandBuffer{};
 	}
 
-
 } // namespace gen
