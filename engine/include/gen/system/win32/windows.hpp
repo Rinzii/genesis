@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "gen/core.hpp"
+#include "gen/core/base/config/platform.hpp"
 
 // clang-format off
 

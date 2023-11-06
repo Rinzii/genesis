@@ -3,6 +3,7 @@
 #pragma once
 
 // internal
+#include "commandBuffer.hpp"
 #include "device.hpp"
 #include "gen/core.hpp"
 #include "gen/core/monoInstance.hpp"
@@ -24,6 +25,8 @@ namespace gen
 		Renderer(Renderer &&)				   = delete;
 		Renderer & operator=(const Renderer &) = delete;
 		Renderer & operator=(Renderer &&)	   = delete;
+
+		void render();
 
 	private:
 		std::unique_ptr<Device> m_device;

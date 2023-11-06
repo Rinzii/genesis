@@ -5,6 +5,9 @@
 #include <gen/logger/log.hpp>
 #include <gen/util/version.hpp>
 
+// temp
+#include "gen/io/fileUtils.hpp"
+
 // TODO: Replace this with a config file. At least for the startup window size.
 static constexpr const char * appName{"Genesis Game - Editor"};
 static constexpr gen::Version appVersion{0, 0, 1};
@@ -15,6 +18,8 @@ int main()
 	try
 	{
 		auto logger = gen::logger::Instance{}; // Required to initialize the logger
+
+		gen::logger::general.log("Current executable path: {}", gen::io::getExecutablePath().string());
 
 		gen::Game app{appName, appVersion.getVersion(), startingWindowSize};
 		app.run();

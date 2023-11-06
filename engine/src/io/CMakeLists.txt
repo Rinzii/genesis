@@ -4,5 +4,6 @@
 target_sources(${PROJECT_NAME} PRIVATE
         fileAsync.cpp
         file.cpp
+        fileUtils.cpp
         fileHelper.cpp
         )

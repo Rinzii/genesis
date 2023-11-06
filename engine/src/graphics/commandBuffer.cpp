@@ -37,4 +37,5 @@ namespace gen
 		device.waitForFence(*fence);
 		m_commandBuffer = vk::CommandBuffer{};
 	}
+
 } // namespace gen

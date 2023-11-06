@@ -46,7 +46,7 @@ namespace gen
 			bool resizable{false};
 		};
 
-		Window(mim::vec2i extent, const char * title);
+		Window(const mim::vec2i & extent, const char * title);
 		~Window();
 
 		Window(const Window &)			   = delete;

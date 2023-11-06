@@ -12,21 +12,17 @@
 
 namespace gen
 {
-	Window::Window(const mim::vec2i extent, const char * title) // NOLINT(performance-unnecessary-value-param)
-		: m_extent{extent}										// NOLINT(cppcoreguidelines-pro-type-member-init)
+	Window::Window(const mim::vec2i & extent, const char * title) : m_extent{extent} // NOLINT(cppcoreguidelines-pro-type-member-init)
 	{
 
-		if (!glfwInit()) // NOLINT(readability-implicit-bool-conversion)
-		{
-			throw gen::windowing_error("Failed to initialize GLFW");
-		}
+		if (glfwInit() != GLFW_TRUE || glfwVulkanSupported() != GLFW_TRUE) { throw gen::windowing_error("Failed to initialize GLFW"); }
 
 		// Set window hints
 		glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
-		glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE); // TODO: Later add support for resizing of windows.
+		glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE); // Currently resizing is not supported, but for testing we are allowing it.
 
 		// Create window
-		GLFWwindow * window_ = glfwCreateWindow(static_cast<int>(m_extent.x), static_cast<int>(m_extent.y), title, nullptr, nullptr);
+		GLFWwindow * window_ = glfwCreateWindow(m_extent.x, m_extent.y, title, nullptr, nullptr);
 
 		m_window = std::unique_ptr<GLFWwindow, Deleter>(window_);
 
@@ -72,13 +68,11 @@ namespace gen
 
 	int Window::getWidth() const
 	{
-		// Query glfw for the window size just in case it has changed
 		return m_extent.x;
 	}
 
 	int Window::getHeight() const
 	{
-		// Query glfw for the window size just in case it has changed
 		return m_extent.y;
 	}
 
