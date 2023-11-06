@@ -26,10 +26,11 @@ namespace gen
 		Renderer & operator=(const Renderer &) = delete;
 		Renderer & operator=(Renderer &&)	   = delete;
 
+		void render();
+
 	private:
 		std::unique_ptr<Device> m_device;
 		std::unique_ptr<Swapchain> m_swapchain;
-		std::unique_ptr<CommandBuffer> m_commandBuffer;
 
 		Logger m_logger{"graphics"};
 	};
