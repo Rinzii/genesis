@@ -25,6 +25,7 @@ namespace gen
 	// Internal draw function that should be overridden by the user for game specific drawing
 	void Application::draw()
 	{
+		m_engine->render();
 	}
 
 	// Internal update function that should be overridden by the user for game specific updating

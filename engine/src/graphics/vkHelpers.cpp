@@ -22,7 +22,7 @@ VULKAN_HPP_DEFAULT_DISPATCH_LOADER_DYNAMIC_STORAGE
 #endif
 
 // Define the helper functions and classes within the 'vk::util' namespace.
-namespace vk::util
+namespace vk::utils
 {
 
 	gen::Logger const logger{"graphics"};
@@ -137,7 +137,7 @@ namespace vk::util
 	{
 		VkSurfaceKHR surface_{};
 		VkResult const err = glfwCreateWindowSurface(VkInstance(instance), window.getHandle(), nullptr, &surface_);
-		if (err != VK_SUCCESS) { throw gen::vulkan_error(std::format("Failed to create window surface: {}", vk::to_string(vk::Result(err)))); }
+		if (err != VK_SUCCESS) { throw gen::VulkanException(std::format("Failed to create window surface: {}", vk::to_string(vk::Result(err)))); }
 
 		return vk::UniqueSurfaceKHR(surface_, instance);
 	}
@@ -150,5 +150,35 @@ namespace vk::util
 
 		return std::to_string(major) + "." + std::to_string(minor) + "." + std::to_string(patch);
 	}
+	void checkResult(vk::Result result)
+	{
+		if (result != vk::Result::eSuccess)
+		{
+			logger.error("Detected Vulkan error: {}", vk::to_string(result));
+			throw gen::VulkanException(vk::to_string(result));
+		}
+	}
 
-} // namespace vk::util
+	void insertImageMemoryBarrier(
+		vk::CommandBuffer cmdbuffer,
+		vk::Image image,
+		vk::AccessFlags srcAccessMask,
+		vk::AccessFlags dstAccessMask,
+		vk::ImageLayout oldImageLayout,
+		vk::ImageLayout newImageLayout,
+		vk::PipelineStageFlags srcStageMask,
+		vk::PipelineStageFlags dstStageMask,
+		vk::ImageSubresourceRange subresourceRange)
+	{
+		vk::ImageMemoryBarrier imageMemoryBarrier{};
+		imageMemoryBarrier.srcAccessMask	= srcAccessMask;
+		imageMemoryBarrier.dstAccessMask	= dstAccessMask;
+		imageMemoryBarrier.oldLayout		= oldImageLayout;
+		imageMemoryBarrier.newLayout		= newImageLayout;
+		imageMemoryBarrier.image			= image;
+		imageMemoryBarrier.subresourceRange = subresourceRange;
+
+		cmdbuffer.pipelineBarrier(srcStageMask, dstStageMask, {}, nullptr, nullptr, imageMemoryBarrier);
+	}
+
+} // namespace vk::utils

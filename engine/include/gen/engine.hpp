@@ -29,6 +29,8 @@ namespace gen
 		Engine & operator=(const Engine &) = delete;
 		Engine & operator=(Engine &&)	   = delete;
 
+		void render();
+
 	private:
 		std::unique_ptr<Window> m_window;
 		std::unique_ptr<Renderer> m_renderer;

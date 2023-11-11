@@ -6,13 +6,13 @@
 
 namespace gen
 {
-	vulkan_error::vulkan_error(const std::string & message) : std::runtime_error{message}
+	VulkanException::VulkanException(const std::string & message) : std::runtime_error{message}
 	{
 		Logger const log{"vulkan"};
 		log.error("{}", message);
 	}
 
-	graphics_error::graphics_error(const std::string & message) : runtime_error(message)
+	GraphicsException::GraphicsException(const std::string & message) : runtime_error(message)
 	{
 		Logger const log{"graphics"};
 		log.error("{}", message);

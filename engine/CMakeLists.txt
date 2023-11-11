@@ -190,7 +190,7 @@ target_include_directories(genesis
         )
 
 # Generate build version header
-configure_file(src/genesis_version.hpp.in "${CMAKE_CURRENT_BINARY_DIR}/include/genesis_version.hpp" @ONLY)
+configure_file(src/genesis_version.hpp.in "${CMAKE_CURRENT_BINARY_DIR}/include/gen/genesis_version.hpp" @ONLY)
 
 if(CMAKE_GENERATOR MATCHES "^(Visual Studio)")
     target_compile_options(genesis INTERFACE /MP)

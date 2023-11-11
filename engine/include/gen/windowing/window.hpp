@@ -62,7 +62,7 @@ namespace gen
 		GEN_NODISCARD bool shouldClose() const;
 		static void pollEvents();
 
-		// Getters
+		/// Getters
 
 		GEN_NODISCARD mim::vec2i getExtent();
 		GEN_NODISCARD int getWidth() const;
@@ -70,9 +70,7 @@ namespace gen
 		GEN_NODISCARD CursorMode getCursorMode() const;
 		GEN_NODISCARD GLFWwindow * getHandle() const;
 
-		// TODO: Currently these functions will break the window. Have not yet implemented window resizing.
-
-		// Setters
+		/// Setters
 
 		void setWidth(int width);
 		void setHeight(int height);

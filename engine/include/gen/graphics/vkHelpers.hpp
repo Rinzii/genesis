@@ -13,11 +13,11 @@
 #include "GLFW/glfw3.h"
 
 #include "gen/core.hpp"
+#include "gen/logger/log.hpp"
 #include "gen/windowing/window.hpp"
 
-namespace vk::util
+namespace vk::utils
 {
-
 	std::vector<char const *> gatherExtensions(
 		std::vector<std::string> const & extensions
 #ifndef GEN_NDEBUG
@@ -39,4 +39,17 @@ namespace vk::util
 
 	std::string intToSemver(uint32_t version);
 
-} // namespace vk::util
+	void checkResult(vk::Result result);
+
+	void insertImageMemoryBarrier(
+		vk::CommandBuffer cmdbuffer,
+		vk::Image image,
+		vk::AccessFlags srcAccessMask,
+		vk::AccessFlags dstAccessMask,
+		vk::ImageLayout oldImageLayout,
+		vk::ImageLayout newImageLayout,
+		vk::PipelineStageFlags srcStageMask,
+		vk::PipelineStageFlags dstStageMask,
+		vk::ImageSubresourceRange subresourceRange);
+
+} // namespace vk::utils

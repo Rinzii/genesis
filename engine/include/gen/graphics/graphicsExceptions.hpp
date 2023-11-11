@@ -7,16 +7,16 @@
 
 namespace gen
 {
-	struct vulkan_error : public std::runtime_error
+	struct VulkanException : public std::runtime_error
 	{
 
-		explicit vulkan_error(const std::string & message);
+		explicit VulkanException(const std::string & message);
 	};
 
-	struct graphics_error : public std::runtime_error
+	struct GraphicsException : public std::runtime_error
 	{
 
-		explicit graphics_error(const std::string & message);
+		explicit GraphicsException(const std::string & message);
 	};
 
 } // namespace gen

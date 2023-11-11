@@ -2,6 +2,7 @@
 Checks: 'clang-analyzer-*,
 concurrency-*,
 cppcoreguidelines-*,
+-cppcoreguidelines-avoid-do-while,
 misc-*,
 -misc-non-private-member-variables-in-classes,
 modernize-*,

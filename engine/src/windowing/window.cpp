@@ -10,6 +10,8 @@
 // std
 #include <cassert>
 
+#include "gen/graphics/renderer.hpp"
+
 namespace gen
 {
 	Window::Window(const mim::vec2i & extent, const char * title) : m_extent{extent} // NOLINT(cppcoreguidelines-pro-type-member-init)
@@ -133,6 +135,8 @@ namespace gen
 	{
 		auto & self	  = getWindow(window);
 		self.m_extent = {width, height};
+
+		Renderer::self().windowResize();
 	}
 
 	void Window::Deleter::operator()(GLFWwindow * ptr) const

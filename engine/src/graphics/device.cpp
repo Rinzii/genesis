@@ -12,6 +12,7 @@ namespace gen
 {
 	static const std::vector<const char *> deviceExtensions = {
 		VK_KHR_SWAPCHAIN_EXTENSION_NAME,
+		VK_KHR_DYNAMIC_RENDERING_EXTENSION_NAME,
 #ifdef GEN_PLATFORM_APPLE
 		VK_KHR_PORTABILITY_ENUMERATION_EXTENSION_NAME,
 #endif
@@ -19,11 +20,10 @@ namespace gen
 
 	constexpr float desiredQueuePriority_v{1.0F};
 
-	Device::Device(const std::string & appName, const u32 appVersion, const std::string & engineName, const u32 & apiVersion)
+	Device::Device(vk::Instance instance)
 	{
-		createInstance(appName, appVersion, engineName, apiVersion);
-		createSurface();
-		selectPhysicalDevice();
+		createSurface(instance);
+		selectPhysicalDevice(instance);
 		createLogicalDevice();
 		m_logger.debug("Device constructed");
 	}
@@ -34,48 +34,39 @@ namespace gen
 		m_logger.debug("Device destroyed");
 	}
 
-	void Device::createInstance(const std::string & appName, const u32 appVersion, const std::string & engineName, const u32 & apiVersion)
+	u32 Device::getMemoryType(u32 typeBits, vk::MemoryPropertyFlags properties, vk::Bool32 * memTypeFound) const
 	{
-#if (VULKAN_HPP_DISPATCH_LOADER_DYNAMIC == 1)
-		static vk::DynamicLoader const dynLoader;
-		auto vkGetInstanceProcAddr = dynLoader.getProcAddress<PFN_vkGetInstanceProcAddr>("vkGetInstanceProcAddr");
-		VULKAN_HPP_DEFAULT_DISPATCHER.init(vkGetInstanceProcAddr);
-#endif
+		for (u32 i = 0; i < m_gpu.memoryProperties.memoryTypeCount; i++)
+		{
+			if ((typeBits & 1) == 1)
+			{
+				if ((m_gpu.memoryProperties.memoryTypes[i].propertyFlags & properties) == properties)
+				{
+					if (memTypeFound != nullptr) { *memTypeFound = true; } // NOLINT(readability-implicit-bool-conversion)
+					return i;
+				}
+			}
+			typeBits >>= 1;
+		}
 
-		vk::ApplicationInfo const appInfo(appName.c_str(), appVersion, engineName.c_str(), gen::version_v.getVersion(), apiVersion);
+		if (memTypeFound != nullptr)
+		{
+			*memTypeFound = false; // NOLINT(readability-implicit-bool-conversion)
+			return 0;
+		}
 
-		auto extensionsCount	   = 0U;
-		auto * requestedExtensions = glfwGetRequiredInstanceExtensions(&extensionsCount);
-		std::vector<std::string> const requestedExtensionsVec(
-			requestedExtensions,
-			requestedExtensions + extensionsCount); // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
-		auto enabledExtensions = vk::util::gatherExtensions(
-			requestedExtensionsVec
-#ifndef GEN_NDEBUG
-			,
-			vk::enumerateInstanceExtensionProperties()
-#endif
-		);
-
-		m_instance = vk::createInstanceUnique(vk::util::makeInstanceCreateInfoChain(appInfo, {}, enabledExtensions).get<vk::InstanceCreateInfo>());
-
-		if (!m_instance) { throw gen::vulkan_error("Failed to create instance!"); }
-
-#if (VULKAN_HPP_DISPATCH_LOADER_DYNAMIC == 1)
-		// initialize function pointers for instance
-		VULKAN_HPP_DEFAULT_DISPATCHER.init(*m_instance);
-#endif
+		throw gen::VulkanException("Could not find a matching memory type!");
 	}
 
-	void Device::createSurface()
+	void Device::createSurface(vk::Instance instance)
 	{
-		m_surface = vk::util::createWindowSurface(m_instance.get(), Window::getInstance());
+		m_surface = vk::utils::createWindowSurface(instance, Window::getInstance());
 	}
 
-	void Device::selectPhysicalDevice()
+	void Device::selectPhysicalDevice(vk::Instance instance)
 	{
-		auto availablePhysicalDevices = m_instance.get().enumeratePhysicalDevices();
-		if (availablePhysicalDevices.empty()) { throw gen::vulkan_error("Failed to find GPUs with Vulkan support!"); }
+		auto availablePhysicalDevices = instance.enumeratePhysicalDevices();
+		if (availablePhysicalDevices.empty()) { throw gen::VulkanException("Failed to find GPUs with Vulkan support!"); }
 
 		// Search for a discrete gpu in our list.
 		for (const auto & device : availablePhysicalDevices)
@@ -97,6 +88,12 @@ namespace gen
 			m_gpu.properties	 = availablePhysicalDevices.front().getProperties();
 		}
 
+		// Populate our memory properties.
+		m_gpu.memoryProperties = m_gpu.physicalDevice.getMemoryProperties();
+
+		// Populate our device features.
+		m_gpu.deviceFeatures = m_gpu.physicalDevice.getFeatures();
+
 		auto aDev = std::stringstream{"vulkan"};
 		for (std::size_t i = 0; i < availablePhysicalDevices.size(); i++)
 		{
@@ -104,8 +101,8 @@ namespace gen
 				 << "\n"
 				 << "\t\tName: " << availablePhysicalDevices[i].getProperties().deviceName << "\n"
 				 << "\t\tType: " << to_string(availablePhysicalDevices[i].getProperties().deviceType) << "\n"
-				 << "\t\tAPI Version: " << vk::util::intToSemver(availablePhysicalDevices[i].getProperties().apiVersion) << "\n"
-				 << "\t\tDriver Version: " << vk::util::intToSemver(availablePhysicalDevices[i].getProperties().driverVersion) << "\n"
+				 << "\t\tAPI Version: " << vk::utils::intToSemver(availablePhysicalDevices[i].getProperties().apiVersion) << "\n"
+				 << "\t\tDriver Version: " << vk::utils::intToSemver(availablePhysicalDevices[i].getProperties().driverVersion) << "\n"
 				 << "\t\tVendor ID: 0x" << std::hex << availablePhysicalDevices[i].getProperties().vendorID << "\n"
 				 << "\t\tDevice ID: 0x" << std::hex << availablePhysicalDevices[i].getProperties().deviceID << "\n";
 		}
@@ -179,12 +176,26 @@ namespace gen
 		return getDevice().waitForFences(fence, vk::True, timeout) == vk::Result::eSuccess;
 	}
 
-	bool Device::submit(const vk::SubmitInfo2 & submitInfo, vk::Fence signal) const
+	bool Device::submit(const vk::SubmitInfo & submitInfo, vk::Fence signal) const
+	{
+		auto lock = std::scoped_lock{m_queueMutex};
+		return getQueue().submit(1, &submitInfo, signal) == vk::Result::eSuccess;
+	}
+
+	bool Device::submit2(const vk::SubmitInfo2 & submitInfo, vk::Fence signal) const
 	{
 		auto lock = std::scoped_lock{m_queueMutex};
 		return getQueue().submit2(1, &submitInfo, signal) == vk::Result::eSuccess;
 	}
-	bool Device::submitAndPresent(const vk::SubmitInfo2 & submitInfo, vk::Fence signal, const vk::PresentInfoKHR & presentInfo) const
+
+	bool Device::submitAndPresent(const vk::SubmitInfo & submitInfo, vk::Fence signal, const vk::PresentInfoKHR & presentInfo) const
+	{
+		auto lock						   = std::scoped_lock{m_queueMutex};
+		[[maybe_unused]] auto const result = getQueue().submit(1, &submitInfo, signal);
+		return getQueue().presentKHR(&presentInfo) == vk::Result::eSuccess;
+	}
+
+	bool Device::submit2AndPresent(const vk::SubmitInfo2 & submitInfo, vk::Fence signal, const vk::PresentInfoKHR & presentInfo) const
 	{
 		auto lock						   = std::scoped_lock{m_queueMutex};
 		[[maybe_unused]] auto const result = getQueue().submit2(1, &submitInfo, signal);
