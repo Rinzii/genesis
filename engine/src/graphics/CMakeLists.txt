@@ -6,5 +6,6 @@ target_sources(${PROJECT_NAME} PRIVATE
         device.cpp
         swapchain.cpp
         renderer.cpp
+        renderFrame.cpp
         vkHelpers.cpp
         )

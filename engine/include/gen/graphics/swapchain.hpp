@@ -16,59 +16,78 @@
 
 namespace gen
 {
-
 	struct SwapChainSupportDetails
 	{
 		vk::SurfaceCapabilitiesKHR capabilities{};
-		std::vector<vk::SurfaceFormatKHR> availableFormats{};
-		vk::SurfaceFormatKHR selectedFormat{};
-		std::vector<vk::PresentModeKHR> availablePresentModes{};
-		vk::PresentModeKHR selectedPresentMode{};
-	};
-
-	struct SwapChainBuffer
-	{
-		vk::Image image{};
-		vk::UniqueImageView view{};
+		std::vector<vk::SurfaceFormatKHR> formats{};
+		std::vector<vk::PresentModeKHR> presentModes{};
 	};
 
 	class SwapChain
 	{
 	public:
-		SwapChain();
+		SwapChain(
+			vk::SurfaceKHR surface,
+			const vk::Extent2D & extent			   = {},
+			const u32 & imageCount				   = 2,
+			const vk::PresentModeKHR & presentMode = vk::PresentModeKHR::eFifo,
+			const vk::ImageUsageFlags & imageUsage = vk::ImageUsageFlagBits::eColorAttachment);
+
+		SwapChain(
+			SwapChain & oldSwapChain,
+			vk::SurfaceKHR surface,
+			const vk::Extent2D & extent			   = {},
+			const u32 & imageCount				   = 2,
+			const vk::PresentModeKHR & presentMode = vk::PresentModeKHR::eFifo,
+			const vk::ImageUsageFlags & imageUsage = vk::ImageUsageFlagBits::eColorAttachment);
+
+		SwapChain(SwapChain & oldSwapChain, const u32 & imageCount);
+
+		SwapChain(SwapChain & oldSwapChain, const vk::Extent2D & extent);
 
 		SwapChain(SwapChain const &)			 = delete;
 		SwapChain(SwapChain &&)					 = delete;
 		SwapChain & operator=(SwapChain const &) = delete;
 		SwapChain & operator=(SwapChain &&)		 = delete;
 
-		void create(u32 width, u32 height, bool vsync = false);
-
-		vk::Result acquireNextImage(vk::Semaphore presentCompleteSemaphore, u32 * imageIndex, u64 timeout = std::numeric_limits<u64>::max());
-
-		vk::Result queuePresent(vk::Queue queue, u32 imageIndex, vk::Semaphore waitSemaphore = nullptr);
+		vk::Result acquireNextImage(vk::Semaphore presentCompleteSemaphore, vk::Fence fence, u32 * imageIndex, u64 timeout = std::numeric_limits<u64>::max());
 
 		/// Getters
 
-		[[nodiscard]] vk::SwapchainKHR getSwapChain() const { return m_swapChain.get(); }
-		[[nodiscard]] const std::vector<vk::Image> & getImages() const { return m_images; }
-		[[nodiscard]] const SwapChainBuffer & getBufferAt(std::size_t i) const;
-		[[nodiscard]] u32 getImageCount() const { return m_imageCount; }
-		[[nodiscard]] const SwapChainSupportDetails & getSupportDetails() const { return m_supportDetails; }
+		vk::Extent2D getExtent() const { return m_extent; }
 
 	private:
 		/// Helpers
 
-		static SwapChainSupportDetails querySwapChainSupport(vk::PhysicalDevice device, vk::SurfaceKHR surface, bool vsync);
-		static vk::SurfaceFormatKHR chooseSwapSurfaceFormat(const std::vector<vk::SurfaceFormatKHR> & availableFormats);
-		static vk::PresentModeKHR chooseSwapPresentMode(const std::vector<vk::PresentModeKHR> & availablePresentModes, bool vsync);
-		static vk::Extent2D chooseSwapExtent(const SwapChainSupportDetails & swapChainSupportDetails, u32 & width, u32 & height);
+		static SwapChainSupportDetails querySwapChainSupport(Device & device, vk::SurfaceKHR surface);
 
-		vk::UniqueSwapchainKHR m_swapChain{};
+		u32 selectImageCount(u32 requestedImageCount, u32 minImageCount, u32 maxImageCount);
+
+		vk::SurfaceFormatKHR selectSurfaceFormat(
+			const std::vector<vk::SurfaceFormatKHR> & surfaceFormats, const std::vector<vk::SurfaceFormatKHR> & requestedFormats);
+
+		vk::Extent2D selectExtent(vk::Extent2D requestedExtent, vk::Extent2D minExtent, vk::Extent2D maxExtent, vk::Extent2D currentExtent);
+
+		u32 selectImageArrayLayers(u32 requestedImageArrayLayers, u32 maxImageArrayLayers);
+
+		vk::ImageUsageFlags selectImageUsage(vk::ImageUsageFlags requestedImageUsage, vk::ImageUsageFlags supportedImageUsage);
+
+		vk::SurfaceTransformFlagBitsKHR selectPreTransform(
+			vk::SurfaceTransformFlagBitsKHR requestedPreTransform,
+			vk::SurfaceTransformFlagsKHR supportedPreTransform,
+			vk::SurfaceTransformFlagBitsKHR currentPreTransform);
+
+		vk::CompositeAlphaFlagBitsKHR selectCompositeAlpha(
+			vk::CompositeAlphaFlagBitsKHR requestedCompositeAlpha, vk::CompositeAlphaFlagsKHR supportedCompositeAlpha);
+
+		vk::PresentModeKHR selectPresentMode(const std::vector<vk::PresentModeKHR> & availablePresentModes, vk::PresentModeKHR requestedPresentMode);
+
 		SwapChainSupportDetails m_supportDetails{};
+
+		vk::UniqueSwapchainKHR m_handle{};
+		vk::SwapchainCreateInfoKHR m_createInfo{};
 		std::vector<vk::Image> m_images{};
-		std::vector<SwapChainBuffer> m_buffers{};
-		u32 m_imageCount{0};
+		vk::Extent2D m_extent{};
 
 	private:
 		Logger m_logger{"graphics"};

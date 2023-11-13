@@ -10,6 +10,8 @@
 #include "gen/windowing/window.hpp"
 #include "swapchain.hpp"
 
+#include "gen/graphics/renderFrame.hpp"
+
 #include <vulkan/vulkan.hpp>
 
 #include <memory>
@@ -96,8 +98,6 @@ namespace gen
 
 		std::unique_ptr<SwapChain> m_swapChain{};
 
-		// TODO: Maybe move instance out of device?
-
 		vk::Queue m_queue{};
 
 		vk::Format m_depthFormat{};
@@ -124,27 +124,15 @@ namespace gen
 			vk::UniqueImageView view{};
 		} m_depthStencil{};
 
-		struct FrameData
-		{
-			vk::UniqueCommandBuffer cmd{};
-
-			vk::UniqueSemaphore presentCompleteSemaphore{};
-			vk::UniqueSemaphore renderCompleteSemaphore{};
-			vk::UniqueFence renderCompleteFence{};
-		};
-
-		static constexpr u32 m_renderAhead{2};
-		std::array<FrameData, m_renderAhead> m_frames{};
-
-		u32 m_frameIndex{0};
-
-		// std::vector<vk::UniqueFence> m_waitFences{};
+		std::vector<RenderFrame> m_frames{};
+		u32 m_activeFrameIndex{0};
+		bool m_frameActive{false};
 
 		bool m_prepared{false};
 		bool m_resized{false};
 		bool viewUpdated{false};
 
-		mim::vec2i m_framebufferExtent{};
+		vk::Extent2D m_framebufferExtent{};
 
 		Logger m_logger{"graphics"};
 	};

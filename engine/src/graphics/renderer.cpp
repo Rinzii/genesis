@@ -16,9 +16,6 @@ namespace gen
 
 		m_device = std::make_unique<Device>(m_instance.get());
 
-		// Update our current framebuffer extent
-		glfwGetFramebufferSize(Window::self().getHandle(), &m_framebufferExtent.x, &m_framebufferExtent.y);
-
 		prepare();
 
 		m_logger.debug("Renderer constructed");
@@ -99,6 +96,8 @@ namespace gen
 
 	void Renderer::prepare()
 	{
+		m_device->getDevice().waitIdle();
+
 		initSwapChain();
 		createCommandPool();
 		setupSwapChain();
@@ -146,7 +145,19 @@ namespace gen
 
 	void Renderer::initSwapChain()
 	{
-		m_swapChain = std::make_unique<SwapChain>();
+		if (m_device->getSurface() != nullptr)
+		{
+			m_swapChain			= std::make_unique<SwapChain>(m_device->getSurface());
+			m_framebufferExtent = m_swapChain->getExtent();
+		}
+		else
+		{
+			mim::vec2i framebufferExtent;
+			glfwGetFramebufferSize(Window::self().getHandle(), &framebufferExtent.x, &framebufferExtent.y);
+
+			m_framebufferExtent.width  = static_cast<u32>(framebufferExtent.x);
+			m_framebufferExtent.height = static_cast<u32>(framebufferExtent.y);
+		}
 	}
 
 	void Renderer::createCommandPool()

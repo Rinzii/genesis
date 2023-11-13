@@ -23,6 +23,7 @@ set(core_headers
 set(graphics_headers
         include/gen/graphics/graphicsExceptions.hpp
         include/gen/graphics/renderer.hpp
+        include/gen/graphics/renderFrame.hpp
         include/gen/graphics/swapchain.hpp
         include/gen/graphics/device.hpp
         include/gen/graphics/vkHelpers.hpp
