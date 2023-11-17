@@ -20,13 +20,38 @@ set(core_headers
         include/gen/core/monoInstance.hpp
 )
 
-set(graphics_headers
-        include/gen/graphics/graphicsExceptions.hpp
-        include/gen/graphics/renderer.hpp
-        include/gen/graphics/renderFrame.hpp
-        include/gen/graphics/swapchain.hpp
-        include/gen/graphics/device.hpp
-        include/gen/graphics/vkHelpers.hpp
+set(rendering_utils_headers
+        include/gen/rendering/utils/debugUtils.hpp
+        include/gen/rendering/utils/exceptions.hpp
+        include/gen/rendering/utils/vkHelpers.hpp
+        include/gen/rendering/utils/vulkanStructs.hpp
+)
+
+set(rendering_vk_headers
+        include/gen/rendering/vk/commandBuffer.hpp
+        include/gen/rendering/vk/commandPool.hpp
+        include/gen/rendering/vk/device.hpp
+        include/gen/rendering/vk/fence.hpp
+        include/gen/rendering/vk/image.hpp
+        include/gen/rendering/vk/instance.hpp
+        include/gen/rendering/vk/semaphore.hpp
+        include/gen/rendering/vk/swapchain.hpp
+)
+
+set(rendering_headers
+        ${rendering_utils_headers}
+        ${rendering_vk_headers}
+        include/gen/rendering/renderWindow.hpp
+        include/gen/rendering/buffer.hpp
+        include/gen/rendering/device.hpp
+        include/gen/rendering/fencePool.hpp
+        include/gen/rendering/semaphorePool.hpp
+        include/gen/rendering/bufferPool.hpp
+        include/gen/rendering/frame.hpp
+        include/gen/rendering/instance.hpp
+        include/gen/rendering/pipeline.hpp
+        include/gen/rendering/renderer.hpp
+        include/gen/rendering/swapchain.hpp
 		)
 
 set(inputs_headers
@@ -74,7 +99,7 @@ set(windowing_headers
 # core header include
 set(genesis_headers
         ${core_headers}
-		${graphics_headers}
+		${rendering_headers}
 		${inputs_headers}
         ${io_headers}
         ${system_headers}

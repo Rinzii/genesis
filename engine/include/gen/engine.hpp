@@ -2,8 +2,11 @@
 
 #pragma once
 
-#include "gen/graphics/renderer.hpp"
+#include "gen/rendering/renderer.hpp"
+#include "gen/system/types.hpp"
 #include "mim/vec2.hpp"
+
+#include "gen/windowing/window.hpp"
 
 #include "gen/core/monoInstance.hpp"
 
@@ -32,7 +35,6 @@ namespace gen
 		void render();
 
 	private:
-		std::unique_ptr<Window> m_window;
 		std::unique_ptr<Renderer> m_renderer;
 
 		Logger m_logger{"engine"};

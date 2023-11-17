@@ -10,7 +10,7 @@
 // std
 #include <cassert>
 
-#include "gen/graphics/renderer.hpp"
+#include "gen/rendering/renderer.hpp"
 
 namespace gen
 {
@@ -135,8 +135,6 @@ namespace gen
 	{
 		auto & self	  = getWindow(window);
 		self.m_extent = {width, height};
-
-		Renderer::self().windowResize();
 	}
 
 	void Window::Deleter::operator()(GLFWwindow * ptr) const

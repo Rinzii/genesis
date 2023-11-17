@@ -5,6 +5,8 @@
 #include <gen/logger/log.hpp>
 #include <gen/util/version.hpp>
 
+#include <iostream>
+
 // temp
 #include "gen/io/fileUtils.hpp"
 
@@ -26,7 +28,8 @@ int main()
 	}
 	catch (std::exception const & e)
 	{
-		gen::logger::general.error("{}", e.what());
+		// TODO: Logger does not work inside of a catch block. Need to fix this.
+		std::cout << "Exception: " << e.what() << '\n';
 		return 1;
 	}
 
