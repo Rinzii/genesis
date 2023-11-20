@@ -1,7 +1,6 @@
 // Copyright (c) 2023-present Genesis Engine contributors (see LICENSE.txt)
 
 #include "gen/logger/instance.hpp"
-#include <algorithm>
 #include <condition_variable>
 #include <filesystem>
 #include <fstream>
@@ -244,7 +243,7 @@ namespace gen::logger
 
 		Impl(char const * filePath) : file(nonEmptyFilePath(filePath)) {}
 
-		void print(std::string_view const message, Context const & context, const char * function = "", const char * filePath = "", int line = 0)
+		void print(std::string_view const message, Context const & context)
 		{
 			// config is shared state, must synchronize access
 			auto lock = std::unique_lock{mutex};

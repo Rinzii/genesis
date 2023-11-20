@@ -10,9 +10,7 @@
 
 namespace gen::logger
 {
-	///
 	/// \brief Timestamp mode.
-	///
 	enum class Timestamp
 	{
 		eLocal,
@@ -35,7 +33,24 @@ namespace gen::logger
 		///  timestamp: log timestamp
 		///
 		static constexpr std::string_view default_format_v{"[{level}][T{thread}] [{category}] {message} [{timestamp}]"};
-		static constexpr std::string_view verbose_format_v{"[{level}][T{thread}] [{category}] {message} [{timestamp}] [F:{func}] [{file}:{line}]"};
+
+		///
+		/// \brief Default format specification for verbose log entries.
+		///
+		/// Syntax: "{format_key}..."
+		/// Text not matching any format keys will be passed through.
+		///
+		/// Supported format keys:
+		///  level: log Level
+		///  thread: current (logging) thread ID
+		///  category: log category
+		///  message: log message
+		///  timestamp: log timestamp
+		///  func: function name
+		///  file: file name
+		///  line: line number
+		///
+		static constexpr std::string_view verbose_format_v{"[{level}][T{thread}] [{category}] {message} [{timestamp}] [F: {func}] [{file}:{line}]"};
 
 		static constexpr std::size_t format_size_v{128};
 
@@ -57,7 +72,7 @@ namespace gen::logger
 		/// \brief Timestamp mode.
 		Timestamp timestamp{Timestamp::eLocal};
 
-		/// \brief Whether to print verbose information.
+		/// \brief Whether to print verbose logging information.
 		bool verbose{false};
 	};
 } // namespace gen::logger
