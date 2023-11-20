@@ -1,6 +1,6 @@
 // Copyright (c) 2023-present Genesis Engine contributors (see LICENSE.txt)
 
-#include "time.hpp"
+#include "gen/time.hpp"
 
 namespace gen
 {
@@ -9,26 +9,28 @@ namespace gen
 		namespace
 		{
 			Clock::time_point g_start{Clock::now()};
-			double g_deltaTime;
-			double g_timeScale;
+			float g_deltaTime;
+			float g_timeScale;
 		} // namespace
 
 		void UpdateDeltaTime()
 		{
 			auto const end = Clock::now();
-			g_deltaTime	   = std::chrono::duration_cast<std::chrono::duration<double>>(end - g_start).count() * g_timeScale;
+			g_deltaTime	   = std::chrono::duration_cast<std::chrono::duration<float>>(end - g_start).count() * g_timeScale;
 			g_start		   = end;
 		}
 
-		void SetTimeScale(double timeScale)
+		void SetTimeScale(float timeScale)
 		{
 			g_timeScale = timeScale;
 		}
-		double GetDeltaTime()
+
+		float GetDeltaTime()
 		{
 			return g_deltaTime;
 		}
-		double GetTimeScale()
+
+		float GetTimeScale()
 		{
 			return g_timeScale;
 		}
@@ -45,12 +47,12 @@ namespace gen
 	{
 		namespace
 		{
-			double g_updateDelay = 0.5;
-			double g_updateTimer;
+			float g_updateDelay = 0.5;
+			float g_updateTimer;
 			unsigned g_fps;
 		} // namespace
 
-		void SetFPSUpdateDelay(double updateDelay)
+		void SetFPSUpdateDelay(float updateDelay)
 		{
 			g_updateDelay = updateDelay;
 		}

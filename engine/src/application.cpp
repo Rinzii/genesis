@@ -2,30 +2,35 @@
 
 // TODO: Replace this with a proper implementation
 
-#include "application.hpp"
+#include "gen/application.hpp"
 #include <numbers>
 
 namespace gen
 {
-	// possibly change this to instead use Update() and Draw() functions
+
+	Application::Application(const char * const appName, const u32 appVersion, mim::vec2i const & initialSize)
+		: m_engine(std::make_unique<Engine>(appName, appVersion, initialSize))
+	{
+	}
 
 	void Application::run()
 	{
-		gameLoop();
-		shutdown();
+		while (!Window::getInstance().shouldClose())
+		{
+			update(Time::GetDeltaTime());
+			draw();
+		}
 	}
 
-	void Application::gameLoop()
-	{
-		while (!m_window.shouldClose()) { Window::pollEvents(); }
-	}
-
-	void Application::shutdown()
+	// Internal draw function that should be overridden by the user for game specific drawing
+	void Application::draw()
 	{
 	}
 
-	Application::Application(const char * appName, mim::vec2i const & initialSize) : m_window{initialSize, appName}, m_graphicsDevice{m_window, appName}
+	// Internal update function that should be overridden by the user for game specific updating
+	void Application::update(float dt)
 	{
+		Window::pollEvents();
 	}
 
 } // namespace gen
