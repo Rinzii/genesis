@@ -129,6 +129,24 @@ namespace gen::logger
 					return true;
 				}
 
+				if (key == "func")
+				{
+					if (context.func.has_value()) { out += context.func.value(); }
+					return true;
+				}
+
+				if (key == "file")
+				{
+					if (context.file.has_value()) { out += context.file.value(); }
+					return true;
+				}
+
+				if (key == "line")
+				{
+					if (context.line.has_value()) { std::format_to(std::back_inserter(out), "{}", context.line.value()); }
+					return true;
+				}
+
 				return false;
 			}
 
@@ -226,7 +244,7 @@ namespace gen::logger
 
 		Impl(char const * filePath) : file(nonEmptyFilePath(filePath)) {}
 
-		void print(std::string_view const message, Context const & context)
+		void print(std::string_view const message, Context const & context, const char * function = "", const char * filePath = "", int line = 0)
 		{
 			// config is shared state, must synchronize access
 			auto lock = std::unique_lock{mutex};
@@ -240,6 +258,17 @@ namespace gen::logger
 				if (auto const itr = config.levelTargets.find(context.level); itr != config.levelTargets.end()) { return itr->second; }
 				return all_v;
 			}();
+
+			if (config.verbose)
+			{
+				// verbose logging is enabled, override the format
+				config.format = Config::verbose_format_v;
+			}
+			else
+			{
+				// verbose logging is disabled, set the format back to default.
+				config.format = Config::default_format_v;
+			}
 
 			auto const data = Formatter::Data{.format = config.format, .timestamp = config.timestamp};
 			// cache this for later use

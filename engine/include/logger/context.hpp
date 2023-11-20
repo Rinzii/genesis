@@ -3,6 +3,7 @@
 #pragma once
 #include <logger/level.hpp>
 #include <chrono>
+#include <optional>
 #include <string_view>
 
 namespace gen::logger
@@ -27,6 +28,9 @@ namespace gen::logger
 		Clock::time_point timestamp{};
 		ThreadId thread{};
 		Level level{};
+		std::optional<std::string_view> func{};
+		std::optional<std::string_view> file{};
+		std::optional<int> line{};
 
 		///
 		/// \brief Obtain this thread's ID.
@@ -34,5 +38,6 @@ namespace gen::logger
 		///
 		static ThreadId getThreadId();
 		static Context make(std::string_view category, Level level);
+		static Context make(std::string_view category, Level level, std::string_view function, std::string_view filePath, int currentLine);
 	};
 } // namespace gen::logger

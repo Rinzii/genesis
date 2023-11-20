@@ -25,4 +25,17 @@ namespace gen::logger
 			.level	   = level,
 		};
 	}
+
+	Context Context::make(std::string_view category, Level level, std::string_view function, std::string_view filePath, int currentLine)
+	{
+		return Context{
+			.category  = category,
+			.timestamp = Clock::now(),
+			.thread	   = getThreadId(),
+			.level	   = level,
+			.func	   = function,
+			.file	   = filePath,
+			.line	   = currentLine,
+		};
+	}
 } // namespace gen::logger

@@ -10,6 +10,12 @@ namespace gen
 		Instance::print(message, Context::make(category, level));
 	}
 
+	void logger::print(
+		logger::Level level, std::string_view category, std::string_view function, std::string_view filePath, int curLine, std::string_view message)
+	{
+		Instance::print(message, Context::make(category, level, function, filePath, curLine));
+	}
+
 	Logger::Logger(std::string_view const category) : m_category(category.empty() ? "unknown" : category)
 	{
 	}
