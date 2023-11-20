@@ -94,7 +94,7 @@ namespace gen
 // NOLINTBEGIN
 #define INTERNAL_GEN_LOG(logger, level, message, ...)                                                                                                          \
 	do {                                                                                                                                                       \
-		logger.verbose_##level(__func__, __FILE__, __LINE__, message, ##__VA_ARGS__);                                                                      \
+		logger.verbose_##level(__func__, __FILE__, __LINE__, message, ##__VA_ARGS__);                                                                          \
 	} while ((void)0, 0)
 
 #define GEN_LOG(logger, message, ...)		INTERNAL_GEN_LOG(logger, log, message, ##__VA_ARGS__)

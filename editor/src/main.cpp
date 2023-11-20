@@ -9,6 +9,7 @@
 static constexpr const char * appName{"Genesis Game - Editor"};
 static constexpr gen::Version appVersion{0, 0, 1};
 static constexpr mim::vec2i startingWindowSize{800, 600};
+static constexpr const char * logFile{"genesis.log"};
 
 int main()
 {
@@ -19,11 +20,10 @@ int main()
 #endif
 
 	// Required to initialize the logger for the application. This must also stay outside the try/catch block.
-	auto logger = gen::logger::Instance{"genesis.log", config};
+	auto logger = gen::logger::Instance{logFile, config};
 
 	try
 	{
-
 		gen::Game app{appName, appVersion.getVersion(), startingWindowSize};
 		app.run();
 	}
