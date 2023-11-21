@@ -258,16 +258,9 @@ namespace gen::logger
 				return all_v;
 			}();
 
-			if (config.verbose)
-			{
-				// verbose logging is enabled, override the format
-				config.format = Config::verbose_format_v;
-			}
-			else
-			{
-				// verbose logging is disabled, set the format back to default.
-				config.format = Config::default_format_v;
-			}
+#ifdef GEN_VERBOSE_LOGGING
+			config.format = Config::verbose_format_v;
+#endif
 
 			auto const data = Formatter::Data{.format = config.format, .timestamp = config.timestamp};
 			// cache this for later use

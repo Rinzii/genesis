@@ -44,6 +44,15 @@
       }
     },
     {
+      "name": "ninja-verbose-logging",
+      "description": "Build configuration using Ninja Multi-config / verbose logging enabled",
+      "inherits": "default",
+      "binaryDir": "${sourceDir}/out/verbose",
+      "cacheVariables": {
+        "GENESIS_ENABLE_VERBOSE_LOGGING": "ON"
+      }
+    },
+    {
       "name": "vs19",
       "description": "Build configuration using Visual Studio 16 (2019)",
       "generator": "Visual Studio 16 2019",
