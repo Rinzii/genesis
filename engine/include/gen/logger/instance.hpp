@@ -41,6 +41,7 @@ namespace gen::logger
 		/// \brief Obtain a copy of the Config in use.
 		///
 		[[nodiscard]] Config getConfig() const;
+
 		///
 		/// \brief Overwrite the Config in use.
 		///

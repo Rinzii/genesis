@@ -9,13 +9,21 @@
 static constexpr const char * appName{"Genesis Game - Editor"};
 static constexpr gen::Version appVersion{0, 0, 1};
 static constexpr mim::vec2i startingWindowSize{800, 600};
+static constexpr const char * logFile{"genesis.log"};
 
 int main()
 {
+	// TODO: Make this be set by a config file.
+	auto config = gen::logger::Config{};
+#ifdef GEN_DEBUG
+	config.verbose = true;
+#endif
+
+	// Required to initialize the logger for the application. This must also stay outside the try/catch block.
+	auto logger = gen::logger::Instance{logFile, config};
+
 	try
 	{
-		auto logger = gen::logger::Instance{}; // Required to initialize the logger
-
 		gen::Game app{appName, appVersion.getVersion(), startingWindowSize};
 		app.run();
 	}
