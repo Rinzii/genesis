@@ -10,7 +10,9 @@
 
 namespace gen::logger
 {
+	///
 	/// \brief Timestamp mode.
+	///
 	enum class Timestamp
 	{
 		eLocal,
@@ -57,22 +59,34 @@ namespace gen::logger
 		static_assert(default_format_v.size() < format_size_v);
 		static_assert(verbose_format_v.size() < format_size_v);
 
+		///
 		/// \brief Format specification for log entries.
+		///
 		FixedString<format_size_v> format{default_format_v};
 
+		///
 		/// \brief Max log Level.
+		///
 		Level maxLevel{Level::eDebug};
 
+		///
 		/// \brief Max log Level overrides per category.
+		///
 		std::unordered_map<std::string_view, Level> categoryMaxLevels{};
 
+		///
 		/// \brief Log Target overrides per Level.
+		///
 		std::unordered_map<Level, Target> levelTargets{};
 
+		///
 		/// \brief Timestamp mode.
+		///
 		Timestamp timestamp{Timestamp::eLocal};
 
+		///
 		/// \brief Whether to print verbose logging information.
+		///
 		bool verbose{false};
 	};
 } // namespace gen::logger
