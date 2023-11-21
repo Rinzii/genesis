@@ -52,7 +52,7 @@ namespace gen::logger
 		///  file: file name
 		///  line: line number
 		///
-		static constexpr std::string_view verbose_format_v{"[{level}][T{thread}] [{category}] {message} [{timestamp}] [F: {func}] [{file}:{line}]"};
+		static constexpr std::string_view verbose_format_v{"[{level}][T{thread}] [{category}] {message} [{timestamp}] [F:{func}] [{file}:{line}]"};
 
 		static constexpr std::size_t format_size_v{128};
 
@@ -83,10 +83,5 @@ namespace gen::logger
 		/// \brief Timestamp mode.
 		///
 		Timestamp timestamp{Timestamp::eLocal};
-
-		///
-		/// \brief Whether to print verbose logging information.
-		///
-		bool verbose{false};
 	};
 } // namespace gen::logger

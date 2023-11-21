@@ -39,6 +39,7 @@ if(PROJECT_NAME STREQUAL CMAKE_PROJECT_NAME)
 endif()
 
 option(GENESIS_ENABLE_EDITOR "Set the runtime to instead build the editor instead of the default" ON)
+option(GENESIS_ENABLE_VERBOSE_LOGGING "Enable verbose logging" OFF)
 option(GENESIS_BUILD_RUNTIME "Build the genesis runtime (else only library)" ON)
 option(GENESIS_BUILD_GAME "Build the genesis game" ON)
 option(GENESIS_BUILD_SHADERS "Build the genesis shaders" ON)
