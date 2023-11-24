@@ -1,2 +1,2 @@
 # Genesis
-A small Vulkan game engine written in C++20.
+Genesis is an open-source, cross-platform, Vulkan Game Engine made for creating 2D/3D desktop games, built using C++20.
