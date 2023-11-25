@@ -19,7 +19,7 @@ endif()
 # include the configuration file
 include(cmake/Config.cmake)
 
-if (GENESIS_OS_LINUX || GENESIS_OS_MACOS)
+if (GENESIS_OS_LINUX OR GENESIS_OS_MACOS)
   # Set execute permissions for the extracted executable. For some reason it doesn't have them by default.
 #  file(
 #          COPY ${CMAKE_CURRENT_SOURCE_DIR}/tools/dxc/linux/bin/dxc
