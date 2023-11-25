@@ -9,26 +9,16 @@ set(genesis_root_dir ${CMAKE_CURRENT_SOURCE_DIR})
 
 project(genesis VERSION "0.0.1")
 
-if (EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/tools/dxc")
-  message(STATUS "DXC already extracted! Skipping...")
-else()
-  message(STATUS "Extracting DXC!")
-  file(ARCHIVE_EXTRACT INPUT "${CMAKE_CURRENT_SOURCE_DIR}/tools/dxc.zip" DESTINATION "${CMAKE_CURRENT_SOURCE_DIR}/tools")
-endif()
+file(ARCHIVE_EXTRACT INPUT "${CMAKE_CURRENT_SOURCE_DIR}/tools/dxc.zip" DESTINATION "${CMAKE_CURRENT_SOURCE_DIR}/tools")
+
 
 # include the configuration file
 include(cmake/Config.cmake)
 
 if (GENESIS_OS_LINUX OR GENESIS_OS_MACOS)
   # Set execute permissions for the extracted executable. For some reason it doesn't have them by default.
-#  file(
-#          COPY ${CMAKE_CURRENT_SOURCE_DIR}/tools/dxc/linux/bin/dxc
-#          DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/tools/dxc/linux/bin
-#          FILE_PERMISSIONS OWNER_EXECUTE OWNER_WRITE OWNER_READ GROUP_EXECUTE GROUP_READ WORLD_EXECUTE WORLD_READ
-#  )
-
   execute_process(
-          COMMAND chmod +x ${CMAKE_CURRENT_SOURCE_DIR}/tools/dxc/linux/bin/dxc
+          COMMAND chmod -R +x ${CMAKE_CURRENT_SOURCE_DIR}/tools/dxc/linux/bin/dxc
   )
 endif()
 
