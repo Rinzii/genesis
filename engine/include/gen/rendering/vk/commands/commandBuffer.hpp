@@ -2,13 +2,12 @@
 
 #pragma once
 
-#include "gen/system/types.hpp"
+#include "gen/rendering/utils/vulkanStructs.hpp"
+#include "gen/rendering/vk/Buffers/buffer.hpp"
 #include "gen/rendering/vk/fence.hpp"
-#include "gen/rendering/vk/buffer.hpp"
 #include "gen/rendering/vk/image.hpp"
 #include "gen/rendering/vk/imageView.hpp"
-#include "gen/rendering/utils/vulkanStructs.hpp"
-
+#include "gen/system/types.hpp"
 
 #include <vulkan/vulkan.hpp>
 

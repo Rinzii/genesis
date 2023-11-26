@@ -5,7 +5,7 @@ target_sources(${PROJECT_NAME} PRIVATE
         descriptorPool.cpp
         descriptorSet.cpp
         descriptorSetLayout.cpp
-        device.cpp
+        devices/logicalDevice.cpp
         fence.cpp
         image.cpp
         imageView.cpp

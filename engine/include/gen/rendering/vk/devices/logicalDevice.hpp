@@ -4,27 +4,23 @@
 
 #include "gen/system/types.hpp"
 
+#include "gen/rendering/vk/devices/physicalDevice.hpp"
+
 #include "gen/rendering/vk/queue.hpp"
 
 #include <vk_mem_alloc.h>
 #include <vulkan/vulkan.hpp>
 
+#include <iosfwd>
+
 namespace gen
 {
-	struct Gpu
-	{
-		vk::PhysicalDevice physicalDevice;
-		vk::PhysicalDeviceProperties properties;
-		vk::PhysicalDeviceFeatures features;
-		vk::PhysicalDeviceMemoryProperties memoryProperties;
-	};
-
 	struct DeviceInfo
 	{
-		vk::DeviceCreateInfo createInfo;
-		vk::PhysicalDeviceFeatures enabledFeatures;
-		std::vector<const char *> enabledExtensions;
-		std::vector<const char *> enabledLayers;
+		std::string name{};
+		PhysicalDevice physicalDevice{};
+		vk::DeviceSize totalLocalDevice{0};
+		std::vector<vk::ExtensionProperties> extensions{};
 	};
 
 	class Device
@@ -42,13 +38,12 @@ namespace gen
 
 	private:
 		vk::UniqueDevice m_handle{nullptr};
-		Gpu m_gpu;
 		VmaAllocator m_allocator{nullptr};
 
 		// TODO: Maybe handle multiple queues at a later date? Idk maybe not.
 
-		Queue m_graphicsQueue{nullptr};
+		vk::Queue m_graphicsQueue{nullptr};
 
-		u32 m_graphicsQueueFamilyIndex{0};
+		u32 m_graphicsFamilyIndex{0};
 	};
 } // namespace gen

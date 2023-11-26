@@ -2,7 +2,7 @@
 
 #include "gen/rendering/renderWindow.hpp"
 
-#include "gen/rendering/vk/instance.hpp"
+#include "gen/rendering/vk/devices/instance.hpp"
 
 #include <utility>
 

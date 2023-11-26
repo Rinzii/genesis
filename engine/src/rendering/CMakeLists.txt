@@ -9,7 +9,7 @@ target_sources(${PROJECT_NAME} PRIVATE
         semaphorePool.cpp
         bufferPool.cpp
         frame.cpp
-        instance.cpp
+        vk/devices/instance.cpp
         pipeline.cpp
         renderer.cpp
         swapchain.cpp

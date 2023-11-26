@@ -28,12 +28,12 @@ set(rendering_utils_headers
 )
 
 set(rendering_vk_headers
-        include/gen/rendering/vk/commandBuffer.hpp
-        include/gen/rendering/vk/commandPool.hpp
-        include/gen/rendering/vk/device.hpp
+        include/gen/rendering/vk/commands/commandBuffer.hpp
+        include/gen/rendering/vk/commands/commandPool.hpp
+        include/gen/rendering/vk/devices/logicalDevice.hpp
         include/gen/rendering/vk/fence.hpp
         include/gen/rendering/vk/image.hpp
-        include/gen/rendering/vk/instance.hpp
+        include/gen/rendering/vk/devices/instance.hpp
         include/gen/rendering/vk/semaphore.hpp
         include/gen/rendering/vk/swapchain.hpp
 )

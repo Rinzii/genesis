@@ -4,7 +4,7 @@
 
 #include "gen/system/types.hpp"
 
-#include "gen/rendering/vk/buffer.hpp"
+#include "gen/rendering/vk/Buffers/buffer.hpp"
 #include "gen/rendering/vk/imageView.hpp"
 
 #include <vulkan/vulkan.hpp>
