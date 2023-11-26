@@ -1,7 +1,6 @@
 // Copyright (c) 2023-present Genesis Engine contributors (see LICENSE.txt)
 
 #include "gen/logger/instance.hpp"
-#include <algorithm>
 #include <condition_variable>
 #include <filesystem>
 #include <fstream>
@@ -129,6 +128,24 @@ namespace gen::logger
 					return true;
 				}
 
+				if (key == "func")
+				{
+					if (context.func.has_value()) { out += context.func.value(); }
+					return true;
+				}
+
+				if (key == "file")
+				{
+					if (context.file.has_value()) { out += context.file.value(); }
+					return true;
+				}
+
+				if (key == "line")
+				{
+					if (context.line.has_value()) { std::format_to(std::back_inserter(out), "{}", context.line.value()); }
+					return true;
+				}
+
 				return false;
 			}
 
@@ -240,6 +257,10 @@ namespace gen::logger
 				if (auto const itr = config.levelTargets.find(context.level); itr != config.levelTargets.end()) { return itr->second; }
 				return all_v;
 			}();
+
+#ifdef GEN_VERBOSE_LOGGING
+			config.format = Config::verbose_format_v;
+#endif
 
 			auto const data = Formatter::Data{.format = config.format, .timestamp = config.timestamp};
 			// cache this for later use

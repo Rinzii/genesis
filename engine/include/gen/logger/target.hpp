@@ -19,10 +19,12 @@ namespace gen::logger
 	/// \brief Standard IO streams.
 	///
 	inline constexpr Target console_v{.value = 1 << 0};
+
 	///
 	/// \brief Log file.
 	///
 	inline constexpr Target file_v{.value = 1 << 1};
+
 	///
 	/// \brief Custom sinks.
 	///

@@ -36,26 +36,49 @@ namespace gen::logger
 		///
 		static constexpr std::string_view default_format_v{"[{level}][T{thread}] [{category}] {message} [{timestamp}]"};
 
+		///
+		/// \brief Default format specification for verbose log entries.
+		///
+		/// Syntax: "{format_key}..."
+		/// Text not matching any format keys will be passed through.
+		///
+		/// Supported format keys:
+		///  level: log Level
+		///  thread: current (logging) thread ID
+		///  category: log category
+		///  message: log message
+		///  timestamp: log timestamp
+		///  func: function name
+		///  file: file name
+		///  line: line number
+		///
+		static constexpr std::string_view verbose_format_v{"[{level}][T{thread}] [{category}] {message} [{timestamp}] [F:{func}] [{file}:{line}]"};
+
 		static constexpr std::size_t format_size_v{128};
 
 		static_assert(default_format_v.size() < format_size_v);
+		static_assert(verbose_format_v.size() < format_size_v);
 
 		///
 		/// \brief Format specification for log entries.
 		///
 		FixedString<format_size_v> format{default_format_v};
+
 		///
 		/// \brief Max log Level.
 		///
 		Level maxLevel{Level::eDebug};
+
 		///
 		/// \brief Max log Level overrides per category.
 		///
 		std::unordered_map<std::string_view, Level> categoryMaxLevels{};
+
 		///
 		/// \brief Log Target overrides per Level.
 		///
 		std::unordered_map<Level, Target> levelTargets{};
+
 		///
 		/// \brief Timestamp mode.
 		///

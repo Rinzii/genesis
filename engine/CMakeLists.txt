@@ -14,6 +14,10 @@ target_compile_definitions(genesis
         $<$<CONFIG:Release>:GEN_NDEBUG>
         )
 
+if(GENESIS_ENABLE_VERBOSE_LOGGING)
+  target_compile_definitions(genesis PUBLIC GEN_VERBOSE_LOGGING)
+endif()
+
 if (GENESIS_ENABLE_SIMD)
   # This create an internal definition that allows our project to check if it can use simd.
   # If the code decides it can then GEN_SIMD will be defined along with a bunch of other SIMD related defines.

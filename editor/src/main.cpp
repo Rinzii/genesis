@@ -5,31 +5,28 @@
 #include <gen/logger/log.hpp>
 #include <gen/util/version.hpp>
 
-#include <iostream>
-
-// temp
-#include "gen/io/fileUtils.hpp"
-
 // TODO: Replace this with a config file. At least for the startup window size.
 static constexpr const char * appName{"Genesis Game - Editor"};
 static constexpr gen::Version appVersion{0, 0, 1};
 static constexpr mim::vec2i startingWindowSize{800, 600};
+static constexpr const char * logFile{"genesis.log"};
 
 int main()
 {
+	// TODO: Make this be set by a config file.
+	auto config = gen::logger::Config{};
+
+	// Required to initialize the logger for the application. This must also stay outside the try/catch block.
+	auto logger = gen::logger::Instance{logFile, config};
+
 	try
 	{
-		auto logger = gen::logger::Instance{}; // Required to initialize the logger
-
-		gen::logger::general.log("Current executable path: {}", gen::io::getExecutablePath().string());
-
 		gen::Game app{appName, appVersion.getVersion(), startingWindowSize};
 		app.run();
 	}
 	catch (std::exception const & e)
 	{
-		// TODO: Logger does not work inside of a catch block. Need to fix this.
-		std::cout << "Exception: " << e.what() << '\n';
+		gen::logger::general.error("{}", e.what());
 		return 1;
 	}
 
