@@ -3,9 +3,9 @@
 #pragma once
 #include <memory>
 #include <stdexcept>
-#include "config.hpp"
-#include "sink.hpp"
-#include "target.hpp"
+#include "loggerConfig.hpp"
+#include "loggerSink.hpp"
+#include "loggerTarget.hpp"
 
 namespace gen::logger
 {

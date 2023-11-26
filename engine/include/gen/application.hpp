@@ -6,7 +6,7 @@
 
 #include "gen/util/version.hpp"
 
-#include "gen/logger/log.hpp"
+#include "gen/system/log.hpp"
 #include "gen/windowing/window.hpp"
 
 #include "engine.hpp"

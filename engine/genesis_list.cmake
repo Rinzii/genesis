@@ -1,5 +1,8 @@
 
-
+set(containers_headers
+        include/gen/gtl/containerOpResult.hpp
+        include/gen/gtl/dynArray.hpp
+)
 
 set(core_base_config_headers
         include/gen/core/base/config/architecture.hpp
@@ -49,6 +52,11 @@ set(system_win32_headers
 set(system_headers
         ${system_win32_headers}
         include/gen/system/types.hpp
+        include/gen/system/loggerContext.hpp
+        include/gen/system/loggerInstance.hpp
+        include/gen/system/loggerLevel.hpp
+        include/gen/system/log.hpp
+        include/gen/system/loggerSink.hpp
         )
 
 
@@ -57,14 +65,6 @@ set(util_headers
         include/gen/util/version.hpp
         )
 
-set(logger_headers
-        include/gen/logger/context.hpp
-        include/gen/logger/instance.hpp
-        include/gen/logger/level.hpp
-        include/gen/logger/log.hpp
-        include/gen/logger/sink.hpp
-)
-
 set(windowing_headers
         include/gen/windowing/window.hpp
         include/gen/windowing/windowExceptions.hpp
@@ -72,13 +72,13 @@ set(windowing_headers
 
 # core header include
 set(genesis_headers
+        ${containers_headers}
         ${core_headers}
 		${graphics_headers}
 		${inputs_headers}
         ${io_headers}
         ${system_headers}
         ${util_headers}
-        ${logger_headers}
         ${windowing_headers}
         include/gen/application.hpp
         include/gen/engine.hpp

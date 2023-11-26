@@ -2,7 +2,7 @@
 
 #include "gen/windowing/windowExceptions.hpp"
 
-#include "gen/logger/log.hpp"
+#include "gen/system/log.hpp"
 
 namespace gen
 {

@@ -4,7 +4,7 @@
 #include <chrono>
 #include <optional>
 #include <string_view>
-#include "level.hpp"
+#include "loggerLevel.hpp"
 
 namespace gen::logger
 {

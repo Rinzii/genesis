@@ -5,8 +5,8 @@
 #include <string>
 #include <unordered_map>
 #include "gen/util/fixed_string.hpp"
-#include "level.hpp"
-#include "target.hpp"
+#include "loggerLevel.hpp"
+#include "loggerTarget.hpp"
 
 namespace gen::logger
 {

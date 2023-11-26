@@ -6,7 +6,7 @@
 #include "device.hpp"
 #include "gen/core.hpp"
 #include "gen/core/monoInstance.hpp"
-#include "gen/logger/log.hpp"
+#include "gen/system/log.hpp"
 #include "gen/windowing/window.hpp"
 #include "swapchain.hpp"
 

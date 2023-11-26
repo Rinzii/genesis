@@ -1,6 +1,6 @@
 // Copyright (c) 2023-present Genesis Engine contributors (see LICENSE.txt)
 
-#include "gen/logger/context.hpp"
+#include "gen/system/loggerContext.hpp"
 #include <atomic>
 
 namespace gen::logger

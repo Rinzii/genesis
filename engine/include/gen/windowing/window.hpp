@@ -4,7 +4,7 @@
 
 #include "gen/core.hpp"
 #include "gen/core/monoInstance.hpp"
-#include "gen/logger/log.hpp"
+#include "gen/system/log.hpp"
 
 #include <mim/vec2.hpp>
 

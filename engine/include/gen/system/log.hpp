@@ -3,8 +3,8 @@
 #pragma once
 #include <format>
 #include <string_view>
-#include "level.hpp"
-#include "target.hpp"
+#include "loggerLevel.hpp"
+#include "loggerTarget.hpp"
 
 namespace gen
 {
