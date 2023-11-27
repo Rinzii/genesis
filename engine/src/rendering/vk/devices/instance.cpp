@@ -1,17 +1,13 @@
 // Copyright (c) 2023-present Genesis Engine contributors (see LICENSE.txt)
 
 #include "gen/rendering/vk/devices/instance.hpp"
-
-#include "gen/logger/log.hpp"
-#include "gen/core/base/config/platform.hpp"
 #include "gen/rendering/utils/exceptions.hpp"
-
+#include "gen/core/base/config/platform.hpp"
+#include "gen/logger/log.hpp"
 
 #include <GLFW/glfw3.h>
 #include <volk.h>
 
-
-// TODO: Make this better
 
 // Macros used for configuring Vulkan
 #if (VULKAN_HPP_DISPATCH_LOADER_DYNAMIC == 1)
@@ -27,14 +23,11 @@ VULKAN_HPP_DEFAULT_DISPATCH_LOADER_DYNAMIC_STORAGE
 #define INTERNAL_ENABLE_PORTABILITY
 #endif
 
-
-
 namespace gen
 {
 	namespace
 	{
 		const Logger s_logger{"vulkan"};
-
 
 	#if defined(INTERNAL_USE_VALIDATION_LAYERS)
 		VKAPI_ATTR VkBool32 VKAPI_CALL debugUtilsMessengerCallback(VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity, VkDebugUtilsMessageTypeFlagsEXT  /*messageTypes*/,
@@ -86,7 +79,7 @@ namespace gen
 
 		bool enableLayer(const char *layerName, const std::vector<vk::LayerProperties> &availableLayers, std::vector<const char *> &enabledLayers)
 		{
-#ifdef INTERNAL_USE_VALIDATION_LAYERS
+#ifdef INTERNAL_USE_VALIDATION_LAYERS // Don't bother trying to enable layers if they are disabled
 			for (auto const &availableLayer : availableLayers)
 			{
 				if (std::strcmp(layerName, availableLayer.layerName) == 0)
@@ -135,6 +128,7 @@ namespace gen
 		assert(!engineName.empty() && "Engine name cannot be empty");
 
 #ifndef INTERNAL_USE_VALIDATION_LAYERS
+		// If validation layers are disabled, we cannot enable validation layers
 		if (enableValidationLayers)
 		{
 			GEN_LOG_WARN(s_logger, "Validation layers are disabled, cannot enable validation layers");
@@ -148,9 +142,13 @@ namespace gen
 		VULKAN_HPP_DEFAULT_DISPATCHER.init(vkGetInstanceProcAddr);
 #endif
 
+		// Check if the selected Vulkan API version meets the minimum requirements
 		doesProvidedApiMeetMin(apiVersion);
 
 		const auto appInfo = vk::ApplicationInfo(appName.c_str(), appVersion, engineName.c_str(), engineVersion, apiVersion);
+
+
+		// Handle the extensions
 
 		const auto availableExtensions = vk::enumerateInstanceExtensionProperties();
 
@@ -159,7 +157,7 @@ namespace gen
 			VK_EXT_DEBUG_UTILS_EXTENSION_NAME,
 			VK_EXT_VALIDATION_FEATURES_EXTENSION_NAME,
 #endif
-#if defined(GEN_PLATFORM_APPLE)
+#if defined(GEN_PLATFORM_APPLE) // Required for MoltenVK
 			VK_KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME,
 			VK_KHR_PORTABILITY_ENUMERATION_EXTENSION_NAME,
 #endif
@@ -176,11 +174,11 @@ namespace gen
 		auto *requiredGlfwExtensions = glfwGetRequiredInstanceExtensions(&glfwExtensionCount);
 
 
+		// Add the required glfw extensions to the desired extensions vector
 		for (std::uint32_t i = 0; i < glfwExtensionCount; i++)
 		{
 			enableExtension(requiredGlfwExtensions[i], availableExtensions, desiredInstanceExtensions); // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
 		}
-
 
 		// create a stream to output the enabled extensions to our logger
 		auto enabledExtensionsStream = std::stringstream{};
@@ -191,6 +189,7 @@ namespace gen
 		GEN_LOG_INFO(s_logger, "Enabled extensions: {}", enabledExtensionsStream.str());
 
 
+		// Handle the layers
 
 		std::vector<const char *> desiredInstanceLayers = {};
 
@@ -210,6 +209,9 @@ namespace gen
 			for (auto const & layer : desiredInstanceLayers) { enabledLayersStream << layer << ", "; }
 			GEN_LOG_INFO(s_logger, "Enabled layers: {}", enabledLayersStream.str());
 		}
+
+
+		// Handle instance creation
 
 		auto instanceCreateInfo = vk::InstanceCreateInfo({}, &appInfo, desiredInstanceLayers, desiredInstanceExtensions);
 
