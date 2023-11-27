@@ -42,16 +42,7 @@ set(rendering_headers
         ${rendering_utils_headers}
         ${rendering_vk_headers}
         include/gen/rendering/renderWindow.hpp
-        include/gen/rendering/buffer.hpp
-        include/gen/rendering/device.hpp
-        include/gen/rendering/fencePool.hpp
-        include/gen/rendering/semaphorePool.hpp
-        include/gen/rendering/bufferPool.hpp
-        include/gen/rendering/frame.hpp
-        include/gen/rendering/instance.hpp
-        include/gen/rendering/pipeline.hpp
         include/gen/rendering/renderer.hpp
-        include/gen/rendering/swapchain.hpp
 		)
 
 set(inputs_headers

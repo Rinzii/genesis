@@ -11,11 +11,14 @@
 #include "gen/core/monoInstance.hpp"
 
 #include <memory>
+#include <string>
 
 namespace gen
 {
 	class Engine : public MonoInstance<Engine>
 	{
+		static constexpr std::string_view s_engineName { "Genesis Engine" };
+
 	public:
 		struct Settings
 		{
@@ -33,6 +36,10 @@ namespace gen
 		Engine & operator=(Engine &&)	   = delete;
 
 		void render();
+
+
+		// Getters
+		[[nodiscard]] static std::string_view getEngineName() { return s_engineName; }
 
 	private:
 		std::unique_ptr<Renderer> m_renderer;

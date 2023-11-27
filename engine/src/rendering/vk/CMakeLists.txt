@@ -9,7 +9,7 @@ target_sources(${PROJECT_NAME} PRIVATE
         fence.cpp
         image.cpp
         imageView.cpp
-        instance.cpp
+        devices/instance.cpp
         pipeline.cpp
         pipelineLayout.cpp
         queryPool.cpp

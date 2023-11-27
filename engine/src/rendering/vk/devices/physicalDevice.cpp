@@ -4,4 +4,8 @@
 
 namespace gen
 {
+	PhysicalDevice::PhysicalDevice(vk::PhysicalDevice gpu)
+		: m_physicalDevice{gpu}
+	{
+	}
 } // namespace gen

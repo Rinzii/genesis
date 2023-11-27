@@ -15,18 +15,11 @@
 
 namespace gen
 {
-	struct DeviceInfo
-	{
-		std::string name{};
-		PhysicalDevice physicalDevice{};
-		vk::DeviceSize totalLocalDevice{0};
-		std::vector<vk::ExtensionProperties> extensions{};
-	};
 
 	class Device
 	{
 	public:
-		Device(std::string name);
+		Device(std::string name, PhysicalDevice const & physicalDevice, std::unordered_map<const char *, bool> const & extensions, std::unordered_map<const char *, bool> const & requestedExtensions = {});
 		~Device();
 
 		Device(Device const &)			   = delete;

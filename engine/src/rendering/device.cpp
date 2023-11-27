@@ -7,6 +7,7 @@
 #include <GLFW/glfw3.h>
 
 #include <set>
+#include <gen/rendering/vk/devices/logicalDevice.hpp>
 
 namespace gen
 {
@@ -158,6 +159,7 @@ namespace gen
 	{
 		m_handle->waitIdle();
 	}
+
 
 	void Device::submit(const vk::CommandBuffer & cmd, vk::Fence fence) const
 	{

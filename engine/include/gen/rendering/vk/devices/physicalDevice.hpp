@@ -14,12 +14,15 @@ namespace gen
 	class PhysicalDevice
 	{
 	public:
-		PhysicalDevice();
+		explicit PhysicalDevice(vk::PhysicalDevice gpu);
 
 		[[nodiscard]] vk::PhysicalDevice getHandle() const { return m_physicalDevice; }
-		[[nodiscard]] vk::PhysicalDeviceProperties getProperty() const { return m_properties; }
+		[[nodiscard]] vk::PhysicalDeviceProperties getProperties() const { return m_properties; }
 		[[nodiscard]] vk::PhysicalDeviceFeatures getFeatures() const { return m_features; }
 		[[nodiscard]] vk::PhysicalDeviceMemoryProperties getMemoryProperties() const { return m_memoryProperties; }
+		[[nodiscard]] std::vector<vk::QueueFamilyProperties> getQueueFamilyProperties() const { return m_queueFamilyProperties; }
+
+
 
 
 	private:
@@ -30,6 +33,7 @@ namespace gen
 		vk::PhysicalDeviceProperties m_properties;
 		vk::PhysicalDeviceFeatures m_features;
 		vk::PhysicalDeviceMemoryProperties m_memoryProperties;
+		std::vector<vk::QueueFamilyProperties> m_queueFamilyProperties;
 	};
 
 

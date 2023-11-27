@@ -65,12 +65,20 @@ add_subdirectory(src/spirv_cross)
 add_subdirectory(src/stb)
 add_library(stb::image ALIAS stb-image)
 
+FetchContent_Declare(
+        volk
+        GIT_REPOSITORY https://github.com/zeux/volk.git
+        GIT_TAG       sdk-1.3.261
+)
+FetchContent_MakeAvailable(volk)
+
 add_library(genesis-ext INTERFACE)
 add_library(genesis::ext ALIAS genesis-ext)
 
 target_link_libraries(genesis-ext INTERFACE
         vk-dynamic::vk-dynamic
         vma::vma
+        volk::volk
         glfw::glfw
         mim::mim
         gtest::gtest
