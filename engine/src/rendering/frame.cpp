@@ -1,7 +1,7 @@
 // Copyright (c) 2023-present Genesis Engine contributors (see LICENSE.txt)
 
-#include "gen/rendering/frame.hpp"
 #include "gen/rendering/device.hpp"
+#include "gen/rendering/renderFrame.hpp"
 #include "gen/rendering/utils/vkHelpers.hpp"
 
 namespace gen

@@ -237,37 +237,6 @@ namespace gen
 													 vk::DebugUtilsMessageTypeFlagBitsEXT::eValidation | vk::DebugUtilsMessageTypeFlagBitsEXT::ePerformance,
 													 debugUtilsMessengerCallback));
 		}
-
-		// Query the physical devices and store them in the m_gpus vector
-		queryPhysicalDevices();
-	}
-
-	Instance::Instance(vk::Instance instance)
-	: m_handle(instance)
-	{
-		if (m_handle) { queryPhysicalDevices(); }
-		else
-		{
-			throw VulkanException("Instance is not initialized");
-		}
-	}
-
-	void Instance::queryPhysicalDevices()
-	{
-		assert(m_handle && "Instance is not initialized");
-
-		auto physicalDevices = m_handle->enumeratePhysicalDevices();
-
-		if (physicalDevices.empty())
-		{
-			throw VulkanException("No physical devices found");
-		}
-
-		for (auto const & physicalDevice : physicalDevices)
-		{
-			m_gpus.push_back(std::make_unique<PhysicalDevice>(physicalDevice));
-		}
-
 	}
 
 	void Instance::doesProvidedApiMeetMin(u32 apiVersion)

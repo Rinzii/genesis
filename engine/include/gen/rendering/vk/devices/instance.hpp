@@ -46,12 +46,6 @@ namespace gen
 				 std::vector<std::string> const & requiredLayers = {},
 				 u32 apiVersion = VK_API_VERSION_1_3);
 
-		///
-		/// \brief Receives an already created vulkan instance and queries the physical devices.
-		/// \param instance Initialized Vulkan instance.
-		///
-		explicit Instance(vk::Instance instance);
-
 		~Instance() = default;
 
 		Instance(const Instance &) = delete;
@@ -79,11 +73,6 @@ namespace gen
 
 	private:
 		///
-		/// \brief Query the physical devices available on the system and store them in m_gpus.
-		///
-		void queryPhysicalDevices();
-
-		///
 		/// \brief Check if the provided api version meets the minimum required version.
 		/// \param apiVersion The api version to check.
 		///
@@ -95,7 +84,6 @@ namespace gen
 
 		std::vector<const char *> m_enabledExtensions{};
 
-		std::vector<std::unique_ptr<PhysicalDevice>> m_gpus{};
 
 #if (defined(GEN_DEBUG) || defined(GEN_VK_FORCE_VALIDATION_LAYERS)) && !defined(GEN_VK_DISABLE_VALIDATION_LAYERS) && !(defined(GEN_NDEBUG) && !defined(GEN_VK_FORCE_VALIDATION_LAYERS))
 		vk::UniqueDebugUtilsMessengerEXT debugUtilsMessengerExt;

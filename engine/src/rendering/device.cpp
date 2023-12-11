@@ -160,7 +160,6 @@ namespace gen
 		m_handle->waitIdle();
 	}
 
-
 	void Device::submit(const vk::CommandBuffer & cmd, vk::Fence fence) const
 	{
 		auto lock = std::scoped_lock{m_queueMutex};

@@ -37,4 +37,6 @@ namespace vk::utils
 
 	std::string intToSemver(std::uint32_t version);
 
+	std::string getDriverVendorName(std::uint32_t vendorID);
+
 } // namespace vk::utils

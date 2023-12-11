@@ -6,8 +6,8 @@
 #include "gen/system/types.hpp"
 
 #include "gen/rendering/device.hpp"
-#include "gen/rendering/frame.hpp"
 #include "gen/rendering/instance.hpp"
+#include "gen/rendering/renderFrame.hpp"
 #include "gen/rendering/swapchain.hpp"
 
 #include <memory>

@@ -82,4 +82,23 @@ namespace vk::utils
 		return std::to_string(major) + "." + std::to_string(minor) + "." + std::to_string(patch);
 	}
 
+	std::string getDriverVendorName(std::uint32_t vendorID)
+	{
+		// PCI vendor IDs that support vulkan
+		// https://www.reddit.com/r/vulkan/comments/4ta9nj/comment/d5nso2t/?utm_source=share&utm_medium=web3x&utm_name=web3xcss&utm_term=1&utm_content=share_button
+		static std::map<std::uint32_t, std::string> const vendorNames{
+			{0x1002, "AMD"},
+			{0x1010, "ImgTec"},
+			{0x10DE, "NVIDIA"},
+			{0x13B5, "ARM"},
+			{0x5143, "Qualcomm"},
+			{0x8086, "INTEL"},
+		};
+
+		auto const it = vendorNames.find(vendorID);
+		if (it != vendorNames.end()) { return it->second; }
+
+		return "Unknown";
+	}
+
 } // namespace vk::utils
