@@ -2,48 +2,41 @@
 
 #pragma once
 
-#include "gen/system/types.hpp"
+#include "gen/core/monoInstance.hpp"
 #include "gen/rendering/vk/queue.hpp"
+#include "gen/system/types.hpp"
 
-#include <vulkan/vulkan.hpp>
+#include "gen/rendering/vk/devices/physicalDevice.hpp"
+
 #include <vk_mem_alloc.h>
+#include <vulkan/vulkan.hpp>
 
-#include <string>
+#include <memory>
+#include <optional>
 #include <span>
+#include <string>
 
 namespace gen
 {
-	struct Gpu
-	{
-		vk::PhysicalDevice physicalDevice{ nullptr };
-		vk::PhysicalDeviceType type{ vk::PhysicalDeviceType::eOther };
-		vk::PhysicalDeviceProperties properties{};
-		vk::PhysicalDeviceFeatures features{};
-		vk::PhysicalDeviceMemoryProperties memoryProperties{};
-		std::vector<vk::QueueFamilyProperties> queueFamilyProperties{};
-		u32 graphicsQueueFamilyIndex{ 0 };
-		bool presentSupport{ false };
-	};
 
 	struct DeviceInfo
 	{
 		std::string name{};
-		Gpu gpu{};
+		// Gpu gpu{};
 		vk::DeviceSize totalDeviceLocalMemory{0};
 		std::vector<vk::ExtensionProperties> extensions{};
-
-
 	};
 
-	class Device
+	class Device : public MonoInstance<Device>
 	{
 	public:
-		explicit Device(vk::Instance instance,
-						vk::SurfaceKHR surface,
-						std::span<const char * const> requiredExtensions = {},
-						const vk::PhysicalDeviceFeatures & requiredFeatures = {},
-						const vk::PhysicalDeviceFeatures & optionalFeatures = {},
-						std::optional<u32> selectSpecificGpuIndex = std::nullopt);
+		explicit Device(
+			Instance & instance,
+			PhysicalDevice & gpu,
+			std::span<const char * const> requiredExtensions	= {},
+			const vk::PhysicalDeviceFeatures & requiredFeatures = {},
+			const vk::PhysicalDeviceFeatures & optionalFeatures = {},
+			std::optional<u32> selectSpecificGpuIndex			= std::nullopt);
 
 		~Device();
 
@@ -52,54 +45,53 @@ namespace gen
 		Device & operator=(Device const &) = delete;
 		Device & operator=(Device &&)	   = delete;
 
-		[[nodiscard]] vk::Device getHandle() const { return m_handle.get(); }
+		[[nodiscard]] vk::Device const & getHandle() const { return m_gpu.get(); }
 
-		static vk::PhysicalDevice selectBestPhysicalDevice(std::vector<DeviceInfo> & gpus,
-													vk::SurfaceKHR surface,
-													std::span<const char * const> requiredExtensions = {},
-													const vk::PhysicalDeviceFeatures & requiredFeatures = {});
+		[[nodiscard]] PhysicalDevice & getPhysicalDevice() const { return *m_physicalDevice; }
 
-		static vk::PhysicalDevice selectBestPhysicalDevice(const vk::Instance & instance,
-													const vk::SurfaceKHR & surface,
-													std::span<const char * const> requiredExtensions = {},
-													const vk::PhysicalDeviceFeatures & requiredFeatures = {});
+		VmaAllocator getAllocator() const { return m_allocator; }
 
-		[[nodiscard]] vk::SurfaceKHR getSurface() const { return m_surface; }
+		vk::Queue const & getQueue(u32 queueFamilyIndex, u32 queueIndex) const;
 
-		[[nodiscard]] vk::Queue getGraphicsQueue() const { return m_graphicsQueue; }
+		vk::Queue const & getQueueByFlags(vk::QueueFlags flags, u32 queueIndex) const;
 
-		[[nodiscard]] vk::PhysicalDevice getPhysicalDevice() const { return m_selectedGpu.physicalDevice; }
+		vk::Queue const & getQueueByPresentSupport(u32 queueIndex) const;
 
-		[[nodiscard]] vk::DeviceSize getTotalDeviceMemory() const { return totalDeviceMemory; }
+		vk::Queue const & getIdealGraphicsQueue() const;
 
-		[[nodiscard]] VmaAllocator getAllocator() const { return m_allocator; }
+		bool isExtensionSupported(std::string_view const & extensionName) const;
 
-		[[nodiscard]] Gpu getSelectedGpu() const { return m_selectedGpu; }
+		bool isExtensionEnabled(std::string_view const & extensionName) const;
 
-	private:
+		u32 getQueueFamilyIndex(vk::QueueFlagBits flags) const;
 
-		static Gpu selectPhysicalDevice(const vk::Instance & instance,
-											const vk::SurfaceKHR & surface,
-											std::span<const char * const> requiredExtensions = {},
-											const vk::PhysicalDeviceFeatures & requiredFeatures = {},
-											const vk::PhysicalDeviceFeatures & optionalFeatures = {});
+		vk::CommandPool getCommandPool() const;
 
+		std::pair<vk::Image, vk::DeviceMemory> createImage(
+			vk::Format format, vk::Extent2D const & extent, u32 mipLevels, vk::ImageUsageFlags usage, vk::MemoryPropertyFlags properties) const;
 
+		void copyBuffer(vk::Buffer srcBuffer, vk::Buffer dstBuffer, vk::Queue queue, vk::BufferCopy * copyRegion = nullptr) const;
+
+		vk::CommandBuffer createCommandBuffer(vk::CommandBufferLevel level, bool begin = false) const;
+
+		void flushCommandBuffer(vk::CommandBuffer commandBuffer, vk::Queue queue, bool free = true, vk::Semaphore signalSemaphore = VK_NULL_HANDLE) const;
 
 	private:
-		vk::UniqueDevice m_handle{nullptr};
+		vk::Device m_handle{nullptr};
 
-		VmaAllocator m_allocator{VK_NULL_HANDLE};
+		PhysicalDevice m_gpu{nullptr};
 
 		vk::SurfaceKHR m_surface{nullptr};
 
-		vk::DeviceSize totalDeviceMemory{0};
+		std::vector<vk::ExtensionProperties> m_deviceExtensions{};
 
-		vk::Queue m_graphicsQueue{nullptr};
+		std::vector<const char *> m_enabledExtensions{};
 
-		DeviceInfo m_gpu{};
+		VmaAllocator m_allocator{VK_NULL_HANDLE};
 
-		std::vector<DeviceInfo> m_gpus{};
+		// TODO: Maybe add multiple queues at a later date. Unlikely, but will leave this todo for a reminder.
+		Queue m_graphicsQueue;
 
+		vk::CommandPool m_commandPool{nullptr};
 	};
 } // namespace gen

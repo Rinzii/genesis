@@ -2,16 +2,7 @@ project(genesis-ext)
 
 find_package(Threads)
 
-if (EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/src")
-    # delete the src directory if it exists
-    message(STATUS "Deleting ext/src directory!")
-    file(REMOVE_RECURSE "${CMAKE_CURRENT_SOURCE_DIR}/src")
-    message(STATUS "Extracting ext/src directory!")
-    file(ARCHIVE_EXTRACT INPUT "${CMAKE_CURRENT_SOURCE_DIR}/src.zip" DESTINATION "${CMAKE_CURRENT_SOURCE_DIR}")
-else ()
-    message(STATUS "Extracting ext/src directory!")
-    file(ARCHIVE_EXTRACT INPUT "${CMAKE_CURRENT_SOURCE_DIR}/src.zip" DESTINATION "${CMAKE_CURRENT_SOURCE_DIR}")
-endif ()
+file(ARCHIVE_EXTRACT INPUT "${genesis_root_dir}/ext/src.zip" DESTINATION "${genesis_root_dir}/ext")
 
 add_subdirectory(src/vk_dynamic)
 add_library(vk-dynamic::vk-dynamic ALIAS vk-dynamic)
@@ -26,9 +17,6 @@ FetchContent_Declare(
         GIT_TAG       origin/main
 )
 FetchContent_MakeAvailable(mim)
-
-add_subdirectory(src/dxc)
-add_library(dxc::dxc ALIAS dxc)
 
 set(GLFW_VULKAN_STATIC OFF)
 set(GLFW_INSTALL OFF)
@@ -86,8 +74,6 @@ target_link_libraries(genesis-ext INTERFACE
         imgui::imgui
         spirv-cross-hlsl
         stb::image
-
-        dxc::dxc
 
         Threads::Threads
         )

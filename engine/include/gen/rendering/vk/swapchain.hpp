@@ -12,6 +12,13 @@
 
 namespace gen
 {
+	struct SwapchainProperties
+	{
+		vk::SurfaceFormatKHR surfaceFormat;
+		vk::PresentModeKHR presentMode;
+		vk::Extent2D extent;
+	};
+
 	class Swapchain
 	{
 	public:

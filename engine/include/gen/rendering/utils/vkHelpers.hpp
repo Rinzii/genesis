@@ -35,6 +35,39 @@ namespace vk::utils
 	 */
 	void unusedResult(vk::Result result);
 
+	///
+	/// \brief Template helper for validating a template only accepts only integrals.
+	//
+	template <typename T>
+	concept IsIntegral = std::is_integral_v<T>;
+
+	///
+	/// \brief Creates a valid semver value that is valid for Vulkan.
+	/// \note Generally variant is not used by Vulkan, but is included for futures Vulkan as this is how the API now defines it.
+	/// \note We only accept integrals with this function. We theoretically could allow anything and just convert it, but personally I think its just better to
+	/// enforce that we only use integrals.
+	///
+	template <IsIntegral T>
+	uint32_t makeVkVersion(T variant, T major, T minor, T patch)
+	{
+		// NOLINTNEXTLINE
+		return (
+			((static_cast<uint32_t>(variant)) << 29U) | ((static_cast<uint32_t>(major)) << 22U) | ((static_cast<uint32_t>(minor)) << 12U) |
+			(static_cast<uint32_t>(patch)));
+	}
+
+	///
+	/// \brief Creates a valid semver value that is valid for Vulkan.
+	/// \note We only accept integrals with this function. We theoretically could allow anything and just convert it, but personally I think its just better to
+	/// enforce that we only use integrals.
+	///
+	template <IsIntegral T>
+	uint32_t makeVkVersion(T major, T minor, T patch)
+	{
+		// NOLINTNEXTLINE
+		return ((static_cast<uint32_t>(major)) << 22U) | ((static_cast<uint32_t>(minor)) << 12U) | (static_cast<uint32_t>(patch)));
+	}
+
 	std::string intToSemver(std::uint32_t version);
 
 	std::string getDriverVendorName(std::uint32_t vendorID);

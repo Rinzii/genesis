@@ -1,10 +1,11 @@
+add_subdirectory(buffers)
+add_subdirectory(commands)
+add_subdirectory(descriptors)
 add_subdirectory(devices)
+add_subdirectory(images)
+add_subdirectory(pipelines)
+
 target_sources(${PROJECT_NAME} PRIVATE
-        commandBuffer.cpp
-        commandPool.cpp
-        descriptorPool.cpp
-        descriptorSet.cpp
-        descriptorSetLayout.cpp
         fence.cpp
         image.cpp
         imageView.cpp

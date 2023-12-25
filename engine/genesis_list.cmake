@@ -27,13 +27,40 @@ set(rendering_utils_headers
         include/gen/rendering/utils/vulkanStructs.hpp
 )
 
-set(rendering_vk_headers
+set(rendering_vk_buffers_headers
+        include/gen/rendering/vk/buffers/buffer.hpp
+)
+
+set(rendering_vk_commands_headers
         include/gen/rendering/vk/commands/commandBuffer.hpp
         include/gen/rendering/vk/commands/commandPool.hpp
+)
+
+set(rendering_vk_devices_headers
+        include/gen/rendering/vk/devices/instance.hpp
         include/gen/rendering/vk/devices/logicalDevice.hpp
+        include/gen/rendering/vk/devices/physicalDevice.hpp
+)
+
+set(rendering_vk_images_headers
+        include/gen/rendering/vk/images/image.hpp
+        include/gen/rendering/vk/images/imageView.hpp
+)
+
+set(rendering_vk_pipelines_headers
+        include/gen/rendering/vk/pipelines/pipeline.hpp
+        include/gen/rendering/vk/pipelines/pipelineGraphics.hpp
+        include/gen/rendering/vk/pipelines/shader.hpp
+)
+
+set(rendering_vk_headers
+        ${rendering_vk_buffers_headers}
+        ${rendering_vk_commands_headers}
+        ${rendering_vk_devices_headers}
+        ${rendering_vk_images_headers}
+        ${rendering_vk_pipelines_headers}
         include/gen/rendering/vk/fence.hpp
         include/gen/rendering/vk/image.hpp
-        include/gen/rendering/vk/devices/instance.hpp
         include/gen/rendering/vk/semaphore.hpp
         include/gen/rendering/vk/swapchain.hpp
 )
@@ -43,6 +70,10 @@ set(rendering_headers
         ${rendering_vk_headers}
         include/gen/rendering/renderWindow.hpp
         include/gen/rendering/renderer.hpp
+        include/gen/rendering/renderFrame.hpp
+        include/gen/rendering/renderPipeline.hpp
+        include/gen/rendering/renderTarget.hpp
+        include/gen/rendering/renderContext.hpp
 		)
 
 set(inputs_headers

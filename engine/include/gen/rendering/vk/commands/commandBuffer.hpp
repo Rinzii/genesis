@@ -37,12 +37,10 @@ namespace gen
 		CommandBuffer(CommandPool & cmdPool, vk::CommandBufferLevel level, std::string name);
 		~CommandBuffer();
 
-		CommandBuffer(CommandBuffer const &)				 = delete;
+		CommandBuffer(CommandBuffer const &) = delete;
 		CommandBuffer(CommandBuffer &&) noexcept;
 		CommandBuffer & operator=(CommandBuffer const &)	 = delete;
 		CommandBuffer & operator=(CommandBuffer &&) noexcept = default;
-
-		void flush(vk::PipelineBindPoint bindPoint);
 
 		vk::Result begin(vk::CommandBufferUsageFlags flags, CommandBuffer * primaryCmdBuffer = nullptr);
 
@@ -65,7 +63,6 @@ namespace gen
 		void bindVertexBuffers(u32 firstBinding, std::vector<Buffer> & buffers, std::vector<vk::DeviceSize> & offsets);
 
 		void bindIndexBuffer(Buffer & buffer, vk::DeviceSize offset, vk::IndexType indexType);
-
 
 		void setViewport(u32 firstViewport, const std::vector<vk::Viewport> & viewports);
 
@@ -102,27 +99,13 @@ namespace gen
 		void copyBuffer(Buffer & srcBuffer, Buffer & dstBuffer, const std::vector<vk::BufferCopy> & regions);
 
 		void copyImage(
-			Image & srcImage,
-			vk::ImageLayout srcImageLayout,
-			Image & dstImage,
-			vk::ImageLayout dstImageLayout,
-			const std::vector<vk::ImageCopy> & regions);
+			Image & srcImage, vk::ImageLayout srcImageLayout, Image & dstImage, vk::ImageLayout dstImageLayout, const std::vector<vk::ImageCopy> & regions);
 
-		void copyBufferToImage(
-			Buffer & srcBuffer,
-			Image & dstImage,
-			vk::ImageLayout dstImageLayout,
-			const std::vector<vk::BufferImageCopy> & regions);
+		void copyBufferToImage(Buffer & srcBuffer, Image & dstImage, vk::ImageLayout dstImageLayout, const std::vector<vk::BufferImageCopy> & regions);
 
-		void copyImageToBuffer(
-			Image & srcImage,
-			vk::ImageLayout srcImageLayout,
-			Buffer & dstBuffer,
-			const std::vector<vk::BufferImageCopy> & regions);
+		void copyImageToBuffer(Image & srcImage, vk::ImageLayout srcImageLayout, Buffer & dstBuffer, const std::vector<vk::BufferImageCopy> & regions);
 
-		void imageMemoryBarrier(
-			Image & image,
-			vk::types::ImageMemoryBarrier & barrier) const;
+		void imageMemoryBarrier(Image & image, vk::types::ImageMemoryBarrier & barrier) const;
 
 		void bufferMemoryBarrier(Buffer & buffer, vk::DeviceSize offset, vk::DeviceSize size, vk::types::BufferMemoryBarrier & barrier) const;
 
@@ -151,8 +134,6 @@ namespace gen
 		PipelineState m_pipelineState;
 
 		ResourceBindingState m_resourceBindingState;
-
-
 
 		vk::UniqueCommandBuffer m_handle{nullptr};
 		std::string m_name;

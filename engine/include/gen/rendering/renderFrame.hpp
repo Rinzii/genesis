@@ -2,8 +2,8 @@
 
 #pragma once
 
-#include "gen/rendering/fencePool.hpp"
-#include "gen/rendering/semaphorePool.hpp"
+// #include "gen/rendering/fencePool.hpp"
+// #include "gen/rendering/semaphorePool.hpp"
 #include "gen/system/types.hpp"
 
 #include <vulkan/vulkan.hpp>
@@ -18,23 +18,24 @@ namespace gen
 		std::vector<vk::UniqueImageView> imageViews;
 	};
 
-	class Frame
+	class RenderFrame
 	{
 	public:
-		explicit Frame(FrameSwapchainData && swapchainData, vk::CommandPoolCreateFlagBits commandPoolCreateBits = vk::CommandPoolCreateFlagBits::eTransient);
+		explicit RenderFrame(
+			FrameSwapchainData && swapchainData, vk::CommandPoolCreateFlagBits commandPoolCreateBits = vk::CommandPoolCreateFlagBits::eTransient);
 
-		explicit Frame(std::vector<vk::Image> && image, vk::CommandPoolCreateFlagBits commandPoolCreateBits = vk::CommandPoolCreateFlagBits::eTransient);
+		explicit RenderFrame(std::vector<vk::Image> && image, vk::CommandPoolCreateFlagBits commandPoolCreateBits = vk::CommandPoolCreateFlagBits::eTransient);
 
-		explicit Frame(
+		explicit RenderFrame(
 			std::vector<vk::UniqueImageView> && imageView, vk::CommandPoolCreateFlagBits commandPoolCreateBits = vk::CommandPoolCreateFlagBits::eTransient);
 
-		~Frame() = default;
+		~RenderFrame() = default;
 
-		Frame(const Frame &)			 = delete;
-		Frame & operator=(const Frame &) = delete;
+		RenderFrame(const RenderFrame &)			 = delete;
+		RenderFrame & operator=(const RenderFrame &) = delete;
 
-		Frame(Frame &&)				= delete;
-		Frame & operator=(Frame &&) = delete;
+		RenderFrame(RenderFrame &&)				= delete;
+		RenderFrame & operator=(RenderFrame &&) = delete;
 
 		void reset();
 

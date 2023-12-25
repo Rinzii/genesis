@@ -5,7 +5,8 @@
 namespace
 {
 
-#if (defined(GEN_DEBUG) || defined(GEN_VK_FORCE_VALIDATION_LAYERS)) && !defined(GEN_VK_DISABLE_VALIDATION_LAYERS) && !(defined(GEN_NDEBUG) && !defined(GEN_VK_FORCE_VALIDATION_LAYERS))
+#if (defined(GEN_DEBUG) || defined(GEN_VK_FORCE_VALIDATION_LAYERS)) && !defined(GEN_VK_DISABLE_VALIDATION_LAYERS) &&                                           \
+	!(defined(GEN_NDEBUG) && !defined(GEN_VK_FORCE_VALIDATION_LAYERS))
 	constexpr bool debugEnabled = true;
 #else
 	constexpr bool debugEnabled = false;
@@ -47,7 +48,6 @@ namespace vk::debug
 		commandBuffer.beginDebugUtilsLabelEXT(label);
 	}
 
-
 	void cmdBeginRegion(vk::CommandBuffer & commandBuffer, const char * regionName, std::vector<float> const & color)
 	{
 		if (!debugEnabled) // NOLINT
@@ -62,7 +62,6 @@ namespace vk::debug
 		marker.color[2]	   = color[2];
 		marker.color[3]	   = color[3];
 		commandBuffer.debugMarkerBeginEXT(marker);
-
 	}
 
 	void cmdBeginRegion(vk::CommandBuffer & commandBuffer, const char * regionName, mim::vec4f const & color)
@@ -261,11 +260,11 @@ namespace vk::debug
 		}
 
 		vk::DebugUtilsObjectTagInfoEXT tagInfo{};
-		tagInfo.objectType	  = objectType;
-		tagInfo.objectHandle  = objectHandle;
-		tagInfo.tagName		  = name;
-		tagInfo.tagSize		  = tagSize;
-		tagInfo.pTag		  = tag;
+		tagInfo.objectType	 = objectType;
+		tagInfo.objectHandle = objectHandle;
+		tagInfo.tagName		 = name;
+		tagInfo.tagSize		 = tagSize;
+		tagInfo.pTag		 = tag;
 		handle.setDebugUtilsObjectTagEXT(tagInfo);
 	}
 } // namespace vk::debug

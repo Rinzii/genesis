@@ -20,23 +20,6 @@ endif()
 include(cmake/Config.cmake)
 
 
-# EXTRACT DXC
-
-if (EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/tools/dxc")
-  message(STATUS "DXC already extracted! Skipping...")
-else()
-  message(STATUS "Extracting DXC!")
-  file(ARCHIVE_EXTRACT INPUT "${CMAKE_CURRENT_SOURCE_DIR}/tools/dxc.zip" DESTINATION "${CMAKE_CURRENT_SOURCE_DIR}/tools")
-endif()
-
-if (GENESIS_OS_LINUX)
-  # Set execute permissions for the extracted executable. For some reason it doesn't have them by default.
-  execute_process(
-          COMMAND chmod +x ${CMAKE_CURRENT_SOURCE_DIR}/tools/dxc/linux/bin/dxc
-  )
-endif()
-
-
 # SET OPTIONS
 
 option(GENESIS_ENABLE_EDITOR "Set the runtime to instead build the editor instead of the default" ON)

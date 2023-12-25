@@ -26,7 +26,6 @@ namespace gen
 
 		[[nodiscard]] const std::thread::id & getThreadId() const { return m_threadId; }
 
-
 	private:
 		vk::UniqueCommandPool m_handle{nullptr};
 		std::thread::id m_threadId;

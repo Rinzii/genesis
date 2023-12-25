@@ -14,11 +14,11 @@ namespace gen
 	{
 	public:
 		Queue(u32 familyIndex, u32 queueIndex, vk::QueueFamilyProperties properties, vk::Bool32 canPresent);
-		~Queue() = default;
-		Queue(const Queue&) = delete;
-		Queue(Queue&&) noexcept ;
-		Queue& operator=(const Queue&) = delete;
-		Queue& operator=(Queue&&) = delete;
+		~Queue()			 = default;
+		Queue(const Queue &) = delete;
+		Queue(Queue &&) noexcept;
+		Queue & operator=(const Queue &) = delete;
+		Queue & operator=(Queue &&)		 = delete;
 
 		void submit(const CommandBuffer & commandBuffer, vk::Fence fence, std::string name) const;
 
@@ -32,7 +32,7 @@ namespace gen
 		[[nodiscard]] vk::Bool32 canPresent() const { return m_canPresent; }
 
 	private:
-		vk::Queue m_handle;
+		vk::Queue m_handle{VK_NULL_HANDLE};
 		u32 m_familyIndex{0};
 		u32 m_queueIndex{0};
 		vk::QueueFamilyProperties m_properties{};

@@ -2,8 +2,8 @@
 
 #pragma once
 
-#include "gen/system/types.hpp"
 #include "gen/rendering/vk/devices/physicalDevice.hpp"
+#include "gen/system/types.hpp"
 
 #include <vulkan/vulkan.hpp>
 
@@ -37,21 +37,22 @@ namespace gen
 		/// \param requiredLayers Desired layers to be enabled.
 		/// \param apiVersion The api version of Vulkan to use.
 		///
-		Instance(const std::string & appName,
-				 u32 appVersion,
-				 const std::string & engineName,
-				 u32 engineVersion,
-				 bool enableValidationLayers = false,
-				 std::vector<std::string> const & requiredExtensions = {},
-				 std::vector<std::string> const & requiredLayers = {},
-				 u32 apiVersion = VK_API_VERSION_1_3);
+		Instance(
+			const std::string & appName,
+			u32 appVersion,
+			const std::string & engineName,
+			u32 engineVersion,
+			bool enableValidationLayers							= false,
+			std::vector<std::string> const & requiredExtensions = {},
+			std::vector<std::string> const & requiredLayers		= {},
+			u32 apiVersion										= VK_API_VERSION_1_3);
 
 		~Instance() = default;
 
-		Instance(const Instance &) = delete;
-		Instance(Instance &&) = delete;
+		Instance(const Instance &)			   = delete;
+		Instance(Instance &&)				   = delete;
 		Instance & operator=(const Instance &) = delete;
-		Instance & operator=(Instance &&) = delete;
+		Instance & operator=(Instance &&)	   = delete;
 
 		///
 		/// \brief Get the handle to the vulkan instance.
@@ -78,14 +79,13 @@ namespace gen
 		///
 		static void doesProvidedApiMeetMin(u32 apiVersion);
 
-
 	private:
 		vk::UniqueInstance m_handle{nullptr};
 
 		std::vector<const char *> m_enabledExtensions{};
 
-
-#if (defined(GEN_DEBUG) || defined(GEN_VK_FORCE_VALIDATION_LAYERS)) && !defined(GEN_VK_DISABLE_VALIDATION_LAYERS) && !(defined(GEN_NDEBUG) && !defined(GEN_VK_FORCE_VALIDATION_LAYERS))
+#if (defined(GEN_DEBUG) || defined(GEN_VK_FORCE_VALIDATION_LAYERS)) && !defined(GEN_VK_DISABLE_VALIDATION_LAYERS) &&                                           \
+	!(defined(GEN_NDEBUG) && !defined(GEN_VK_FORCE_VALIDATION_LAYERS))
 		vk::UniqueDebugUtilsMessengerEXT debugUtilsMessengerExt;
 #endif
 	};
